@@ -1,0 +1,162 @@
+[gd_scene load_steps=14 format=3 uid="uid://8fg0ock6r1iq"]
+
+[ext_resource type="Script" path="res://tank/tank_base.gd" id="1_tp3gl"]
+[ext_resource type="Texture2D" uid="uid://bktxctmuadfnu" path="res://tank/assets/tank2_2_shadow.png" id="3_rx7oa"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_sdocv"]
+resource_local_to_scene = true
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v6kbr"]
+size = Vector2(110, 115)
+
+[sub_resource type="Animation" id="Animation_7aqam"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("body:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("CompressedTexture2D_sdocv")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("body:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("body/head_mount/head:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_xcjhs"]
+load_path = "res://.godot/imported/tank2_1_1.png-e5b02268c2bd6cd3df29faf04c0c59fe.ctex"
+
+[sub_resource type="Animation" id="Animation_5pyqi"]
+resource_name = "idle"
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("body:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [SubResource("CompressedTexture2D_xcjhs"), SubResource("CompressedTexture2D_xcjhs")]
+}
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_eqh4k"]
+load_path = "res://.godot/imported/tank2_1_4.png-340cd2cfe25e548700c24274056c5af6.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_dcqp3"]
+load_path = "res://.godot/imported/tank2_1_3.png-77f855520d03c2ba63c842b129469d86.ctex"
+
+[sub_resource type="Animation" id="Animation_ubywv"]
+resource_name = "move"
+length = 0.2
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("body:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [SubResource("CompressedTexture2D_xcjhs"), SubResource("CompressedTexture2D_eqh4k"), SubResource("CompressedTexture2D_dcqp3"), SubResource("CompressedTexture2D_eqh4k"), SubResource("CompressedTexture2D_xcjhs")]
+}
+
+[sub_resource type="Animation" id="Animation_kdiyk"]
+resource_name = "death"
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("body:modulate")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.35, 0.95),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("body/head_mount/head:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.05, 0.55),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_w4rpg"]
+_data = {
+"RESET": SubResource("Animation_7aqam"),
+"death": SubResource("Animation_kdiyk"),
+"idle": SubResource("Animation_5pyqi"),
+"move": SubResource("Animation_ubywv")
+}
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mbr5e"]
+height = 32.5
+
+[node name="Tank" type="CharacterBody2D"]
+scale = Vector2(0.8, 0.8)
+script = ExtResource("1_tp3gl")
+
+[node name="body" type="Sprite2D" parent="."]
+scale = Vector2(0.3, 0.3)
+texture = SubResource("CompressedTexture2D_sdocv")
+
+[node name="head_mount" type="Node2D" parent="body"]
+
+[node name="head" type="Sprite2D" parent="body/head_mount"]
+position = Vector2(63, -10)
+texture = ExtResource("3_rx7oa")
+
+[node name="muzzle" type="Node2D" parent="body/head_mount/head"]
+position = Vector2(140, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_v6kbr")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_w4rpg")
+}
+speed_scale = 0.75
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(67.5, -2.5)
+scale = Vector2(1, 1)
+shape = SubResource("CapsuleShape2D_mbr5e")

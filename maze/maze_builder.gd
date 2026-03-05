@@ -1,0 +1,252 @@
+class_name MazeBuilder extends Node2D
+
+const wall = preload("res://maze/wall/wall.tscn")
+
+@export var maze_size : Vector2i = Vector2i(10,10)
+@onready var offset: Node2D = $offset
+var grid_size : float
+var wall_thickness : float
+const neighbour_dir = [Vector2i(1,0), Vector2i(-1,0), Vector2i(0,1), Vector2i(0,-1)]
+var walls_dict = {}
+
+func _ready() -> void:
+	# cache wall size
+	var wall_inst : Wall = wall.instantiate()
+	offset.add_child(wall_inst)
+	var wall_size : Vector2 = wall_inst.collision_shape_2d.shape.size
+	wall_thickness = min(wall_size.x,wall_size.y)
+	grid_size = max(wall_size.x,wall_size.y) - wall_thickness
+	wall_inst.queue_free()
+	
+	offset.position -= maze_size*grid_size/2.
+	
+	create_maze()
+	
+func get_cell_position(i:int, j:int) -> Vector2:
+	return global_position + Vector2(grid_size*(i+.5),grid_size*(j+.5)) - grid_size*maze_size/2.
+
+func add_wall(posx:float, posy:float, horizontal:bool) -> void:
+	'''
+	posx : row
+	poxy : column
+	horizontal : if the wall is horizontal or vertical
+	'''
+	var wall_inst : Wall = wall.instantiate()
+	# name is important for wall deletion later
+	var key = "%d_%d_%s" % [posx, posy, "h" if horizontal else "v"]
+	wall_inst.name = key
+	walls_dict[key] = wall_inst
+	
+	offset.add_child(wall_inst)
+	wall_inst.position = Vector2(posx * grid_size, posy * grid_size)
+	if horizontal:
+		wall_inst.rotation = PI/2
+		wall_inst.position.x += grid_size/2.
+	else:
+		wall_inst.position.y += grid_size/2.
+
+func remove_wall(posx:float, posy:float, horizontal:bool) -> void:
+	var key = "%d_%d_%s" % [posx, posy, "h" if horizontal else "v"]
+	if walls_dict.has(key):
+		walls_dict[key].queue_free()
+		walls_dict.erase(key)
+
+func add_all_walls() -> void:
+	for i in range(maze_size.x+1):
+		for j in range(maze_size.y):
+			add_wall(i,j,false)
+	for i in range(maze_size.x):
+		for j in range(maze_size.y+1):
+			add_wall(i,j,true)
+	
+func add_border_walls() -> void:
+	for i in [0,maze_size.x]:
+		for j in range(maze_size.y):
+			add_wall(i,j,false)
+	for i in range(maze_size.x):
+		for j in [0,maze_size.y]:
+			add_wall(i,j,true)
+
+func valid_index(i:int,j:int) -> bool:
+	'''
+	check if (i,j) is inside the maze
+	'''
+	return (i>=0) and (i<maze_size.x) and (j>=0) and (j<maze_size.y)
+
+func pop_random(array):
+	assert(not array.is_empty(), "Array cannot be empty")
+	var random_index = randi() % array.size()
+	return array.pop_at(random_index)
+
+func create_maze_BFS_tree(p:float) -> void:
+	'''
+	BFS, works sometimes
+	'''
+	add_border_walls()
+	# bool array of whether each cell has been used, 2D flattened
+	var cell_unused : PackedByteArray = PackedByteArray()
+	cell_unused.resize(maze_size.x*maze_size.y)
+	cell_unused.fill(true)
+	# number of cell used, stop recursion if reaches N, equals number of false in cell_unused
+	var num_cell_used : int = 1
+	# create tree from (0,0)
+	cell_unused[0] = false
+	var leaves : Array[Vector2i] = [Vector2i(0,0)]
+	
+	while len(leaves)!=0 and (num_cell_used < (maze_size.x*maze_size.y)):
+		var leaf = leaves.pop_front()
+		var children_candidate = []
+		var children = []
+		if valid_index(leaf.x-1,leaf.y) and cell_unused[(leaf.x-1)*maze_size.y+leaf.y]:
+			children_candidate.push_back(Vector2i(leaf.x-1,leaf.y))
+		if valid_index(leaf.x,leaf.y-1) and cell_unused[leaf.x*maze_size.y+leaf.y-1]:
+			children_candidate.push_back(Vector2i(leaf.x,leaf.y-1))
+		if valid_index(leaf.x+1,leaf.y) and cell_unused[(leaf.x+1)*maze_size.y+leaf.y]:
+			children_candidate.push_back(Vector2i(leaf.x+1,leaf.y))
+		if valid_index(leaf.x,leaf.y+1) and cell_unused[leaf.x*maze_size.y+leaf.y+1]:
+			children_candidate.push_back(Vector2i(leaf.x,leaf.y+1))
+		if len(children_candidate)!=0:
+			# first one with probability 1
+			children.push_back(pop_random(children_candidate))
+			for i in range(len(children_candidate)):
+				if randf()<p:
+					children.push_back(pop_random(children_candidate))
+			num_cell_used += len(children)
+		if valid_index(leaf.x-1,leaf.y) and cell_unused[(leaf.x-1)*maze_size.y+leaf.y]:
+			if Vector2i(leaf.x-1,leaf.y) not in children:
+				add_wall(leaf.x,leaf.y,false)
+		if valid_index(leaf.x+1,leaf.y) and cell_unused[(leaf.x+1)*maze_size.y+leaf.y]:
+			if Vector2i(leaf.x+1,leaf.y) not in children:
+				add_wall(leaf.x+1,leaf.y,false)
+		if valid_index(leaf.x,leaf.y-1) and cell_unused[(leaf.x)*maze_size.y+leaf.y-1]:
+			if Vector2i(leaf.x,leaf.y-1) not in children:
+				add_wall(leaf.x,leaf.y-1,true)
+		if valid_index(leaf.x,leaf.y+1) and cell_unused[(leaf.x)*maze_size.y+leaf.y+1]:
+			if Vector2i(leaf.x,leaf.y+1) not in children:
+				add_wall(leaf.x,leaf.y+1,true)
+		for c in children:
+				cell_unused[c.x*maze_size.y+c.y] = false
+				leaves.push_back(c)
+				
+func create_maze_Prim() -> void:
+	'''
+	Prim algorithm, delete walls, always work
+	'''
+	add_all_walls()
+	# in_maze, here "maze" refer to the current partially constructed maze
+	var in_maze: PackedByteArray = PackedByteArray()
+	in_maze.resize(maze_size.x * maze_size.y)
+	in_maze.fill(false)
+	# Frontier list (cells adjacent to maze)
+	var frontier: Array[Vector2i] = []
+	
+	# Start with random cell
+	var start_x = randi() % maze_size.x
+	var start_y = randi() % maze_size.y
+	var start_cell = Vector2i(start_x, start_y)
+	in_maze[start_x * maze_size.y + start_y] = true
+	
+	# Add its neighbors to frontier
+	for dir in neighbour_dir:
+		var neighbor = start_cell + dir
+		if valid_index(neighbor.x, neighbor.y) and not in_maze[neighbor.x * maze_size.y + neighbor.y]:
+			if not frontier.has(neighbor):
+				frontier.append(neighbor)
+	
+	# Main Prim's loop
+	while not frontier.is_empty() and in_maze.has(false):
+		var current = pop_random(frontier)
+		
+		var maze_neighbors: Array[Vector2i] = []
+		for dir in neighbour_dir:
+			var neighbor = current + dir
+			if valid_index(neighbor.x, neighbor.y) and in_maze[neighbor.x * maze_size.y + neighbor.y]:
+				maze_neighbors.push_back(neighbor)
+		
+		if not maze_neighbors.is_empty():
+			# Connect to a random maze neighbor
+			var connect_to = maze_neighbors[randi() % maze_neighbors.size()]
+			
+			# Determine direction from connect_to to current and remove that wall
+			var diff = current - connect_to
+			if diff == neighbour_dir[0]:  # current is right of connect_to
+				remove_wall(connect_to.x+1, connect_to.y, false)  # Right wall of connect_to
+			elif diff == neighbour_dir[1]:  # current is left of connect_to
+				remove_wall(connect_to.x, connect_to.y, false)  # Left wall of connect_to
+			elif diff == neighbour_dir[2]:  # current is below connect_to
+				remove_wall(connect_to.x, connect_to.y+1, true)  # Down wall of connect_to
+			elif diff == neighbour_dir[3]:  # current is above connect_to
+				remove_wall(connect_to.x, connect_to.y, true)  # Up wall of connect_to
+			
+			# Add current to maze
+			in_maze[current.x * maze_size.y + current.y] = true
+			
+			# Add current's neighbors to frontier
+			for dir in neighbour_dir:
+				var neighbor = current + dir
+				if valid_index(neighbor.x, neighbor.y) and not in_maze[neighbor.x * maze_size.y + neighbor.y]:
+					if not frontier.has(neighbor):
+						frontier.append(neighbor)
+
+# Helper functions for union-find
+func find(parent:PackedInt32Array, v: int) -> int:
+	if parent[v] != v:
+		parent[v] = find(parent, parent[v])
+	return parent[v]
+
+func union(parent:PackedInt32Array, v1: int, v2: int) -> void:
+	var root1 = find(parent, v1)
+	var root2 = find(parent, v2)
+	if root1 != root2:
+		parent[root2] = root1  # Simple union
+
+func create_maze_Kruskal() -> void:
+	'''
+	Kruskal's algorithm: randomly remove walls that connect different sets
+	Always creates a perfect maze (no cycles, all cells connected)
+	'''
+	add_all_walls()
+	# Union-Find data structure for tracking connected components
+	var parent: PackedInt32Array = PackedInt32Array()
+	parent.resize(maze_size.x * maze_size.y)
+	for i in range(parent.size()):
+		parent[i] = i  # Each cell starts as its own set
+	# Collect internal walls
+	var all_walls: Array = []
+	for i in range(1,maze_size.x):
+		for j in range(maze_size.y):
+			all_walls.append([i, j, false])  # [x, y, is_horizontal]
+	for i in range(maze_size.x):
+		for j in range(1,maze_size.y):
+			all_walls.append([i, j, true])
+	# Shuffle internal walls
+	all_walls.shuffle()
+	for wall_data in all_walls:
+		var x = wall_data[0]
+		var y = wall_data[1]
+		var is_horizontal = wall_data[2]
+		
+		# Determine which two cells this wall separates
+		var cell1: Vector2i
+		var cell2: Vector2i
+		if is_horizontal:
+			cell1 = Vector2i(x, y-1)
+			cell2 = Vector2i(x, y)
+		else:
+			cell1 = Vector2i(x-1, y)
+			cell2 = Vector2i(x, y)
+		# Get indices in our flat array
+		var idx1 = cell1.x * maze_size.y + cell1.y
+		var idx2 = cell2.x * maze_size.y + cell2.y
+		# If cells are in different sets, remove the wall and union them
+		if find(parent,idx1) != find(parent,idx2):
+			remove_wall(x, y, is_horizontal)
+			union(parent,idx1, idx2)
+
+func create_maze() -> void:
+	#create_maze_BFS_tree(0.1)
+	#create_maze_Prim()
+	create_maze_Kruskal()
+	
+	
+	

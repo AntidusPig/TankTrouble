@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cxjd1l0h35ya1"]
+
+[ext_resource type="Script" path="res://maze/maze_builder.gd" id="1_pr586"]
+
+[node name="MazeBuilder" type="Node2D" groups=["MazeBuilder"]]
+script = ExtResource("1_pr586")
+maze_size = Vector2i(3, 4)
+
+[node name="offset" type="Node2D" parent="."]
