@@ -1,7 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://8fg0ock6r1iq"]
+[gd_scene load_steps=15 format=3 uid="uid://8fg0ock6r1iq"]
 
 [ext_resource type="Script" path="res://tank/tank_base.gd" id="1_tp3gl"]
 [ext_resource type="Texture2D" uid="uid://bktxctmuadfnu" path="res://tank/assets/tank2_2_shadow.png" id="3_rx7oa"]
+[ext_resource type="Texture2D" uid="uid://c3jsp6lemxm4o" path="res://tank/assets/sequence/tank2_1_1.png" id="3_yttuk"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_sdocv"]
 resource_local_to_scene = true
@@ -48,6 +49,34 @@ tracks/2/keys = {
 "values": [Color(1, 1, 1, 1)]
 }
 
+[sub_resource type="Animation" id="Animation_kdiyk"]
+resource_name = "death"
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("body:modulate")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.35, 0.95),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("body/head_mount/head:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.05, 0.55),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_xcjhs"]
 load_path = "res://.godot/imported/tank2_1_1.png-e5b02268c2bd6cd3df29faf04c0c59fe.ctex"
 
@@ -91,34 +120,6 @@ tracks/0/keys = {
 "values": [SubResource("CompressedTexture2D_xcjhs"), SubResource("CompressedTexture2D_eqh4k"), SubResource("CompressedTexture2D_dcqp3"), SubResource("CompressedTexture2D_eqh4k"), SubResource("CompressedTexture2D_xcjhs")]
 }
 
-[sub_resource type="Animation" id="Animation_kdiyk"]
-resource_name = "death"
-step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("body:modulate")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.35, 0.95),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("body/head_mount/head:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.05, 0.55),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_w4rpg"]
 _data = {
 "RESET": SubResource("Animation_7aqam"),
@@ -141,11 +142,15 @@ texture = SubResource("CompressedTexture2D_sdocv")
 [node name="head_mount" type="Node2D" parent="body"]
 
 [node name="head" type="Sprite2D" parent="body/head_mount"]
-position = Vector2(63, -10)
+position = Vector2(63, 0)
 texture = ExtResource("3_rx7oa")
 
 [node name="muzzle" type="Node2D" parent="body/head_mount/head"]
-position = Vector2(140, 0)
+position = Vector2(180, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="body/head_mount/head/muzzle"]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("3_yttuk")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_v6kbr")
@@ -157,6 +162,5 @@ libraries = {
 speed_scale = 0.75
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
-position = Vector2(67.5, -2.5)
-scale = Vector2(1, 1)
+position = Vector2(67.5, 0)
 shape = SubResource("CapsuleShape2D_mbr5e")
