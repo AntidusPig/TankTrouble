@@ -11,10 +11,10 @@ func _physics_process(delta: float) -> void:
 	velocity = Vector2(0,0)
 	var forward_direction = get_forward()
 	if Input.is_action_pressed("Up"):
-		velocity = forward_direction * move_speed
+		velocity = forward_direction * (move_speed*scale.x)
 		moving = true
 	if Input.is_action_pressed("Down"):
-		velocity = -forward_direction * move_speed
+		velocity = -forward_direction * (move_speed*scale.x)
 		moving = true
 	if Input.is_action_pressed("Left"):
 		rotation -= rotate_speed*delta

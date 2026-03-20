@@ -1,11 +1,11 @@
-[gd_scene load_steps=15 format=3 uid="uid://8fg0ock6r1iq"]
+[gd_scene format=3 uid="uid://8fg0ock6r1iq"]
 
-[ext_resource type="Script" path="res://tank/tank_base.gd" id="1_tp3gl"]
+[ext_resource type="Script" uid="uid://716jipqp2lwt" path="res://tank/tank_base.gd" id="1_tp3gl"]
 [ext_resource type="Texture2D" uid="uid://bktxctmuadfnu" path="res://tank/assets/tank2_2_shadow.png" id="3_rx7oa"]
 [ext_resource type="Texture2D" uid="uid://c3jsp6lemxm4o" path="res://tank/assets/sequence/tank2_1_1.png" id="3_yttuk"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_sdocv"]
-resource_local_to_scene = true
+[ext_resource type="AudioStream" uid="uid://pca83ov6k3n7" path="res://tank/assets/tank_shoot.wav" id="4_ktvqm"]
+[ext_resource type="AudioStream" uid="uid://bbg6y4sknbsxr" path="res://tank/assets/tank_death.wav" id="4_qdg3w"]
+[ext_resource type="AudioStream" uid="uid://v1m5kubmtvom" path="res://tank/assets/tank_move.wav" id="6_xqxtg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v6kbr"]
 size = Vector2(110, 115)
@@ -22,7 +22,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [SubResource("CompressedTexture2D_sdocv")]
+"values": [ExtResource("3_yttuk")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -47,6 +47,18 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("body/head_mount/head:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(63, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_kdiyk"]
@@ -76,6 +88,21 @@ tracks/1/keys = {
 "update": 0,
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
+tracks/2/type = "audio"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("AudioStreamPlayer2D")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("4_qdg3w")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/2/use_blend = true
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_xcjhs"]
 load_path = "res://.godot/imported/tank2_1_1.png-e5b02268c2bd6cd3df29faf04c0c59fe.ctex"
@@ -120,47 +147,83 @@ tracks/0/keys = {
 "values": [SubResource("CompressedTexture2D_xcjhs"), SubResource("CompressedTexture2D_eqh4k"), SubResource("CompressedTexture2D_dcqp3"), SubResource("CompressedTexture2D_eqh4k"), SubResource("CompressedTexture2D_xcjhs")]
 }
 
+[sub_resource type="Animation" id="Animation_b8j0x"]
+resource_name = "shoot"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("body/head_mount/head:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03333333, 0.1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(63, 0), Vector2(54.166664, 0), Vector2(63, 0)]
+}
+tracks/1/type = "audio"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AudioStreamPlayer2D")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("4_ktvqm")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/1/use_blend = true
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_w4rpg"]
 _data = {
-"RESET": SubResource("Animation_7aqam"),
-"death": SubResource("Animation_kdiyk"),
-"idle": SubResource("Animation_5pyqi"),
-"move": SubResource("Animation_ubywv")
+&"RESET": SubResource("Animation_7aqam"),
+&"death": SubResource("Animation_kdiyk"),
+&"idle": SubResource("Animation_5pyqi"),
+&"move": SubResource("Animation_ubywv"),
+&"shoot": SubResource("Animation_b8j0x")
 }
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mbr5e"]
 height = 32.5
 
-[node name="Tank" type="CharacterBody2D"]
+[node name="Tank" type="CharacterBody2D" unique_id=1559333924]
 scale = Vector2(0.8, 0.8)
 script = ExtResource("1_tp3gl")
 
-[node name="body" type="Sprite2D" parent="."]
+[node name="body" type="Sprite2D" parent="." unique_id=737061034]
 scale = Vector2(0.3, 0.3)
-texture = SubResource("CompressedTexture2D_sdocv")
+texture = ExtResource("3_yttuk")
 
-[node name="head_mount" type="Node2D" parent="body"]
+[node name="head_mount" type="Node2D" parent="body" unique_id=458012620]
 
-[node name="head" type="Sprite2D" parent="body/head_mount"]
+[node name="head" type="Sprite2D" parent="body/head_mount" unique_id=187738766]
 position = Vector2(63, 0)
 texture = ExtResource("3_rx7oa")
 
-[node name="muzzle" type="Node2D" parent="body/head_mount/head"]
+[node name="muzzle" type="Node2D" parent="body/head_mount/head" unique_id=840451426]
 position = Vector2(180, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="body/head_mount/head/muzzle"]
+[node name="Sprite2D" type="Sprite2D" parent="body/head_mount/head/muzzle" unique_id=1911684697]
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("3_yttuk")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1711764608]
 shape = SubResource("RectangleShape2D_v6kbr")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_w4rpg")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=506656969]
+libraries/ = SubResource("AnimationLibrary_w4rpg")
 speed_scale = 0.75
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=604172606]
 position = Vector2(67.5, 0)
 shape = SubResource("CapsuleShape2D_mbr5e")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=332761124]
+
+[node name="EngineSoundPlayer" type="AudioStreamPlayer2D" parent="." unique_id=19680555]
+stream = ExtResource("6_xqxtg")
+autoplay = true

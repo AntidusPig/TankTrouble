@@ -2,7 +2,6 @@
 class_name Shell extends Node2D
 
 @onready var sprite_2d: Sprite2D = $Sprite2D
-@onready var ray_cast_2d: RayCast2D = $RayCast2D
 
 @export var size : float = 14
 @export var shell_speed : float = 600.
@@ -13,13 +12,85 @@ var shell_direction : Vector2 = Vector2(0,1)
 var pending_destroy : bool = false
 var spawner : TankBase
 var ignore_spawner : bool = true
+var radius : float
 
 func _ready():
 	# Create a new image with transparency
-	var image = Image.create(size, size, false, Image.FORMAT_RGBA8)
+	create_shell_texture()
+	# lifetime
+	if not Engine.is_editor_hint():
+		var timer = Timer.new()
+		timer.wait_time = shell_lifetime
+		timer.one_shot = true
+		timer.timeout.connect(destroy)
+		add_child(timer)
+		timer.start()
+		
+		# ignore initial spawner collision
+		timer = Timer.new()
+		timer.wait_time = 0.05  # TWEAK this in case of self collision
+		timer.one_shot = true
+		timer.timeout.connect(enable_spawner_collision)
+		add_child(timer)
+		timer.start()
+	
+	
+func _physics_process(delta: float) -> void:
+	if Engine.is_editor_hint(): return
+	if pending_destroy:
+		# handle_destruction_visuals 
+		sprite_2d.modulate.a = lerp(sprite_2d.modulate.a, 0., delta*2)
+		scale = lerp(scale, Vector2(1.5,1.5), delta)
+		
+	var movement_step = shell_direction * (shell_speed * scale.x) * delta
+	var space_state = get_world_2d().direct_space_state
+	var ray_start = global_position
+	var ray_end = global_position + movement_step
+
+	var query = PhysicsRayQueryParameters2D.create(ray_start, ray_end)
+	# Ignore the shell's area and the spawner (if ignore_spawner is true)
+	if ignore_spawner and is_instance_valid(spawner):
+		query.exclude = [spawner.get_rid()]
+	var result = space_state.intersect_ray(query)
+
+	if result:
+		_handle_collision(result)
+	else:
+		global_position += movement_step
+
+func _handle_collision(result: Dictionary) -> void:
+	var collider = result.collider
+
+	# Hit a Tank?
+	if collider is TankBase:
+		collider.receive_damage(shell_damage)
+		destroy(true) # Instant destroy on hit
+		return
+	
+	# Hit a Wall? Bounce!
+	var normal = result.normal
+	shell_direction = shell_direction.bounce(normal)
+	global_position = result.position + normal
+	
+func destroy(immediate:bool=false) -> void:
+	if immediate: queue_free()
+	else:
+		pending_destroy = true
+		var timer = Timer.new()
+		timer.wait_time = 0.5
+		timer.one_shot = true
+		timer.timeout.connect(queue_free)
+		add_child(timer)
+		timer.start()
+	
+func enable_spawner_collision() -> void:
+	ignore_spawner = false
+
+func create_shell_texture() -> void:
+	var image = Image.create(int(size), int(size), false, Image.FORMAT_RGBA8)
 	image.fill(Color(0, 0, 0, 0))
 	var center = Vector2(size/2, size/2)
-	var radius = size/2 - 2
+	radius = size/2 - 2
 	var samples = 4  # 4x4 supersampling for smooth edges
 	for x in range(size):
 		for y in range(size):
@@ -40,49 +111,3 @@ func _ready():
 							image.set_pixel(x, y, Color(0, 0, 0, alpha))
 	var texture = ImageTexture.create_from_image(image)
 	sprite_2d.texture = texture
-	
-	# lifetime
-	var timer = Timer.new()
-	timer.wait_time = shell_lifetime
-	timer.one_shot = true
-	timer.timeout.connect(destroy)
-	add_child(timer)
-	timer.start()
-	
-	# ignore initial spawner collision
-	timer = Timer.new()
-	timer.wait_time = 1.0
-	timer.one_shot = true
-	timer.timeout.connect(enable_spawner_collision)
-	add_child(timer)
-	timer.start()
-	
-func _process(delta) -> void:
-	position += shell_direction * shell_speed * delta
-	if pending_destroy:
-		sprite_2d.modulate.a = lerp(sprite_2d.modulate.a, 0., delta*2)
-		scale = lerp(scale, Vector2(1.5,1.5), delta)
-	ray_cast_2d.target_position = shell_direction.normalized() * size
-	if ray_cast_2d.is_colliding():
-		var other = ray_cast_2d.get_collider()
-		if other is TankBase and not pending_destroy and not(ignore_spawner and other == spawner):
-			other.receive_damage(shell_damage)
-			destroy(true)
-		else:
-			var normal = ray_cast_2d.get_collision_normal()
-			shell_direction = shell_direction.bounce(normal)
-			global_position += normal * size * 2
-		
-func destroy(immediate:bool=false) -> void:
-	if immediate: queue_free()
-	else:
-		pending_destroy = true
-		var timer = Timer.new()
-		timer.wait_time = 0.5
-		timer.one_shot = true
-		timer.timeout.connect(queue_free)
-		add_child(timer)
-		timer.start()
-	
-func enable_spawner_collision() -> void:
-	ignore_spawner = false

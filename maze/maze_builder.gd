@@ -23,7 +23,7 @@ func _ready() -> void:
 	create_maze()
 	
 func get_cell_position(i:int, j:int) -> Vector2:
-	return global_position + Vector2(grid_size*(i+.5),grid_size*(j+.5)) - grid_size*maze_size/2.
+	return global_position + scale * (Vector2(grid_size*(i+.5),grid_size*(j+.5)) - grid_size*maze_size/2.)
 
 func add_wall(posx:float, posy:float, horizontal:bool) -> void:
 	'''

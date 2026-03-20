@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cl2aca351004l"]
+
+[ext_resource type="Script" uid="uid://c34iqu36ip6ud" path="res://singletons/level_manager_sudoku.gd" id="1_mn8cf"]
+
+[node name="LevelManagerSudoku" type="Node2D" unique_id=1897259335 groups=["LevelManager"]]
+script = ExtResource("1_mn8cf")

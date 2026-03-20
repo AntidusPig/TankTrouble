@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://i11i7q2hepai"]
+
+[ext_resource type="PackedScene" uid="uid://cxjd1l0h35ya1" path="res://maze/maze_builder.tscn" id="1_ismus"]
+[ext_resource type="PackedScene" uid="uid://t7juwgdy8nw5" path="res://UI/Menu/MenuUI.tscn" id="2_80kd4"]
+[ext_resource type="Texture2D" uid="uid://befwbul2y8sm2" path="res://tank/assets/background.png" id="5_sda7d"]
+[ext_resource type="PackedScene" uid="uid://dlxnm03av7o20" path="res://singletons/LevelManager.tscn" id="5_y6120"]
+
+[node name="World" type="Node2D" unique_id=979188408]
+
+[node name="Background" type="Sprite2D" parent="." unique_id=126384998]
+position = Vector2(953, 547)
+scale = Vector2(1.4502, 1.4502)
+texture = ExtResource("5_sda7d")
+
+[node name="MazeBuilder" parent="." unique_id=392824962 instance=ExtResource("1_ismus")]
+position = Vector2(960, 540)
+scale = Vector2(0.6, 0.6)
+maze_size = Vector2i(9, 9)
+
+[node name="MenuUi" parent="." unique_id=2021423982 instance=ExtResource("2_80kd4")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="LevelManager" parent="." unique_id=307953239 instance=ExtResource("5_y6120")]
