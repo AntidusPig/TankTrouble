@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://dlxnm03av7o20"]
+[gd_scene format=3 uid="uid://dlxnm03av7o20"]
 
-[ext_resource type="Script" path="res://singletons/level_manager.gd" id="1_n2vw5"]
+[ext_resource type="Script" uid="uid://ckm3p2mh363co" path="res://singletons/level_manager.gd" id="1_n2vw5"]
 
-[node name="LevelManager" type="Node2D" groups=["LevelManager"]]
+[node name="LevelManager" type="Node2D" unique_id=1918730840 groups=["LevelManager"]]
 script = ExtResource("1_n2vw5")

@@ -5,4 +5,4 @@
 
 [node name="MazeBuilderSudoku" unique_id=289675958 instance=ExtResource("1_qxcpf")]
 script = ExtResource("2_ftmbv")
-maze_size = Vector2i(10, 10)
+maze_size = null

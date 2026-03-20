@@ -48,7 +48,9 @@ func _physics_process(delta: float) -> void:
 	var ray_end = global_position + movement_step
 
 	var query = PhysicsRayQueryParameters2D.create(ray_start, ray_end)
-	# Ignore the shell's area and the spawner (if ignore_spawner is true)
+	query.collide_with_areas = true  # sudoku cell
+	query.collide_with_bodies = true # wall, tank
+	# Ignore tank for a short time
 	if ignore_spawner and is_instance_valid(spawner):
 		query.exclude = [spawner.get_rid()]
 	var result = space_state.intersect_ray(query)
@@ -58,20 +60,23 @@ func _physics_process(delta: float) -> void:
 	else:
 		global_position += movement_step
 
-func _handle_collision(result: Dictionary) -> void:
+# [VIRTUAL]
+func _handle_collision(result:Dictionary)->void:
 	var collider = result.collider
-
-	# Hit a Tank?
 	if collider is TankBase:
 		collider.receive_damage(shell_damage)
 		destroy(true) # Instant destroy on hit
 		return
-	
-	# Hit a Wall? Bounce!
+	# wall
+	else:
+		_bounce(result)
+
+func _bounce(result: Dictionary) -> void:
 	var normal = result.normal
 	shell_direction = shell_direction.bounce(normal)
-	global_position = result.position + normal
-	
+	# Push out slightly to prevent getting stuck inside the collider
+	global_position = result.position + normal * 2.0
+
 func destroy(immediate:bool=false) -> void:
 	if immediate: queue_free()
 	else:

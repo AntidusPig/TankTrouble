@@ -7,8 +7,8 @@ var current_grid: PackedInt32Array = []
 var block_w: int
 var block_h: int
 
-const NUMBER_SCENE = preload("uid://d0etr1ysu0j7o")
-var number_labels = {} # Key: Vector2i(x,y), Value: Label node
+var sudoku_numbers : Array[SudokuNumber] = []
+signal victory_achieved()
 
 func _ready():
 	super._ready()
@@ -103,41 +103,58 @@ func can_place_number(grid: PackedInt32Array, row: int, col: int, val: int) -> b
 
 ######### DISPLAY #############
 func spawn_numbers() -> void:
-	for node in number_labels.values():
-		node.get_parent().queue_free()
-	number_labels.clear()
+	#for n in sudoku_numbers:
+		#n.get_parent().queue_free()
+	#sudoku_numbers.clear()
+	sudoku_numbers.resize(maze_size.x*maze_size.y)
 
 	for i in range(maze_size.x):
 		for j in range(maze_size.y):
 			var idx = i * maze_size.y + j
-			var cell_inst = NUMBER_SCENE.instantiate()
-			cell_inst.scale = scale
-			offset.add_child(cell_inst)
-			print(cell_inst)
-			cell_inst.position = Vector2(i * grid_size + grid_size/2, j * grid_size + grid_size/2)
-			var label = cell_inst.get_node("Label")
-			number_labels[idx] = label
-			_update_label_text(idx)
-
-func _update_label_text(idx: int) -> void:
-	var val = current_grid[idx]
-	if val == 0:
-		number_labels[idx].text = ""
-	else:
-		number_labels[idx].text = str(val)
+			var ns_inst : SudokuNumber = SudokuNumber.create(maze_size.x, current_grid[idx] != 0, idx)
+			ns_inst.scale = scale
+			ns_inst.position = Vector2(i * grid_size + grid_size/2, j * grid_size + grid_size/2)
+			ns_inst.value_changed.connect(_on_cell_value_changed)
+			ns_inst.set_number(current_grid[idx])
+			sudoku_numbers[idx] = ns_inst
+			offset.add_child(ns_inst)
 		
-####### COLLISION #########
-func handle_shell_hit(impact_position: Vector2) -> void:
-	var local_pos = impact_position - offset.global_position
+####### CHECK #########
+func _on_cell_value_changed(index: int, new_value: int):
+	current_grid[index] = new_value
+	if _check_if_solved():
+		_handle_victory()
+		
+func _check_if_solved() -> bool:
+	var size = maze_size.x
+	# Generates 1111111110 for 9, 11110 for 4, etc.
+	# the last digit is for empty (0) cell
+	var target_mask = (1 << (size + 1)) - 2
+	for i in range(size):
+		var row_m = 0; var col_m = 0; var blk_m = 0
+		for j in range(size):
+			# Row index: (i, j)
+			row_m |= 1 << current_grid[i * size + j]
+			# Column index: (j, i)
+			col_m |= 1 << current_grid[j * size + i]
+			# Block index math:
+			var br = (i / block_h) * block_h + (j / block_w)
+			var bc = (i % block_h) * block_w + (j % block_w)
+			blk_m |= 1 << current_grid[br * size + bc]
+		if row_m != target_mask or col_m != target_mask or blk_m != target_mask:
+			return false
+	return true
 	
-	var gx = floor(local_pos.x / grid_size)
-	var gy = floor(local_pos.y / grid_size)
+func _handle_victory() -> void:
+	print("Sudoku Solved! Triggering Victory.")
+	for node in sudoku_numbers:
+		if is_instance_valid(node):
+			# Disable the collision/interaction area so bullets pass through now
+			var area = node.get_node_or_null("Area2D")
+			if area: area.monitorable = false
+			
+			# Visual celebration: Tween the numbers to a "Victory" color
+			for sn in sudoku_numbers:
+				sn.set_fixed(true)
+	victory_achieved.emit()
 	
-	if gx >= 0 and gx < maze_size.x and gy >= 0 and gy < maze_size.y:
-		var idx = int(gx * maze_size.y + gy)
-		current_grid[idx] = (current_grid[idx] % maze_size.x) + 1
-		_update_label_text(idx)
-		check_sudoku_status()
-
-func check_sudoku_status() -> void:
-	pass

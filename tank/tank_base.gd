@@ -1,6 +1,6 @@
 class_name TankBase extends CharacterBody2D
 
-const shell_asset = preload("uid://dqmmo6iiwmn8g")
+@export var SHELL_SCENE : Resource = preload("uid://dqmmo6iiwmn8g")
 var moving : bool = false
 @export var firing_cooldown : float = 0.5
 @export var max_num_shells : int = 6
@@ -35,20 +35,23 @@ func get_forward() -> Vector2:
 	return global_transform.x.normalized()
 
 func shoot() -> void:
-	if pending_destroy:return
+	if pending_destroy: return
 	shells = shells.filter(func(s): return is_instance_valid(s))
+	var shell_inst : Shell = SHELL_SCENE.instantiate()
+	shell_inst.spawner = self
+	# Use call_deferred to avoid physics threading issues when adding to root
+	get_tree().root.add_child.call_deferred(shell_inst)
+	
+	shell_inst.global_position = muzzle.global_position
+	shell_inst.scale = scale
+	shell_inst.shell_direction = get_forward()
+	shells.push_back(shell_inst)
+	# Limit shell count
+	if shells.size() > max_num_shells:
+		var oldest = shells.pop_front()
+		if is_instance_valid(oldest):
+			oldest.destroy()
 	animation_player.play("shoot")
-	var shell : Shell = shell_asset.instantiate()
-	shell.spawner = self
-	get_tree().root.add_child(shell)   # add to root so bullets not destroyed if tank is destroyed
-	shell.global_position = muzzle.global_position
-	shell.scale = scale
-	shell.shell_direction = get_forward()
-	shells.push_back(shell)
-	if len(shells) > max_num_shells:
-		var oldest_shell = shells.pop_front()
-		if is_instance_valid(oldest_shell):
-			oldest_shell.destroy()
 
 func receive_damage(dmg:int) -> void:
 	if pending_destroy:return
