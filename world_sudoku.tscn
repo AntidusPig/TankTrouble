@@ -1,26 +1,26 @@
 [gd_scene format=3 uid="uid://qm3pfnyk3jew"]
 
-[ext_resource type="Texture2D" uid="uid://befwbul2y8sm2" path="res://tank/assets/background.png" id="1_q8ugh"]
-[ext_resource type="PackedScene" uid="uid://t7juwgdy8nw5" path="res://UI/Menu/MenuUI.tscn" id="3_757sr"]
+[ext_resource type="Texture2D" uid="uid://bvoc8lhtapdo8" path="res://UI/background2.png" id="1_q8ugh"]
+[ext_resource type="PackedScene" uid="uid://dnuwrtx2gejw3" path="res://world/world_common.tscn" id="3_q8ugh"]
 [ext_resource type="PackedScene" uid="uid://cl2aca351004l" path="res://singletons/LevelManagerSudoku.tscn" id="4_4m6he"]
 [ext_resource type="PackedScene" uid="uid://huuhkv1yxgr4" path="res://maze/maze_builder_sudoku.tscn" id="4_q8ugh"]
 
+[sub_resource type="GDScript" id="GDScript_q8ugh"]
+
 [node name="World" type="Node2D" unique_id=979188408]
 
-[node name="Background" type="Sprite2D" parent="." unique_id=126384998]
-position = Vector2(953, 547)
-scale = Vector2(1.4502, 1.4502)
-texture = ExtResource("1_q8ugh")
-
-[node name="MenuUi" parent="." unique_id=2021423982 instance=ExtResource("3_757sr")]
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-grow_horizontal = 1
-grow_vertical = 1
-
 [node name="MazeBuilderSudoku" parent="." unique_id=289675958 instance=ExtResource("4_q8ugh")]
-position = Vector2(960, 540)
-maze_size = Vector2i(4, 4)
+position = Vector2(0, -50)
+scale = Vector2(0.65, 0.65)
+maze_size = Vector2i(8, 8)
 
 [node name="LevelManagerSudoku" parent="." unique_id=1897259335 instance=ExtResource("4_4m6he")]
+
+[node name="WorldCommon" parent="." unique_id=1697060638 instance=ExtResource("3_q8ugh")]
+script = SubResource("GDScript_q8ugh")
+
+[node name="Background" parent="WorldCommon" index="0" unique_id=1920694701]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_q8ugh")
+
+[editable path="WorldCommon"]

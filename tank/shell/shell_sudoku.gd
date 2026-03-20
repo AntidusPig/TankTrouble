@@ -1,7 +1,7 @@
 @tool
 class_name ShellSudoku extends Shell
 
-func _handle_collision(result: Dictionary) -> void:
+func _handle_collision(result: Dictionary, is_inside:bool) -> bool:
 	var collider = result.collider
 	var cell : SudokuNumber = null
 	if collider is SudokuNumber:
@@ -12,7 +12,10 @@ func _handle_collision(result: Dictionary) -> void:
 		if not cell.fixed:
 			cell.increment_value()
 			destroy(true) 
-			return
+			return false
+		else:return true  # pass through/ignore fixed cell
 	else:
 		# wall or tank
-		_bounce(result)
+		if not is_inside:
+			_bounce(result)
+		return false

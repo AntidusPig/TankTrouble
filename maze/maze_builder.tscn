@@ -1,9 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://cxjd1l0h35ya1"]
+[gd_scene format=3 uid="uid://cxjd1l0h35ya1"]
 
-[ext_resource type="Script" path="res://maze/maze_builder.gd" id="1_pr586"]
+[ext_resource type="Script" uid="uid://blu2rrgq26qu3" path="res://maze/maze_builder.gd" id="1_pr586"]
 
-[node name="MazeBuilder" type="Node2D" groups=["MazeBuilder"]]
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_s4qdo"]
+
+[node name="MazeBuilder" type="Node2D" unique_id=599731740 groups=["MazeBuilder"]]
 script = ExtResource("1_pr586")
 maze_size = Vector2i(3, 4)
 
-[node name="offset" type="Node2D" parent="."]
+[node name="offset" type="Node2D" parent="." unique_id=798642160]
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=169617410]
+navigation_polygon = SubResource("NavigationPolygon_s4qdo")

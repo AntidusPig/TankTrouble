@@ -11,7 +11,7 @@ const NUMBER_STYLE_GUESSED = preload("uid://cgbe3u8s2wmo8")
 signal value_changed(index: int, new_value: int)
 
 # do not instantiate this class, create it!!!
-static func create(max_val: int, is_fixed: bool, idx: bool) -> SudokuNumber:
+static func create(max_val: int, is_fixed: bool, idx: int) -> SudokuNumber:
 	var scene : Resource = load("uid://d0etr1ysu0j7o")
 	var node : SudokuNumber = scene.instantiate()
 	

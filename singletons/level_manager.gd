@@ -1,20 +1,66 @@
 class_name LevelManager extends Node2D
 
-const TANK_SCENE = preload("uid://csgjg5qdylx7w")
-const SHELL_SCENE = preload("uid://dqmmo6iiwmn8g") # normal shell
-var maze_builder : MazeBuilder
-var tanks : Array[TankBase] = []
-var player_tanks : Array[TankPlayer] = []
+@export var PLAYER_TANK_SCENE: PackedScene = preload("uid://csgjg5qdylx7w")
+@export var TANK_SCENE: PackedScene = preload("uid://csgjg5qdylx7w")
+@export var ENEMY_TANK_SCENE: PackedScene = preload("uid://djlo0siowsb36")
+# Default shell, can be overridden by children
+@export var DEFAULT_SHELL: Resource = preload("uid://dqmmo6iiwmn8g") 
+
+var maze_builder: MazeBuilder
+var tanks: Array[TankBase] = []
+var player_tanks: Array[TankPlayer] = []
+var enemy_tanks: Array[TankAI] = []
+@onready var camera: MyCamera = $"../WorldCommon/MyCamera"
+
+@export var player_spawn_pos = Vector2i(0,0)
+@export var number_of_enemies : int = 3
 
 func _ready() -> void:
+	setup_maze()
+	spawn_player()
+	maze_builder.bake_maze_navmesh()
+
+func setup_maze() -> void:
 	var nodes = get_tree().get_nodes_in_group("MazeBuilder")
 	if nodes.size() > 0:
 		maze_builder = nodes[0] as MazeBuilder
-		
-	var player_tank : TankBase = TANK_SCENE.instantiate()
-	add_child(player_tank)
-	player_tank.SHELL_SCENE = SHELL_SCENE
-	player_tank.scale = maze_builder.scale
-	player_tank.global_position = maze_builder.get_cell_position(0,0)
-	tanks.push_back(player_tank)
+	maze_builder.navigation_region_2d.bake_finished.connect(_on_navmesh_bake_finished)
+
+func spawn_player() -> void:
+	if not maze_builder: return
+	var player_tank : TankPlayer = add_tank(PLAYER_TANK_SCENE, player_spawn_pos.x, player_spawn_pos.y)
 	player_tanks.push_back(player_tank)
+	_on_player_spawned(player_tank)
+
+func add_tank(tank_asset:PackedScene, posx:int, posy:int)-> TankBase:
+	var tank : TankBase = tank_asset.instantiate()
+	add_child(tank)
+	tank.SHELL_SCENE = get_shell_resource()
+	tank.scale = maze_builder.scale
+	tank.global_position = maze_builder.get_cell_position(posx, posy)
+	tanks.push_back(tank)
+	return tank
+
+# Virtual methods for children to override
+func get_shell_resource() -> Resource:
+	return DEFAULT_SHELL
+
+# Virtual
+func _on_player_spawned(tank: TankPlayer) -> void:
+	if camera:
+		tank.shoot_signal.connect(func(_p, _d): camera.add_trauma(0.3))
+		tank.damaged_signal.connect(func(_hp): camera.add_trauma(0.5))
+		tank.player_move_signal.connect(camera.apply_offset)
+		
+func _on_navmesh_bake_finished() -> void:
+	var used_pos: Array[Vector2i] = [player_spawn_pos]
+	for i in range(number_of_enemies):
+		var new_pos = Vector2i(randi()%maze_builder.maze_size.x,randi()%maze_builder.maze_size.y)
+		while new_pos in used_pos:
+			new_pos = Vector2i(randi()%maze_builder.maze_size.x,randi()%maze_builder.maze_size.y)
+		print(new_pos)
+		used_pos.append(new_pos)
+		var enemy_tank : TankAI = add_tank(ENEMY_TANK_SCENE, new_pos.x, new_pos.y)
+		enemy_tank.player = player_tanks[0] ### TOOD
+		enemy_tanks.push_back(enemy_tank)
+		

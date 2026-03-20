@@ -195,21 +195,19 @@ scale = Vector2(0.8, 0.8)
 script = ExtResource("1_tp3gl")
 
 [node name="body" type="Sprite2D" parent="." unique_id=737061034]
+z_index = 1
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("3_yttuk")
 
 [node name="head_mount" type="Node2D" parent="body" unique_id=458012620]
 
 [node name="head" type="Sprite2D" parent="body/head_mount" unique_id=187738766]
+z_index = 2
 position = Vector2(63, 0)
 texture = ExtResource("3_rx7oa")
 
 [node name="muzzle" type="Node2D" parent="body/head_mount/head" unique_id=840451426]
 position = Vector2(180, 0)
-
-[node name="Sprite2D" type="Sprite2D" parent="body/head_mount/head/muzzle" unique_id=1911684697]
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("3_yttuk")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1711764608]
 shape = SubResource("RectangleShape2D_v6kbr")

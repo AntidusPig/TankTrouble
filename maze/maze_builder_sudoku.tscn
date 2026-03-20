@@ -2,7 +2,19 @@
 
 [ext_resource type="PackedScene" uid="uid://cxjd1l0h35ya1" path="res://maze/maze_builder.tscn" id="1_qxcpf"]
 [ext_resource type="Script" uid="uid://c6cj8rx7jylmp" path="res://maze/maze_builder_sudoku.gd" id="2_ftmbv"]
+[ext_resource type="Shader" uid="uid://dvmd2o68be8b" path="res://maze/sudoku/sudoku_bg.gdshader" id="3_bstua"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c6gf0"]
+shader = ExtResource("3_bstua")
+shader_parameter/base_color = Color(0.83, 0.9, 1, 0.3)
+shader_parameter/blur_amount = 2.0
+shader_parameter/fluid_speed = 0.5
+shader_parameter/detail = 5.0
 
 [node name="MazeBuilderSudoku" unique_id=289675958 instance=ExtResource("1_qxcpf")]
 script = ExtResource("2_ftmbv")
-maze_size = null
+maze_size = Vector2i(10, 10)
+
+[node name="Background" type="ColorRect" parent="." index="1" unique_id=1803796861]
+z_index = -1
+material = SubResource("ShaderMaterial_c6gf0")

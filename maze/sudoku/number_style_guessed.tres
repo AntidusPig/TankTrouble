@@ -27,4 +27,6 @@ cache/0/75/0/scale = 1.0
 [resource]
 font = SubResource("FontFile_6fbh6")
 font_size = 75
-font_color = Color(0.47697943, 0.61117506, 0.8089805, 1)
+font_color = Color(0.92917186, 0.94944555, 0.9792921, 1)
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)

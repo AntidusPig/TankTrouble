@@ -248,5 +248,9 @@ func create_maze() -> void:
 	#create_maze_Prim()
 	create_maze_Kruskal()
 	
-	
-	
+#### NAVIGATION ####
+@onready var navigation_region_2d: NavigationRegion2D = $NavigationRegion2D
+func bake_maze_navmesh():
+	# In Godot 4, baking is usually done on a background thread 
+	# to prevent the game from freezing.
+	navigation_region_2d.bake_navigation_polygon()

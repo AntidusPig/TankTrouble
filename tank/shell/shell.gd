@@ -48,6 +48,8 @@ func _physics_process(delta: float) -> void:
 	var ray_end = global_position + movement_step
 
 	var query = PhysicsRayQueryParameters2D.create(ray_start, ray_end)
+	# hitting from inside sudoku cell is possible
+	query.hit_from_inside = true
 	query.collide_with_areas = true  # sudoku cell
 	query.collide_with_bodies = true # wall, tank
 	# Ignore tank for a short time
@@ -56,20 +58,26 @@ func _physics_process(delta: float) -> void:
 	var result = space_state.intersect_ray(query)
 
 	if result:
-		_handle_collision(result)
+		var is_inside : bool = result.position.is_equal_approx(ray_start)
+		var should_move: bool = _handle_collision(result, is_inside)
+		if should_move:
+			global_position += movement_step
 	else:
 		global_position += movement_step
 
 # [VIRTUAL]
-func _handle_collision(result:Dictionary)->void:
+func _handle_collision(result:Dictionary, _is_inside:bool) -> bool:
+	'''
+		return whether you should move forward
+	'''
 	var collider = result.collider
 	if collider is TankBase:
 		collider.receive_damage(shell_damage)
 		destroy(true) # Instant destroy on hit
-		return
 	# wall
 	else:
 		_bounce(result)
+	return false
 
 func _bounce(result: Dictionary) -> void:
 	var normal = result.normal

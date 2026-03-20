@@ -3,8 +3,8 @@ class_name TankBase extends CharacterBody2D
 @export var SHELL_SCENE : Resource = preload("uid://dqmmo6iiwmn8g")
 var moving : bool = false
 @export var firing_cooldown : float = 0.5
-@export var max_num_shells : int = 6
-@export var health : int = 3
+@export var max_num_shells : int = 10
+@export var health : int = 5
 var shells : Array[Shell] = []
 var pending_destroy : bool = false
 
@@ -16,6 +16,9 @@ var pending_destroy : bool = false
 @onready var engine_sound_player: AudioStreamPlayer2D = $EngineSoundPlayer
 @onready var audio_stream_player_2d: AudioStreamPlayer2D = $AudioStreamPlayer2D
 const tank_damaged : Array[Resource] = [preload("uid://c7c5coikwed3h"), preload("uid://cbg6j0oxhfo1d")]
+
+signal shoot_signal(pos: Vector2, direction: Vector2)
+signal damaged_signal(current_health: int)
 
 func _physics_process(_delta: float) -> void:
 	if pending_destroy:return
@@ -52,12 +55,14 @@ func shoot() -> void:
 		if is_instance_valid(oldest):
 			oldest.destroy()
 	animation_player.play("shoot")
+	shoot_signal.emit(muzzle.global_position, get_forward())
 
 func receive_damage(dmg:int) -> void:
 	if pending_destroy:return
 	var health_old = health
 	health = max(0,health-dmg)
 	if health != health_old:
+		damaged_signal.emit(health)
 		audio_stream_player_2d.stream = tank_damaged.pick_random()
 		audio_stream_player_2d.play()
 	if health==0:
