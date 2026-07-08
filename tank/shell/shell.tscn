@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dqmmo6iiwmn8g"]
 
 [ext_resource type="Script" uid="uid://c8f87r7hviq5l" path="res://tank/shell/shell.gd" id="1_wjwwx"]
+[ext_resource type="Resource" uid="uid://bvsplecyym1iy" path="res://data/ShellStats.tres" id="2_4s264"]
 
 [sub_resource type="Image" id="Image_rimfw"]
 data = {
@@ -16,6 +17,7 @@ image = SubResource("Image_rimfw")
 
 [node name="Shell" type="Node2D" unique_id=952745859]
 script = ExtResource("1_wjwwx")
+stats = ExtResource("2_4s264")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=597741346]
 texture = SubResource("ImageTexture_4s264")

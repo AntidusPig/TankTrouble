@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="ShellStats" format=3 uid="uid://bvsplecyym1iy"]
+
+[ext_resource type="Script" uid="uid://dbpjdbusx2hs" path="res://data/scripts/ShellStats.gd" id="1_kb2do"]
+
+[resource]
+script = ExtResource("1_kb2do")
+metadata/_custom_type_script = "uid://dbpjdbusx2hs"

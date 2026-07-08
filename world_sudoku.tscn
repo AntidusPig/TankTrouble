@@ -11,10 +11,10 @@
 
 [node name="MazeBuilderSudoku" parent="." unique_id=289675958 instance=ExtResource("4_q8ugh")]
 position = Vector2(0, -50)
-scale = Vector2(0.65, 0.65)
-maze_size = Vector2i(8, 8)
+maze_size = Vector2i(4, 4)
 
 [node name="LevelManagerSudoku" parent="." unique_id=1897259335 instance=ExtResource("4_4m6he")]
+number_of_enemies = 0
 
 [node name="WorldCommon" parent="." unique_id=1697060638 instance=ExtResource("3_q8ugh")]
 script = SubResource("GDScript_q8ugh")

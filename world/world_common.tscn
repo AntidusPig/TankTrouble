@@ -3,6 +3,11 @@
 [ext_resource type="Texture2D" uid="uid://befwbul2y8sm2" path="res://UI/background.png" id="1_8cnik"]
 [ext_resource type="PackedScene" uid="uid://t7juwgdy8nw5" path="res://UI/Menu/MenuUI.tscn" id="2_aii5x"]
 [ext_resource type="Script" uid="uid://gd5db2ewe86j" path="res://UI/my_camera.gd" id="3_aii5x"]
+[ext_resource type="Script" uid="uid://cj1ykaqglwxkw" path="res://world/maze_nav_region.gd" id="4_rshbe"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_aii5x"]
+parsed_geometry_type = 1
+agent_radius = 65.0
 
 [node name="WorldCommon" type="Node2D" unique_id=1697060638]
 
@@ -20,3 +25,7 @@ grow_vertical = 1
 
 [node name="MyCamera" type="Camera2D" parent="." unique_id=1503636427]
 script = ExtResource("3_aii5x")
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1895731934]
+navigation_polygon = SubResource("NavigationPolygon_aii5x")
+script = ExtResource("4_rshbe")

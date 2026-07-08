@@ -13,24 +13,36 @@ var enemy_tanks: Array[TankAI] = []
 @onready var camera: MyCamera = $"../WorldCommon/MyCamera"
 
 @export var player_spawn_pos = Vector2i(0,0)
-@export var number_of_enemies : int = 3
+@export var number_of_enemies : int = 1
+var used_pos: Array[Vector2i] = [player_spawn_pos]
+@onready var navigation_region_2d: MazeNavRegion = $"../WorldCommon/NavigationRegion2D"
 
 func _ready() -> void:
 	setup_maze()
 	spawn_player()
-	maze_builder.bake_maze_navmesh()
+	await get_tree().process_frame
+	navigation_region_2d.bake_maze_navigation()
 
 func setup_maze() -> void:
 	var nodes = get_tree().get_nodes_in_group("MazeBuilder")
 	if nodes.size() > 0:
 		maze_builder = nodes[0] as MazeBuilder
-	maze_builder.navigation_region_2d.bake_finished.connect(_on_navmesh_bake_finished)
+	navigation_region_2d.bake_finished.connect(_on_navmesh_bake_finished)
 
 func spawn_player() -> void:
 	if not maze_builder: return
 	var player_tank : TankPlayer = add_tank(PLAYER_TANK_SCENE, player_spawn_pos.x, player_spawn_pos.y)
 	player_tanks.push_back(player_tank)
 	_on_player_spawned(player_tank)
+	
+func spawn_enemy() -> void:
+	var new_pos = Vector2i(max(2, randi() % maze_builder.maze_size.x), max(2, randi() % maze_builder.maze_size.y))
+	while new_pos in used_pos:
+		new_pos = Vector2i(max(2, randi() % maze_builder.maze_size.x), max(2, randi() % maze_builder.maze_size.y))
+	used_pos.append(new_pos)
+	var enemy_tank : TankAI = add_tank(ENEMY_TANK_SCENE, new_pos.x, new_pos.y)
+	enemy_tank.player = player_tanks[0] ### TOOD
+	enemy_tanks.push_back(enemy_tank)
 
 func add_tank(tank_asset:PackedScene, posx:int, posy:int)-> TankBase:
 	var tank : TankBase = tank_asset.instantiate()
@@ -53,14 +65,5 @@ func _on_player_spawned(tank: TankPlayer) -> void:
 		tank.player_move_signal.connect(camera.apply_offset)
 		
 func _on_navmesh_bake_finished() -> void:
-	var used_pos: Array[Vector2i] = [player_spawn_pos]
 	for i in range(number_of_enemies):
-		var new_pos = Vector2i(randi()%maze_builder.maze_size.x,randi()%maze_builder.maze_size.y)
-		while new_pos in used_pos:
-			new_pos = Vector2i(randi()%maze_builder.maze_size.x,randi()%maze_builder.maze_size.y)
-		print(new_pos)
-		used_pos.append(new_pos)
-		var enemy_tank : TankAI = add_tank(ENEMY_TANK_SCENE, new_pos.x, new_pos.y)
-		enemy_tank.player = player_tanks[0] ### TOOD
-		enemy_tanks.push_back(enemy_tank)
-		
+		spawn_enemy()

@@ -4,9 +4,7 @@ class_name Shell extends Node2D
 @onready var sprite_2d: Sprite2D = $Sprite2D
 
 @export var size : float = 14
-@export var shell_speed : float = 600.
-@export var shell_damage : int = 1
-@export var shell_lifetime : float = 5.
+@export var stats: ShellStats
 
 var shell_direction : Vector2 = Vector2(0,1)
 var pending_destroy : bool = false
@@ -20,7 +18,7 @@ func _ready():
 	# lifetime
 	if not Engine.is_editor_hint():
 		var timer = Timer.new()
-		timer.wait_time = shell_lifetime
+		timer.wait_time = stats.shell_lifetime
 		timer.one_shot = true
 		timer.timeout.connect(destroy)
 		add_child(timer)
@@ -42,7 +40,7 @@ func _physics_process(delta: float) -> void:
 		sprite_2d.modulate.a = lerp(sprite_2d.modulate.a, 0., delta*2)
 		scale = lerp(scale, Vector2(1.5,1.5), delta)
 		
-	var movement_step = shell_direction * (shell_speed * scale.x) * delta
+	var movement_step = shell_direction * (stats.shell_speed * scale.x) * delta
 	var space_state = get_world_2d().direct_space_state
 	var ray_start = global_position
 	var ray_end = global_position + movement_step
@@ -72,7 +70,7 @@ func _handle_collision(result:Dictionary, _is_inside:bool) -> bool:
 	'''
 	var collider = result.collider
 	if collider is TankBase:
-		collider.receive_damage(shell_damage)
+		collider.receive_damage(stats.shell_damage)
 		destroy(true) # Instant destroy on hit
 	# wall
 	else:

@@ -1,5 +1,6 @@
 class_name MazeBuilder extends Node2D
 
+@onready var maze_astar: MazeAStar = $MazeAStar
 const wall = preload("res://maze/wall/wall.tscn")
 
 @export var maze_size : Vector2i = Vector2i(10,10)
@@ -20,12 +21,13 @@ func _ready() -> void:
 	
 	offset.position -= maze_size*grid_size/2.
 	
+	maze_astar.setup_astar_points()
 	create_maze()
 	
 func get_cell_position(i:int, j:int) -> Vector2:
 	return global_position + scale * (Vector2(grid_size*(i+.5),grid_size*(j+.5)) - grid_size*maze_size/2.)
 
-func add_wall(posx:float, posy:float, horizontal:bool) -> void:
+func add_wall(posx:int, posy:int, horizontal:bool) -> void:
 	'''
 	posx : row
 	poxy : column
@@ -50,6 +52,10 @@ func remove_wall(posx:float, posy:float, horizontal:bool) -> void:
 	if walls_dict.has(key):
 		walls_dict[key].queue_free()
 		walls_dict.erase(key)
+		if horizontal:
+			maze_astar.connect_cells_with_wall(posx, posy, posx, posy-1)
+		else:
+			maze_astar.connect_cells_with_wall(posx, posy, posx-1, posy)
 
 func add_all_walls() -> void:
 	for i in range(maze_size.x+1):
@@ -247,10 +253,3 @@ func create_maze() -> void:
 	#create_maze_BFS_tree(0.1)
 	#create_maze_Prim()
 	create_maze_Kruskal()
-	
-#### NAVIGATION ####
-@onready var navigation_region_2d: NavigationRegion2D = $NavigationRegion2D
-func bake_maze_navmesh():
-	# In Godot 4, baking is usually done on a background thread 
-	# to prevent the game from freezing.
-	navigation_region_2d.bake_navigation_polygon()
