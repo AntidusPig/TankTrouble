@@ -17,13 +17,13 @@ A local multiplayer tank game set in hand-painted cartoon mazes. Bank shots arou
 
 **Esc** pauses or goes back. Use **Tab** or the arrow keys to move through menus and **Enter** to select. On a gamepad, use the left stick to drive and **A** to fire. **Settings → Controls** lets you remap keyboard and gamepad inputs. The language flags switch between English, Simplified Chinese, Spanish, Arabic, and Greek.
 
+![Arabic main menu with a right-to-left layout and five language flags](docs/screenshots/main-menu-arabic.png)
+
 ## Arenas, weapons, and opponents
 
 Fight through seven arenas with freshly generated walls. Steam Foundry has a conveyor lane and barrels that can break interior walls. Moon Crater has lethal meteor strikes, a pulsing gravity well, and the one-shot Portal Gun. In Lucky Grove, 3D Cube Pets wander the maze and flowers recharge shields.
 
 Each tank starts with three lives. Pickup rings show the shots or time remaining, and the HUD identifies each bot’s difficulty. Choose Beginner, Intermediate, Advanced, or Random separately for State Machine, Behavior Tree, GOAP, Utility + Lookahead, and Neural Self-Play. [AI design and benchmarks](docs/enemy_AI.md)
-
-![Moon Crater with an equipped Prism Laser and a separate Turbo Tonic countdown ring](docs/screenshots/moon-loadout.png)
 
 ## Paint a map
 
