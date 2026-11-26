@@ -2,7 +2,7 @@
 
 A local multiplayer tank game set in hand-painted cartoon mazes. Bank shots around corners, race for power-ups, or work together to solve Sudoku with cannon fire. Play with **2–8 tanks**, including up to **3 local human players**. Fill the other slots with AI or practice targets.
 
-![Steam Foundry gameplay with a moving conveyor, explosive barrels, and outlined tank shells](docs/screenshots/arena.png)
+![English Steam Foundry gameplay with a moving conveyor, explosive barrels, and outlined tank shells](docs/screenshots/arena.png)
 
 ## Play
 
@@ -29,19 +29,19 @@ Each tank starts with three lives. Pickup rings show the shots or time remaining
 
 Open **Map Editor**, paint the playable cells, and leave empty space to shape the arena. Save to one of three local slots or use **Playtest**. Keep the painted cells connected edge to edge. Every match rolls new walls inside your footprint.
 
-![The Map Editor with a custom painted footprint and Playtest controls](docs/screenshots/map-editor.png)
+![Spanish Map Editor with a custom painted footprint and Playtest controls](docs/screenshots/map-editor.png)
 
 ## Solve Sudoku together
 
-Shoot an editable cell to increment it. Values wrap back to 1 after the highest digit. Start with the default **9×9** board, choose another supported size, or pick **Random**. Sudoku bots know the solution and take turns driving into position and firing.
+Shoot an editable cell to increment it. Values wrap back to 1 after the highest digit. Start with the default **9×9** board, choose another supported size, or pick **Random**. Sudoku bots know the solution. They take turns, make one edit at a time, and switch cells when they can. A clear corridor lets them shoot from farther away.
 
-![Cooperative 9 by 9 Sudoku with tanks and player edit counts](docs/screenshots/sudoku.png)
+![Simplified Chinese 9 by 9 Sudoku with tanks and player edit counts](docs/screenshots/sudoku.png)
 
 ## Finish a round
 
 The results screen shows elapsed time, remaining lives, shots fired, and total wins. Continue the campaign when available, play a different random level with the same roster, or return to the main menu. Sudoku results show each player’s edits and offer a new random puzzle. During campaign play, **Pause → Save Checkpoint** saves your progress.
 
-![Victory results with player stats and options for another random level or the main menu](docs/screenshots/results.png)
+![Greek victory results with player stats and options for another random level or the main menu](docs/screenshots/results.png)
 
 ## Credits
 
