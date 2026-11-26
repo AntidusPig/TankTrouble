@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+const PALETTE := preload("res://gameplay/npcs/art/Textures/colormap.png")
 const ART := [
 	preload("res://gameplay/npcs/art/animal-bunny.glb"),
 	preload("res://gameplay/npcs/art/animal-dog.glb"),
@@ -74,22 +75,30 @@ func _build_view() -> void:
 	add_child(viewport)
 	_pivot = Node3D.new()
 	viewport.add_child(_pivot)
-	_pivot.add_child(ART.pick_random().instantiate())
+	var pet: Node3D = ART.pick_random().instantiate()
+	_pivot.add_child(pet)
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = PALETTE
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	material.roughness = 1.0
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	for mesh: MeshInstance3D in pet.find_children("*", "MeshInstance3D", true, false):
+		mesh.material_override = material
 	var camera := Camera3D.new()
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.size = 1.9
+	camera.size = 2.55
 	viewport.add_child(camera)
 	camera.position = Vector3(1.8, 2.0, 2.5)
-	camera.look_at(Vector3(0, 0.30, 0))
+	camera.look_at(Vector3(0, 0.83, 0))
 	var light := DirectionalLight3D.new()
 	light.rotation_degrees = Vector3(-45, 28, 0)
-	light.light_energy = 1.4
+	light.light_energy = 0.86
 	viewport.add_child(light)
 	var environment := WorldEnvironment.new()
 	var lighting := Environment.new()
 	lighting.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	lighting.ambient_light_color = Color.WHITE
-	lighting.ambient_light_energy = 0.65
+	lighting.ambient_light_energy = 0.52
 	environment.environment = lighting
 	viewport.add_child(environment)
 	var display := Sprite2D.new()
