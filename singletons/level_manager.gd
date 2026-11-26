@@ -9,7 +9,7 @@ class_name LevelManager extends Node2D
 var maze_builder: MazeBuilder
 var tanks: Array[TankBase] = []
 var player_tanks: Array[TankPlayer] = []
-var enemy_tanks: Array[TankAI] = []
+var enemy_tanks: Array[TankBase] = []
 @onready var camera: MyCamera = $"../WorldCommon/MyCamera"
 
 @export var player_spawn_pos = Vector2i(0,0)
@@ -40,16 +40,15 @@ func spawn_enemy() -> void:
 	while new_pos in used_pos:
 		new_pos = Vector2i(max(2, randi() % maze_builder.maze_size.x), max(2, randi() % maze_builder.maze_size.y))
 	used_pos.append(new_pos)
-	var enemy_tank : TankAI = add_tank(ENEMY_TANK_SCENE, new_pos.x, new_pos.y)
-	enemy_tank.player = player_tanks[0] ### TOOD
+	var enemy_tank : TankBase = add_tank(ENEMY_TANK_SCENE, new_pos.x, new_pos.y)
 	enemy_tanks.push_back(enemy_tank)
 
 func add_tank(tank_asset:PackedScene, posx:int, posy:int)-> TankBase:
 	var tank : TankBase = tank_asset.instantiate()
-	add_child(tank)
 	tank.SHELL_SCENE = get_shell_resource()
 	tank.scale = maze_builder.scale
-	tank.global_position = maze_builder.get_cell_position(posx, posy)
+	tank.position = to_local(maze_builder.get_cell_position(posx, posy))
+	add_child(tank)
 	tanks.push_back(tank)
 	return tank
 
@@ -60,10 +59,9 @@ func get_shell_resource() -> Resource:
 # Virtual
 func _on_player_spawned(tank: TankPlayer) -> void:
 	if camera:
-		tank.shoot_signal.connect(func(_p, _d): camera.add_trauma(0.3))
+		tank.shoot_signal.connect(func(_p, direction): camera.add_recoil(direction))
 		tank.damaged_signal.connect(func(_hp): camera.add_trauma(0.5))
-		tank.player_move_signal.connect(camera.apply_offset)
-		
+
 func _on_navmesh_bake_finished() -> void:
 	for i in range(number_of_enemies):
 		spawn_enemy()

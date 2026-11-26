@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PickupDefinition" format=3]
+
+[ext_resource type="Script" path="res://gameplay/pickups/pickup_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Repair Kit"
+marker = "+"
+color = Color(0.35, 1, 0.55, 1)
+healing = 2

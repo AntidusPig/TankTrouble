@@ -5,9 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://cl2aca351004l" path="res://singletons/LevelManagerSudoku.tscn" id="4_4m6he"]
 [ext_resource type="PackedScene" uid="uid://huuhkv1yxgr4" path="res://maze/maze_builder_sudoku.tscn" id="4_q8ugh"]
 
-[sub_resource type="GDScript" id="GDScript_q8ugh"]
+[ext_resource type="Script" path="res://gameplay/levels/arena_scene.gd" id="5_frame"]
 
 [node name="World" type="Node2D" unique_id=979188408]
+script = ExtResource("5_frame")
+maze_path = NodePath("MazeBuilderSudoku")
 
 [node name="MazeBuilderSudoku" parent="." unique_id=289675958 instance=ExtResource("4_q8ugh")]
 position = Vector2(0, -50)
@@ -17,10 +19,8 @@ maze_size = Vector2i(4, 4)
 number_of_enemies = 0
 
 [node name="WorldCommon" parent="." unique_id=1697060638 instance=ExtResource("3_q8ugh")]
-script = SubResource("GDScript_q8ugh")
 
 [node name="Background" parent="WorldCommon" index="0" unique_id=1920694701]
-scale = Vector2(0.5, 0.5)
 texture = ExtResource("1_q8ugh")
 
 [editable path="WorldCommon"]

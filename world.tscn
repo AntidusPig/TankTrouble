@@ -4,15 +4,38 @@
 [ext_resource type="PackedScene" uid="uid://dnuwrtx2gejw3" path="res://world/world_common.tscn" id="3_tlwt5"]
 [ext_resource type="PackedScene" uid="uid://dlxnm03av7o20" path="res://singletons/LevelManager.tscn" id="5_y6120"]
 
+[ext_resource type="Script" path="res://gameplay/levels/arena_round_manager.gd" id="6_round"]
+[ext_resource type="Script" path="res://gameplay/pickups/pickup_spawner.gd" id="7_spawner"]
+[ext_resource type="Script" path="res://gameplay/pickups/pickup_definition.gd" id="8_definition"]
+[ext_resource type="Resource" path="res://gameplay/pickups/catalog/repair_kit.tres" id="9_repair"]
+[ext_resource type="Resource" path="res://gameplay/pickups/catalog/needle_capsule.tres" id="10_needle"]
+[ext_resource type="Resource" path="res://gameplay/pickups/catalog/fork_capsule.tres" id="11_fork"]
+[ext_resource type="Resource" path="res://gameplay/pickups/catalog/breaker_capsule.tres" id="12_breaker"]
+
+[ext_resource type="Script" path="res://gameplay/levels/arena_scene.gd" id="13_arena"]
+[ext_resource type="Resource" path="res://gameplay/pickups/catalog/laser_capsule.tres" id="14_laser"]
+[ext_resource type="Resource" path="res://gameplay/pickups/catalog/blast_capsule.tres" id="15_blast"]
+
+[ext_resource type="Resource" path="res://gameplay/pickups/catalog/shield_cell.tres" id="16_shield"]
+
 [node name="World" type="Node2D" unique_id=979188408]
+script = ExtResource("13_arena")
 
 [node name="MazeBuilder" parent="." unique_id=392824962 instance=ExtResource("1_ismus")]
 position = Vector2(0, -40)
-maze_size = Vector2i(4, 4)
+maze_size = Vector2i(9, 9)
 
 [node name="LevelManager" parent="." unique_id=307953239 instance=ExtResource("5_y6120")]
+script = ExtResource("6_round")
+
+[node name="PickupSpawner" type="Node2D" parent="LevelManager"]
+script = ExtResource("7_spawner")
+catalog = Array[ExtResource("8_definition")]([ExtResource("9_repair"), ExtResource("10_needle"), ExtResource("11_fork"), ExtResource("12_breaker"), ExtResource("14_laser"), ExtResource("15_blast"), ExtResource("16_shield")])
 
 [node name="WorldCommon" parent="." unique_id=1697060638 instance=ExtResource("3_tlwt5")]
+
+[node name="MenuUi" parent="WorldCommon" index="1"]
+checkpoint_enabled = true
 
 [node name="Node2D" type="Node2D" parent="." unique_id=214413438]
 

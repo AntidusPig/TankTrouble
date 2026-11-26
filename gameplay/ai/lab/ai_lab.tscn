@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://gameplay/ai/lab/AiLab.cs" id="1"]
+
+[node name="AiLab" type="Node2D"]
+script = ExtResource("1")

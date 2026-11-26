@@ -1,6 +1,7 @@
 class_name MazeAStar extends Node2D
 
 var astar := AStar2D.new()
+@export var show_debug := false
 @onready var offset: Node2D = $"../offset"
 @onready var maze_builder: MazeBuilder = $".."
 
@@ -22,20 +23,20 @@ func connect_cells_with_wall(x1: int, y1: int, x2: int, y2: int) -> void:
 		astar.connect_points(id1, id2)
 
 func get_global_enemy_path(start_pos: Vector2, target_pos: Vector2) -> PackedVector2Array:
-	var start_id = astar.get_closest_point(start_pos)
-	var target_id = astar.get_closest_point(target_pos)
+	var start_id = astar.get_closest_point(maze_builder.to_local(start_pos))
+	var target_id = astar.get_closest_point(maze_builder.to_local(target_pos))
 	return local_2_global(astar.get_point_path(start_id, target_id))
 	
 func local_2_global(path:PackedVector2Array)-> PackedVector2Array:
 	var global_path := PackedVector2Array()
 	for local_point in path:
-		global_path.append(local_point + maze_builder.global_position)
+		global_path.append(maze_builder.to_global(local_point))
 	return global_path
 	
 func global_2_local(path:PackedVector2Array)-> PackedVector2Array:
 	var local_path := PackedVector2Array()
 	for global_point in path:
-		local_path.append(global_point - maze_builder.global_position)
+		local_path.append(maze_builder.to_local(global_point))
 	return local_path
 
 ### DEBUG ###
@@ -48,10 +49,11 @@ func add_debug_path(tank_name, path: PackedVector2Array, color: Color = Color.ME
 	}
 
 func _process(_delta: float) -> void:
-	queue_redraw()
+	if show_debug:
+		queue_redraw()
 
 func _draw() -> void:
-	if not astar:
+	if not show_debug or not astar:
 		return
 	for point_id in astar.get_point_ids():
 		var current_pos = astar.get_point_position(point_id)

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PickupDefinition" format=3]
+
+[ext_resource type="Script" path="res://gameplay/pickups/pickup_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Shield Cell"
+marker = "S"
+color = Color(0.57, 0.66, 1, 1)
+shield = 2

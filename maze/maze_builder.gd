@@ -9,8 +9,14 @@ var grid_size : float
 var wall_thickness : float
 const neighbour_dir = [Vector2i(1,0), Vector2i(-1,0), Vector2i(0,1), Vector2i(0,-1)]
 var walls_dict = {}
+@export var generation_seed: int = -1
+var _maze_rng := RandomNumberGenerator.new()
 
 func _ready() -> void:
+	if generation_seed < 0:
+		_maze_rng.randomize()
+	else:
+		_maze_rng.seed = generation_seed
 	# cache wall size
 	var wall_inst : Wall = wall.instantiate()
 	offset.add_child(wall_inst)
@@ -25,7 +31,7 @@ func _ready() -> void:
 	create_maze()
 	
 func get_cell_position(i:int, j:int) -> Vector2:
-	return global_position + scale * (Vector2(grid_size*(i+.5),grid_size*(j+.5)) - grid_size*maze_size/2.)
+	return to_global(Vector2(grid_size * (i + 0.5), grid_size * (j + 0.5)) - grid_size * maze_size / 2.0)
 
 func add_wall(posx:int, posy:int, horizontal:bool) -> void:
 	'''
@@ -81,7 +87,7 @@ func valid_index(i:int,j:int) -> bool:
 
 func pop_random(array):
 	assert(not array.is_empty(), "Array cannot be empty")
-	var random_index = randi() % array.size()
+	var random_index = _maze_rng.randi() % array.size()
 	return array.pop_at(random_index)
 
 func create_maze_BFS_tree(p:float) -> void:
@@ -115,7 +121,7 @@ func create_maze_BFS_tree(p:float) -> void:
 			# first one with probability 1
 			children.push_back(pop_random(children_candidate))
 			for i in range(len(children_candidate)):
-				if randf()<p:
+				if _maze_rng.randf()<p:
 					children.push_back(pop_random(children_candidate))
 			num_cell_used += len(children)
 		if valid_index(leaf.x-1,leaf.y) and cell_unused[(leaf.x-1)*maze_size.y+leaf.y]:
@@ -147,8 +153,8 @@ func create_maze_Prim() -> void:
 	var frontier: Array[Vector2i] = []
 	
 	# Start with random cell
-	var start_x = randi() % maze_size.x
-	var start_y = randi() % maze_size.y
+	var start_x = _maze_rng.randi() % maze_size.x
+	var start_y = _maze_rng.randi() % maze_size.y
 	var start_cell = Vector2i(start_x, start_y)
 	in_maze[start_x * maze_size.y + start_y] = true
 	
@@ -171,7 +177,7 @@ func create_maze_Prim() -> void:
 		
 		if not maze_neighbors.is_empty():
 			# Connect to a random maze neighbor
-			var connect_to = maze_neighbors[randi() % maze_neighbors.size()]
+			var connect_to = maze_neighbors[_maze_rng.randi() % maze_neighbors.size()]
 			
 			# Determine direction from connect_to to current and remove that wall
 			var diff = current - connect_to
@@ -226,7 +232,11 @@ func create_maze_Kruskal() -> void:
 		for j in range(1,maze_size.y):
 			all_walls.append([i, j, true])
 	# Shuffle internal walls
-	all_walls.shuffle()
+	for i in range(all_walls.size() - 1, 0, -1):
+		var swap := _maze_rng.randi_range(0, i)
+		var value = all_walls[i]
+		all_walls[i] = all_walls[swap]
+		all_walls[swap] = value
 	for wall_data in all_walls:
 		var x = wall_data[0]
 		var y = wall_data[1]

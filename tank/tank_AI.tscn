@@ -1,14 +1,8 @@
 [gd_scene format=3 uid="uid://djlo0siowsb36"]
 
 [ext_resource type="PackedScene" uid="uid://8fg0ock6r1iq" path="res://tank/tank_base.tscn" id="1_opewx"]
-[ext_resource type="Script" uid="uid://cfqesyaqrbfah" path="res://tank/tank_ai.gd" id="2_ehh4c"]
 
 [node name="Tank_AI" unique_id=1129330221 instance=ExtResource("1_opewx")]
-script = ExtResource("2_ehh4c")
-SHELL_SCENE = null
-firing_cooldown = null
-max_num_shells = null
-health = null
 
 [node name="body" parent="." index="0" unique_id=737061034]
 modulate = Color(1, 0.24000001, 0.24000001, 1)

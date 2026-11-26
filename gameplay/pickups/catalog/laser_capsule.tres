@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="PickupDefinition" format=3]
+
+[ext_resource type="Script" path="res://gameplay/pickups/pickup_definition.gd" id="1"]
+[ext_resource type="Script" path="res://data/scripts/ShellStats.gd" id="2"]
+
+[sub_resource type="Resource" id="WeaponStats"]
+script = ExtResource("2")
+firing_cooldown = 0.85
+laser_range = 4000.0
+
+[resource]
+script = ExtResource("1")
+display_name = "Prism Laser"
+marker = "L"
+color = Color(1, 0.28, 0.28, 1)
+weapon_stats = SubResource("WeaponStats")
+shot_charges = 3

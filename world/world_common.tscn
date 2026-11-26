@@ -13,15 +13,9 @@ agent_radius = 65.0
 
 [node name="Background" type="Sprite2D" parent="." unique_id=1920694701]
 z_index = -10
-scale = Vector2(1.4502, 1.4502)
 texture = ExtResource("1_8cnik")
 
 [node name="MenuUi" parent="." unique_id=1886589979 instance=ExtResource("2_aii5x")]
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-grow_horizontal = 1
-grow_vertical = 1
 
 [node name="MyCamera" type="Camera2D" parent="." unique_id=1503636427]
 script = ExtResource("3_aii5x")

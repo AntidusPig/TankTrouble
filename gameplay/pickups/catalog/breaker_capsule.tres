@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="PickupDefinition" format=3]
+
+[ext_resource type="Script" path="res://gameplay/pickups/pickup_definition.gd" id="1"]
+[ext_resource type="Script" path="res://data/scripts/ShellStats.gd" id="2"]
+
+[sub_resource type="Resource" id="WeaponStats"]
+script = ExtResource("2")
+shell_speed = 340.0
+shell_damage = 2
+shell_lifetime = 3.5
+firing_cooldown = 1.05
+max_num_shells = 4
+
+[resource]
+script = ExtResource("1")
+display_name = "Breaker Capsule"
+marker = "B"
+color = Color(0.97, 0.45, 0.75, 1)
+weapon_stats = SubResource("WeaponStats")
+shot_charges = 3
+shot_angles = PackedFloat32Array(0)

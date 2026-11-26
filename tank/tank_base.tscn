@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://716jipqp2lwt" path="res://tank/tank_base.gd" id="1_tp3gl"]
 [ext_resource type="Texture2D" uid="uid://bktxctmuadfnu" path="res://tank/assets/tank2_2_shadow.png" id="3_rx7oa"]
 [ext_resource type="Texture2D" uid="uid://c3jsp6lemxm4o" path="res://tank/assets/sequence/tank2_1_1.png" id="3_yttuk"]
-[ext_resource type="AudioStream" uid="uid://pca83ov6k3n7" path="res://tank/assets/tank_shoot.wav" id="4_ktvqm"]
 [ext_resource type="AudioStream" uid="uid://bbg6y4sknbsxr" path="res://tank/assets/tank_death.wav" id="4_qdg3w"]
 [ext_resource type="AudioStream" uid="uid://v1m5kubmtvom" path="res://tank/assets/tank_move.wav" id="6_xqxtg"]
 
@@ -162,21 +161,6 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector2(63, 0), Vector2(54.166664, 0), Vector2(63, 0)]
 }
-tracks/1/type = "audio"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("AudioStreamPlayer2D")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"clips": [{
-"end_offset": 0.0,
-"start_offset": 0.0,
-"stream": ExtResource("4_ktvqm")
-}],
-"times": PackedFloat32Array(0)
-}
-tracks/1/use_blend = true
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_w4rpg"]
 _data = {

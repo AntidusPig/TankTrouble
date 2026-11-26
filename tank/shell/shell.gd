@@ -19,8 +19,9 @@ func _ready():
 	if not Engine.is_editor_hint():
 		var timer = Timer.new()
 		timer.wait_time = stats.shell_lifetime
+		timer.process_callback = Timer.TIMER_PROCESS_PHYSICS
 		timer.one_shot = true
-		timer.timeout.connect(destroy)
+		timer.timeout.connect(_expire)
 		add_child(timer)
 		timer.start()
 		
@@ -35,10 +36,12 @@ func _ready():
 	
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
+	if is_queued_for_deletion(): return
 	if pending_destroy:
 		# handle_destruction_visuals 
 		sprite_2d.modulate.a = lerp(sprite_2d.modulate.a, 0., delta*2)
 		scale = lerp(scale, Vector2(1.5,1.5), delta)
+		return
 		
 	var movement_step = shell_direction * (stats.shell_speed * scale.x) * delta
 	var space_state = get_world_2d().direct_space_state
@@ -68,6 +71,9 @@ func _handle_collision(result:Dictionary, _is_inside:bool) -> bool:
 	'''
 		return whether you should move forward
 	'''
+	if stats.blast_radius > 0.0:
+		_detonate(result.position + result.normal * 2.0, result.collider)
+		return false
 	var collider = result.collider
 	if collider is TankBase:
 		collider.receive_damage(stats.shell_damage)
@@ -83,7 +89,50 @@ func _bounce(result: Dictionary) -> void:
 	# Push out slightly to prevent getting stuck inside the collider
 	global_position = result.position + normal * 2.0
 
+func _expire() -> void:
+	if pending_destroy or is_queued_for_deletion():
+		return
+	if stats.blast_radius > 0.0:
+		_detonate(global_position)
+	else:
+		destroy()
+
+
+func _detonate(center: Vector2, direct_hit: Object = null) -> void:
+	var blast_size := stats.blast_radius * absf(scale.x)
+	var circle := CircleShape2D.new()
+	circle.radius = blast_size
+	var params := PhysicsShapeQueryParameters2D.new()
+	params.shape = circle
+	params.transform = Transform2D(0.0, center)
+	var space := get_world_2d().direct_space_state
+	var victims := {}
+	if direct_hit is TankBase:
+		victims[direct_hit] = true
+	for overlap in space.intersect_shape(params, 64):
+		var tank := overlap.collider as TankBase
+		if tank == null or victims.has(tank):
+			continue
+		var sight := PhysicsRayQueryParameters2D.create(center, tank.global_position)
+		var obstruction := space.intersect_ray(sight)
+		if obstruction.is_empty() or obstruction.collider == tank:
+			victims[tank] = true
+	for tank in victims:
+		tank.receive_damage(stats.shell_damage)
+
+	var parent := get_parent() as Node2D
+	var flash := WeaponFlash.new()
+	flash.position = parent.to_local(center)
+	flash.blast_radius = blast_size
+	flash.z_index = 8
+	flash.add_to_group("arena_weapon_effect")
+	parent.add_child.call_deferred(flash)
+	destroy(true)
+
+
 func destroy(immediate:bool=false) -> void:
+	if pending_destroy or is_queued_for_deletion():
+		return
 	if immediate: queue_free()
 	else:
 		pending_destroy = true
