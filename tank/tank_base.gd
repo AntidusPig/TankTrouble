@@ -25,7 +25,9 @@ const tank_damaged : Array[Resource] = [preload("uid://c7c5coikwed3h"), preload(
 var shield_points: int = 0
 var silent: bool = false
 var portal_launcher: Callable
+var external_motion: Callable
 var boost_left := 0.0
+var boost_duration := 0.0
 var weapon_effect_parent: Node2D
 var _ai_enabled := false
 var _ai_turn := 0.0
@@ -86,7 +88,7 @@ func _physics_process(delta: float) -> void:
 		if is_instance_valid(laser_beam):
 			return
 	if animation_player.current_animation == "shoot" and animation_player.is_playing():
-		move_and_slide() # Still allow movement
+		_move_tank() # Still allow movement
 		return
 	var anim_to_play = "move" if moving else "idle"
 	if animation_player.assigned_animation != anim_to_play:
@@ -95,7 +97,14 @@ func _physics_process(delta: float) -> void:
 	# Adjust volume based on state
 	var target_db = -20.0 if moving else -25.0
 	engine_sound_player.volume_db = lerp(engine_sound_player.volume_db, target_db, delta * 5.0)
+	_move_tank()
+
+
+func _move_tank() -> void:
+	if external_motion.is_valid():
+		velocity += external_motion.call(global_position)
 	move_and_slide()
+
 
 func get_forward() -> Vector2:
 	return global_transform.x.normalized()
@@ -146,6 +155,7 @@ func _fire_shell(direction: Vector2, profile: ShellStats) -> void:
 	var parent := weapon_effect_parent if is_instance_valid(weapon_effect_parent) else get_tree().current_scene as Node2D
 	var shell: Shell = SHELL_SCENE.instantiate()
 	shell.spawner = self
+	shell.shot_color = $body.modulate
 	shell.position = parent.to_local(muzzle.global_position)
 	shell.scale = scale
 	shell.shell_direction = direction
@@ -179,6 +189,7 @@ func heal(amount: int) -> bool:
 func grant_speed_boost(seconds: float) -> bool:
 	if pending_destroy or boost_left >= seconds * 0.75:
 		return false
+	boost_duration = seconds
 	boost_left = seconds
 	queue_redraw()
 	return true

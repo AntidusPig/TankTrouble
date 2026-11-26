@@ -488,3 +488,69 @@ msgstr "Disparo único. Coloca un portal en el pasillo apuntado y otro en una ca
 
 msgid "PROP_8"
 msgstr "Aumenta la velocidad un cuarenta por ciento durante cinco segundos."
+
+msgid "AI_DIFFICULTY"
+msgstr "Dificultad de IA"
+
+msgid "AI_BEGINNER"
+msgstr "Principiante"
+
+msgid "AI_INTERMEDIATE"
+msgstr "Intermedio"
+
+msgid "AI_ADVANCED"
+msgstr "Avanzado"
+
+msgid "AI_RANDOM_HINT"
+msgstr "El modo aleatorio elige un nivel para cada IA al iniciar la ronda."
+
+msgid "SECONDS_REMAINING"
+msgstr "Quedan %d s"
+
+msgid "ARENA_MAP_PICKER"
+msgstr "Arena"
+
+msgid "ARENA_CAMPAIGN"
+msgstr "Campaña"
+
+msgid "ARENA_DRAFT"
+msgstr "Borrador del editor"
+
+msgid "RESULT_CONTINUE"
+msgstr "Continuar campaña"
+
+msgid "RESULT_RANDOM_PUZZLE"
+msgstr "Siguiente sudoku aleatorio"
+
+msgid "RESULT_RANDOM"
+msgstr "Siguiente nivel aleatorio"
+
+msgid "RESULT_PLAYER"
+msgstr "Jugador"
+
+msgid "RESULT_EDITS"
+msgstr "Cambios"
+
+msgid "RESULT_SHOTS"
+msgstr "Disparos"
+
+msgid "RESULT_CONTROLS"
+msgstr "Control"
+
+msgid "RESULT_LIVES"
+msgstr "Vidas restantes"
+
+msgid "RESULT_WINS"
+msgstr "Victorias totales"
+
+msgid "RESULT_TIME"
+msgstr "Tiempo %s"
+
+msgid "RESULT_DRAW"
+msgstr "Empate"
+
+msgid "RESULT_WIN"
+msgstr "Ganaste"
+
+msgid "RESULT_LOSS"
+msgstr "Perdiste"

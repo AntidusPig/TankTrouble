@@ -16,6 +16,8 @@ var editor_draft := PackedInt32Array()
 var editor_dimension := 9
 var return_to_map_editor := false
 var custom_tiles := PackedInt32Array()
+var single_arena := false
+var editor_playtest := false
 var player_count := 1
 var opponent_ai := 3
 var roster := PackedInt32Array([PlayerRoster.HUMAN, 3])
@@ -48,8 +50,10 @@ func prepare_map() -> void:
 	map_size = size_choice if size_choice > 0 else sizes_for(mode).pick_random()
 
 
-func start_roster(selection: PackedInt32Array, game_mode := ARENA_MODE, requested_size := 9, paint := PackedInt32Array()) -> Error:
+func start_roster(selection: PackedInt32Array, game_mode := ARENA_MODE, requested_size := 9, paint := PackedInt32Array(), start_level := 0, from_editor := true) -> Error:
 	if game_mode not in [ARENA_MODE, SUDOKU_MODE] or (requested_size != 0 and requested_size not in sizes_for(game_mode)):
+		return ERR_INVALID_PARAMETER
+	if start_level < 0 or start_level > LEVEL_COUNT or (start_level > 0 and (game_mode != ARENA_MODE or not paint.is_empty())):
 		return ERR_INVALID_PARAMETER
 	for role in selection:
 		if role >= PlayerRoster.PRACTICE and (role == PlayerRoster.SUDOKU_AI) != (game_mode == SUDOKU_MODE):
@@ -61,18 +65,38 @@ func start_roster(selection: PackedInt32Array, game_mode := ARENA_MODE, requeste
 	if not paint.is_empty() and (game_mode != ARENA_MODE or not PAINTED_MAP.valid(requested_size, paint, selection.size() - selection.count(PlayerRoster.OFF))):
 		return ERR_INVALID_DATA
 	custom_tiles = paint.duplicate()
+	single_arena = start_level > 0 or not paint.is_empty()
+	editor_playtest = from_editor and not paint.is_empty()
 	_set_roster(selection)
 	mode = game_mode
 	size_choice = requested_size
 	prepare_map()
 	wins.fill(0)
-	level = 1
+	level = maxi(1, start_level)
 	rounds_played = 0
 	player_one_wins = 0
 	player_two_wins = 0
 	losses = 0
 	draws = 0
 	completed = false
+	return get_tree().change_scene_to_file(SUDOKU if mode == SUDOKU_MODE else ARENA)
+
+
+func play_random_next(previous_level: int, was_custom: bool) -> Error:
+	var next_level := 1
+	if mode == ARENA_MODE:
+		var choices := range(1, LEVEL_COUNT + 1)
+		if not was_custom:
+			choices.erase(previous_level)
+		next_level = choices.pick_random()
+	custom_tiles = PackedInt32Array()
+	editor_playtest = false
+	return_to_map_editor = false
+	single_arena = mode == ARENA_MODE
+	level = next_level
+	completed = false
+	size_choice = 0
+	prepare_map()
 	return get_tree().change_scene_to_file(SUDOKU if mode == SUDOKU_MODE else ARENA)
 
 
@@ -93,7 +117,7 @@ func award_win(slot: int) -> void:
 
 
 func save_checkpoint() -> Error:
-	if mode != ARENA_MODE or not custom_tiles.is_empty():
+	if mode != ARENA_MODE or single_arena:
 		return ERR_UNAVAILABLE
 	var config := ConfigFile.new()
 	var fields := {
@@ -193,6 +217,8 @@ func load_checkpoint() -> Error:
 	if PlayerRoster.needs_dotnet(fields.roster) and not ai_runtime_available():
 		return ERR_UNAVAILABLE
 	custom_tiles = PackedInt32Array()
+	single_arena = false
+	editor_playtest = false
 	_set_roster(fields.roster)
 	mode = ARENA_MODE
 	map_size = fields.map_size

@@ -18,7 +18,6 @@
 
 [ext_resource type="Resource" path="res://gameplay/pickups/catalog/shield_cell.tres" id="16_shield"]
 
-[ext_resource type="Resource" path="res://gameplay/pickups/catalog/portal_capsule.tres" id="17_portal"]
 [ext_resource type="Resource" path="res://gameplay/pickups/catalog/turbo_tonic.tres" id="18_turbo"]
 
 [node name="World" type="Node2D" unique_id=979188408]
@@ -33,7 +32,7 @@ script = ExtResource("6_round")
 
 [node name="PickupSpawner" type="Node2D" parent="LevelManager"]
 script = ExtResource("7_spawner")
-catalog = Array[ExtResource("8_definition")]([ExtResource("9_repair"), ExtResource("10_needle"), ExtResource("11_fork"), ExtResource("12_breaker"), ExtResource("14_laser"), ExtResource("15_blast"), ExtResource("16_shield"), ExtResource("17_portal"), ExtResource("18_turbo")])
+catalog = Array[ExtResource("8_definition")]([ExtResource("9_repair"), ExtResource("10_needle"), ExtResource("11_fork"), ExtResource("12_breaker"), ExtResource("14_laser"), ExtResource("15_blast"), ExtResource("16_shield"), ExtResource("18_turbo")])
 
 [node name="WorldCommon" parent="." unique_id=1697060638 instance=ExtResource("3_tlwt5")]
 

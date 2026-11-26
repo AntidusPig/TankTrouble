@@ -30,11 +30,13 @@ func _choose_spawn(contestant: Contestant, cells: Array[Vector2i]) -> Vector2i:
 	return super._choose_spawn(contestant, givens if not givens.is_empty() else cells)
 
 
-func _attach_ai(tank: TankBase, _role: int) -> void:
+func _attach_ai(tank: TankBase, _role: int, difficulty: int) -> void:
 	if GameSession.ai_runtime_available():
 		var controller := load(SOLVER) as PackedScene
 		if controller != null:
-			tank.add_child(controller.instantiate())
+			var brain := controller.instantiate()
+			brain.set("Difficulty", difficulty)
+			tank.add_child(brain)
 			if tank.has_meta("_active_tank_brain"):
 				return
 	_ai_status = tr("AI_DOTNET")
@@ -54,8 +56,12 @@ func _puzzle_completed() -> void:
 	next_round.start(intermission)
 
 
-func _advance() -> void:
-	_return_to_menu()
+func _results_heading() -> String:
+	return tr("PUZZLE_SOLVED")
+
+
+func _result_edits(team: int) -> int:
+	return int(_edits.get(team, 0))
 
 
 func _process(_delta: float) -> void:

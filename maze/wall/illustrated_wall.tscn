@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://maze/wall/wall.tscn" id="1"]
+[ext_resource type="Script" path="res://maze/wall/illustrated_wall.gd" id="2"]
+
+[node name="IllustratedWall" instance=ExtResource("1")]
+script = ExtResource("2")

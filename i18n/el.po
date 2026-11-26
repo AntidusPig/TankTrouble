@@ -488,3 +488,69 @@ msgstr "Μία βολή τοποθετεί μία πύλη στον στοχευ
 
 msgid "PROP_8"
 msgstr "Αυξάνει την ταχύτητα οδήγησης κατά σαράντα τοις εκατό για πέντε δευτερόλεπτα."
+
+msgid "AI_DIFFICULTY"
+msgstr "Δυσκολία AI"
+
+msgid "AI_BEGINNER"
+msgstr "Αρχάριος"
+
+msgid "AI_INTERMEDIATE"
+msgstr "Μέτριος"
+
+msgid "AI_ADVANCED"
+msgstr "Προχωρημένος"
+
+msgid "AI_RANDOM_HINT"
+msgstr "Η τυχαία επιλογή ορίζει επίπεδο σε κάθε AI στην αρχή του γύρου."
+
+msgid "SECONDS_REMAINING"
+msgstr "Απομένουν %d δ"
+
+msgid "ARENA_MAP_PICKER"
+msgstr "Αρένα"
+
+msgid "ARENA_CAMPAIGN"
+msgstr "Εκστρατεία"
+
+msgid "ARENA_DRAFT"
+msgstr "Πρόχειρο επεξεργαστή"
+
+msgid "RESULT_CONTINUE"
+msgstr "Συνέχεια εκστρατείας"
+
+msgid "RESULT_RANDOM_PUZZLE"
+msgstr "Επόμενος τυχαίος γρίφος"
+
+msgid "RESULT_RANDOM"
+msgstr "Επόμενη τυχαία πίστα"
+
+msgid "RESULT_PLAYER"
+msgstr "Παίκτης"
+
+msgid "RESULT_EDITS"
+msgstr "Αλλαγές"
+
+msgid "RESULT_SHOTS"
+msgstr "Βολές"
+
+msgid "RESULT_CONTROLS"
+msgstr "Χειρισμός"
+
+msgid "RESULT_LIVES"
+msgstr "Ζωές που απομένουν"
+
+msgid "RESULT_WINS"
+msgstr "Σύνολο νικών"
+
+msgid "RESULT_TIME"
+msgstr "Χρόνος %s"
+
+msgid "RESULT_DRAW"
+msgstr "Ισοπαλία"
+
+msgid "RESULT_WIN"
+msgstr "Νίκησες"
+
+msgid "RESULT_LOSS"
+msgstr "Έχασες"

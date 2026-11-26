@@ -13,6 +13,9 @@ var walls_dict = {}
 enum Footprint { RECTANGLE, MOON, FOUNDRY, GROVE, KEYHOLE, SWITCHBACK, FORK }
 const BOARD := preload("res://maze/painted_map.gd")
 var painted_cells := PackedInt32Array()
+var wall_scene: PackedScene = wall
+var wall_material: Texture2D
+var wall_trim := Color.WHITE
 @export var footprint := Footprint.RECTANGLE
 var _maze_rng := RandomNumberGenerator.new()
 
@@ -47,7 +50,10 @@ func add_wall(posx:int, posy:int, horizontal:bool) -> void:
 	poxy : column
 	horizontal : if the wall is horizontal or vertical
 	'''
-	var wall_inst : Wall = wall.instantiate()
+	var wall_inst := wall_scene.instantiate() as Wall
+	if wall_material != null:
+		wall_inst.set("material_texture", wall_material)
+		wall_inst.set("trim", wall_trim)
 	# name is important for wall deletion later
 	var key = "%d_%d_%s" % [posx, posy, "h" if horizontal else "v"]
 	wall_inst.name = key
@@ -70,6 +76,22 @@ func remove_wall(posx:float, posy:float, horizontal:bool) -> void:
 			maze_astar.connect_cells_with_wall(posx, posy, posx, posy-1)
 		else:
 			maze_astar.connect_cells_with_wall(posx, posy, posx-1, posy)
+
+func remove_inner_wall_between(first: Vector2i, second: Vector2i) -> bool:
+	if not valid_index(first.x, first.y) or not valid_index(second.x, second.y):
+		return false
+	var difference := (second - first).abs()
+	if difference.x + difference.y != 1:
+		return false
+	var horizontal := difference.y == 1
+	var x := maxi(first.x, second.x)
+	var y := maxi(first.y, second.y)
+	var key := "%d_%d_%s" % [x, y, "h" if horizontal else "v"]
+	if not walls_dict.has(key):
+		return false
+	remove_wall(x, y, horizontal)
+	return true
+
 
 func add_all_walls() -> void:
 	for i in range(maze_size.x+1):

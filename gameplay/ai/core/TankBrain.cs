@@ -11,6 +11,17 @@ public abstract partial class TankBrain : Node
     [Export(PropertyHint.Range, "0.08,0.5,0.01")]
     public double ThinkInterval { get; set; } = 0.14;
 
+    [Export(PropertyHint.Range, "0,2,1")]
+    public int Difficulty { get; set; } = 2;
+
+    private float _shotDelay;
+    private double DecisionInterval => Difficulty switch
+    {
+        0 => Math.Max(0.45, ThinkInterval),
+        1 => Math.Max(0.25, ThinkInterval),
+        _ => Math.Max(0.08, ThinkInterval)
+    };
+
     private const string DriverMetadata = "_active_tank_brain";
     internal const string Tanks = "arena_tank";
     internal const string Pickups = "arena_pickup";
@@ -65,6 +76,11 @@ public abstract partial class TankBrain : Node
         _patrolRandom = new Random(seed < 0 ? Random.Shared.Next() :
             unchecked((int)seed ^ (int)_tank.GlobalPosition.X * 31 ^ (int)_tank.GlobalPosition.Y));
         _patrolProgress = tank.GlobalPosition;
+        if (Difficulty < 2)
+        {
+            _command = new(Maneuver.Hold, tank.GlobalPosition, 0f);
+            _untilThink = DecisionInterval;
+        }
     }
 
     public override void _ExitTree()
@@ -80,10 +96,11 @@ public abstract partial class TankBrain : Node
     {
         if (_tank.Get("pending_destroy").AsBool())
             return;
+        _shotDelay = Math.Max(0f, _shotDelay - (float)delta);
         _untilThink -= delta;
         if (_untilThink <= 0)
         {
-            var interval = Math.Max(0.08, ThinkInterval);
+            var interval = DecisionInterval;
             _untilThink += interval;
             _situation = Observe((float)interval);
             if (_situation is not null)
@@ -230,7 +247,7 @@ public abstract partial class TankBrain : Node
         var loadout = (GodotObject?)_tank.Get("loadout").AsGodotObject();
         var weapon = loadout?.Get("weapon").AsGodotObject();
         var stats = weapon?.Get("weapon_stats").AsGodotObject() ?? _tank.Get("shell_stats").AsGodotObject();
-        bool ready = _tank.Get("time_since_last_shot").AsDouble() <= 0.10;
+        bool ready = _shotDelay <= 0f && _tank.Get("time_since_last_shot").AsDouble() <= 0.10;
         bool shielded = _tank.Get("shield_points").AsInt32() > 0;
         bool foeShielded = foe.Body.Get("shield_points").AsInt32() > 0;
         Vector2 foeVelocity = foe.Body.Velocity.LimitLength(310f);
@@ -241,13 +258,15 @@ public abstract partial class TankBrain : Node
         _lastOpponentPosition = foe.Position;
         _lastPositionId = foe.Body.GetInstanceId();
 
-        var traces = CombatPrediction.VisibleShells(space, GetTree().GetNodesInGroup(Shells), all, self.Position, cellSize);
+        var traces = Difficulty == 0 ? System.Array.Empty<CombatPrediction.Leg>() :
+            CombatPrediction.VisibleShells(space, GetTree().GetNodesInGroup(Shells), all, self.Position, cellSize);
         float risk = CombatPrediction.Threat(traces, self.Position, Vector2.Zero, 0.65f);
         var shot = stats is null || (range > cellSize * 5f && stats.Get("laser_range").AsDouble() <= 0) ? null :
-            CombatPrediction.BestShot(space, self, foe, foeVelocity, all, stats, cellSize);
+            CombatPrediction.BestShot(space, self, foe, foeVelocity * (Difficulty switch { 0 => 0f, 1 => 0.65f, _ => 1f }),
+                all, stats, cellSize, Difficulty);
         var options = new List<Option>(9) { new(Maneuver.Hold, self.Position, 0.06f) };
         options.Add(new(Maneuver.Chase, foe.Position, clearLane ? 0.36f : 0.57f));
-        if (shot is { } candidate)
+        if (shot is { } candidate && (Difficulty == 2 || ready))
             options.Add(new(Maneuver.Fire, foe.Position, candidate.Quality * (ready ? 1f : 0.65f)));
 
         AddLocalOptions(space, self, foe, cellSize, traces, risk, clearLane, blocked, options);
@@ -385,7 +404,10 @@ public abstract partial class TankBrain : Node
                 drive = direction;
         }
         bool fire = shot is not null && Math.Abs(diff) <= tolerance && readyToFire &&
-            _tank.Get("time_since_last_shot").AsDouble() <= 0.0;
+            _shotDelay <= 0f && _tank.Get("time_since_last_shot").AsDouble() <= 0.0;
+        if (fire)
+            _shotDelay = Difficulty switch { 0 => 1.45f, 1 => 0.72f, _ => 0f };
+        drive *= Difficulty switch { 0 => 0.72f, 1 => 0.90f, _ => 1f };
         float turn = Math.Abs(diff) > tolerance ? Math.Sign(diff) : 0f;
         _tank.Call("set_ai_controls", turn, drive, fire);
     }

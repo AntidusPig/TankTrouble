@@ -12,11 +12,12 @@ var shell_direction : Vector2 = Vector2(0,1)
 var pending_destroy : bool = false
 var spawner : TankBase
 var ignore_spawner : bool = true
-var radius : float
+var shot_color := Color("#f3bb5d")
 
 func _ready():
-	# Create a new image with transparency
-	create_shell_texture()
+	sprite_2d.hide()
+	z_index = 7
+	get_viewport().size_changed.connect(queue_redraw)
 	# lifetime
 	if not Engine.is_editor_hint():
 		var timer = Timer.new()
@@ -41,7 +42,7 @@ func _physics_process(delta: float) -> void:
 	if is_queued_for_deletion(): return
 	if pending_destroy:
 		# handle_destruction_visuals 
-		sprite_2d.modulate.a = lerp(sprite_2d.modulate.a, 0., delta*2)
+		self_modulate.a = lerp(self_modulate.a, 0.0, delta * 2.0)
 		scale = lerp(scale, Vector2(1.5,1.5), delta)
 		return
 		
@@ -77,6 +78,10 @@ func _handle_collision(result:Dictionary, _is_inside:bool) -> bool:
 	'''
 		return whether you should move forward
 	'''
+	if result.collider.has_method("shell_hit"):
+		result.collider.shell_hit()
+		destroy(true)
+		return false
 	if stats.blast_radius > 0.0:
 		_detonate(result.position + result.normal * 2.0, result.collider)
 		return false
@@ -153,28 +158,11 @@ func destroy(immediate:bool=false) -> void:
 func enable_spawner_collision() -> void:
 	ignore_spawner = false
 
-func create_shell_texture() -> void:
-	var image = Image.create(int(size), int(size), false, Image.FORMAT_RGBA8)
-	image.fill(Color(0, 0, 0, 0))
-	var center = Vector2(size/2, size/2)
-	radius = size/2 - 2
-	var samples = 4  # 4x4 supersampling for smooth edges
-	for x in range(size):
-		for y in range(size):
-			var alpha_sum = 0.0
-			# Sample multiple points within each pixel for better antialiasing
-			for sx in range(samples):
-				for sy in range(samples):
-					# Subpixel offset
-					var offset_x = (sx + 0.5) / samples - 0.5
-					var offset_y = (sy + 0.5) / samples - 0.5
-					var subpixel_pos = Vector2(x + offset_x, y + offset_y)
-					var dist = subpixel_pos.distance_to(center)
-					if dist <= radius:
-						alpha_sum += 1.0
-						# Average the samples to get final alpha
-						var alpha = alpha_sum / (samples * samples)
-						if alpha > 0:
-							image.set_pixel(x, y, Color(0, 0, 0, alpha))
-	var texture = ImageTexture.create_from_image(image)
-	sprite_2d.texture = texture
+func _draw() -> void:
+	var zoom := maxf(0.01, get_global_transform_with_canvas().get_scale().abs().x)
+	var shell_radius := maxf(size * 0.5, 5.5 / zoom)
+	var rim := 1.3 / zoom
+	var core := shot_color.lerp(Color.WHITE, 0.39)
+	draw_circle(Vector2.ZERO, shell_radius, Color("#251825"), true, -1, true)
+	draw_circle(Vector2.ZERO, shell_radius - rim, core, true, -1, true)
+	draw_circle(Vector2(-0.25, -0.29) * shell_radius, shell_radius * 0.21, Color("#fff8dc"), true, -1, true)

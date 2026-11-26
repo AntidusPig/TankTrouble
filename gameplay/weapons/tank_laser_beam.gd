@@ -1,7 +1,7 @@
 class_name TankLaserBeam extends Node2D
 
 const PARTICLES := preload("res://gameplay/vfx/cartoon_particles.gd")
-const TANK_MASK := 1 << 1
+const TARGET_MASK := (1 << 1) | (1 << 2)
 const ACTIVE_DURATION := 0.25
 
 var endpoint := Vector2.ZERO
@@ -35,7 +35,7 @@ func advance(delta: float, shooter: TankBase) -> void:
 			queue_free()
 			return
 
-	var query := PhysicsRayQueryParameters2D.create(global_position, to_global(endpoint), TANK_MASK)
+	var query := PhysicsRayQueryParameters2D.create(global_position, to_global(endpoint), TARGET_MASK)
 	query.hit_from_inside = true
 	var excluded: Array[RID] = [shooter.get_rid()]
 	var space := get_world_2d().direct_space_state
@@ -48,6 +48,8 @@ func advance(delta: float, shooter: TankBase) -> void:
 		if hit.collider is TankBase:
 			var victim := hit.collider as TankBase
 			victim.receive_damage(victim.health + victim.shield_points)
+		elif hit.collider.has_method("shell_hit"):
+			hit.collider.shell_hit()
 
 
 func _draw() -> void:

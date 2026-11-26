@@ -53,10 +53,11 @@ func _ready() -> void:
 	_fit_rails()
 
 
-func add_fighter(player_slot: int, role: int) -> FighterCard:
+func add_fighter(player_slot: int, role: int, difficulty := -1) -> FighterCard:
 	var card := FighterCard.new()
 	card.player_slot = player_slot
 	card.role = role
+	card.difficulty = difficulty
 	var rail := _left if _left.get_child_count() < CARDS_PER_SIDE else _right
 	rail.add_child(card)
 	_fit_rails()

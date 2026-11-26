@@ -488,3 +488,69 @@ msgstr "طلقة واحدة تضع بوابة في الممر المستهدف �
 
 msgid "PROP_8"
 msgstr "تزيد سرعة القيادة أربعين بالمئة لمدة خمس ثوانٍ."
+
+msgid "AI_DIFFICULTY"
+msgstr "صعوبة الذكاء الاصطناعي"
+
+msgid "AI_BEGINNER"
+msgstr "مبتدئ"
+
+msgid "AI_INTERMEDIATE"
+msgstr "متوسط"
+
+msgid "AI_ADVANCED"
+msgstr "متقدم"
+
+msgid "AI_RANDOM_HINT"
+msgstr "يختار الوضع العشوائي مستوى لكل خصم في بداية الجولة."
+
+msgid "SECONDS_REMAINING"
+msgstr "تبقّى %d ث"
+
+msgid "ARENA_MAP_PICKER"
+msgstr "الحلبة"
+
+msgid "ARENA_CAMPAIGN"
+msgstr "الحملة"
+
+msgid "ARENA_DRAFT"
+msgstr "مسودة المحرر"
+
+msgid "RESULT_CONTINUE"
+msgstr "تابع الحملة"
+
+msgid "RESULT_RANDOM_PUZZLE"
+msgstr "لغز عشوائي جديد"
+
+msgid "RESULT_RANDOM"
+msgstr "مرحلة عشوائية جديدة"
+
+msgid "RESULT_PLAYER"
+msgstr "اللاعب"
+
+msgid "RESULT_EDITS"
+msgstr "التعديلات"
+
+msgid "RESULT_SHOTS"
+msgstr "الطلقات"
+
+msgid "RESULT_CONTROLS"
+msgstr "التحكم"
+
+msgid "RESULT_LIVES"
+msgstr "الحيوات المتبقية"
+
+msgid "RESULT_WINS"
+msgstr "إجمالي مرات الفوز"
+
+msgid "RESULT_TIME"
+msgstr "الوقت %s"
+
+msgid "RESULT_DRAW"
+msgstr "تعادل"
+
+msgid "RESULT_WIN"
+msgstr "لقد فزت"
+
+msgid "RESULT_LOSS"
+msgstr "لقد خسرت"

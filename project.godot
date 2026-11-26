@@ -21,6 +21,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+AiSettings="*res://gameplay/session/ai_settings.gd"
 LocaleManager="*res://i18n/locale_manager.gd"
 
 GameSession="*res://gameplay/session/game_session.gd"

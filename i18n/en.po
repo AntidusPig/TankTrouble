@@ -488,3 +488,69 @@ msgstr "Fire once to place a gate in the aimed corridor and a second gate in a r
 
 msgid "PROP_8"
 msgstr "Boosts driving speed by 40 percent for five seconds."
+
+msgid "AI_DIFFICULTY"
+msgstr "AI Difficulty"
+
+msgid "AI_BEGINNER"
+msgstr "Beginner"
+
+msgid "AI_INTERMEDIATE"
+msgstr "Intermediate"
+
+msgid "AI_ADVANCED"
+msgstr "Advanced"
+
+msgid "AI_RANDOM_HINT"
+msgstr "Random picks a level for each AI at the start of a round."
+
+msgid "SECONDS_REMAINING"
+msgstr "%d s left"
+
+msgid "ARENA_MAP_PICKER"
+msgstr "Arena"
+
+msgid "ARENA_CAMPAIGN"
+msgstr "Campaign"
+
+msgid "ARENA_DRAFT"
+msgstr "Editor Draft"
+
+msgid "RESULT_CONTINUE"
+msgstr "Continue Campaign"
+
+msgid "RESULT_RANDOM_PUZZLE"
+msgstr "Next Random Puzzle"
+
+msgid "RESULT_RANDOM"
+msgstr "Next Random Level"
+
+msgid "RESULT_PLAYER"
+msgstr "Player"
+
+msgid "RESULT_EDITS"
+msgstr "Edits"
+
+msgid "RESULT_SHOTS"
+msgstr "Shots"
+
+msgid "RESULT_CONTROLS"
+msgstr "Controller"
+
+msgid "RESULT_LIVES"
+msgstr "Lives Left"
+
+msgid "RESULT_WINS"
+msgstr "Total Wins"
+
+msgid "RESULT_TIME"
+msgstr "Time %s"
+
+msgid "RESULT_DRAW"
+msgstr "Draw"
+
+msgid "RESULT_WIN"
+msgstr "You Win"
+
+msgid "RESULT_LOSS"
+msgstr "You Lose"

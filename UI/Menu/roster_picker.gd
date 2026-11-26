@@ -3,12 +3,21 @@ class_name RosterPicker extends VBoxContainer
 signal roster_changed
 
 const GAP := 7
+const STAGES := preload("res://gameplay/levels/arena_theme.gd")
+const PAINTED := preload("res://maze/painted_map.gd")
+const SAVED_SLOT_ID := 100
+const DRAFT_ID := 103
 const SHORT_LABELS := ["SHORT_PRACTICE", "SHORT_STATE", "SHORT_TREE", "GOAP", "SHORT_UTILITY", "SHORT_NEURAL", "SUDOKU_AI"]
 
 var roles: PackedInt32Array
 var game_mode := GameSession.ARENA_MODE
 var map_choice := 9
 var locked_size := false
+var paint := PackedInt32Array()
+var start_level := 0
+var _arena_picker: OptionButton
+var _options: Dictionary[int, Dictionary] = {}
+var _free_size := 9
 var _size_picker := OptionButton.new()
 var _row := HBoxContainer.new()
 var _selectors: Array[Button] = []
@@ -22,23 +31,70 @@ func _ready() -> void:
 	sizes.alignment = BoxContainer.ALIGNMENT_CENTER
 	sizes.add_theme_constant_override("separation", 10)
 	add_child(sizes)
+	_free_size = map_choice
+	if game_mode == GameSession.ARENA_MODE:
+		_build_arena_picker(sizes)
 	var label := Label.new()
 	label.text = tr("PUZZLE_SIZE") if game_mode == GameSession.SUDOKU_MODE else tr("MAP_SIZE")
 	sizes.add_child(label)
 	_size_picker.add_item(tr("RANDOM"), 0)
 	for size_value in GameSession.sizes_for(game_mode):
 		_size_picker.add_item("%d × %d" % [size_value, size_value], size_value)
-	for index in range(_size_picker.item_count):
-		if _size_picker.get_item_id(index) == map_choice:
-			_size_picker.select(index)
-			break
+	_sync_size_picker()
 	_size_picker.item_selected.connect(_select_size)
-	_size_picker.disabled = locked_size
+
 	sizes.add_child(_size_picker)
 	_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	_row.add_theme_constant_override("separation", GAP)
 	add_child(_row)
 	_refresh_row()
+
+
+func _build_arena_picker(toolbar: HBoxContainer) -> void:
+	_arena_picker = OptionButton.new()
+	var caption := Label.new()
+	caption.text = tr("ARENA_MAP_PICKER")
+	toolbar.add_child(caption)
+	_arena_picker.add_item(tr("ARENA_CAMPAIGN"), 0)
+	for level in range(1, GameSession.LEVEL_COUNT + 1):
+		_arena_picker.add_item(tr(STAGES.for_level(level).name), level)
+	for i in range(3):
+		_add_painted_option(tr("MAP_SLOT") % (i + 1), SAVED_SLOT_ID + i, PAINTED.load_slot(i))
+	var draft := {"dimension": GameSession.editor_dimension, "tiles": GameSession.editor_draft}
+	if locked_size:
+		draft = {"dimension": map_choice, "tiles": paint}
+	_add_painted_option(tr("ARENA_DRAFT"), DRAFT_ID, draft)
+	if locked_size:
+		_arena_picker.select(_arena_picker.get_item_index(DRAFT_ID))
+		_arena_picker.disabled = true
+	_arena_picker.add_theme_font_size_override("font_size", 19)
+	_arena_picker.item_selected.connect(_select_arena)
+	toolbar.add_child(_arena_picker)
+
+
+func _add_painted_option(caption: String, id: int, data: Dictionary) -> void:
+	if data.is_empty() or not PAINTED.valid(data.dimension, data.tiles, 2):
+		return
+	_options[id] = data
+	_arena_picker.add_item(caption, id)
+
+
+func _select_arena(index: int) -> void:
+	var id := _arena_picker.get_item_id(index)
+	var selected: Dictionary = _options.get(id, {})
+	start_level = 0 if id >= SAVED_SLOT_ID else id
+	paint = PackedInt32Array() if selected.is_empty() else selected.tiles.duplicate()
+	map_choice = _free_size if selected.is_empty() else selected.dimension
+	_sync_size_picker()
+	CartoonSound.play_confirm()
+	roster_changed.emit()
+
+
+func _sync_size_picker() -> void:
+	var index := _size_picker.get_item_index(map_choice)
+	if index >= 0:
+		_size_picker.select(index)
+	_size_picker.disabled = not paint.is_empty()
 
 
 func _refresh_row() -> void:
@@ -81,10 +137,10 @@ func _add_card(index: int) -> void:
 		var remove := _create_remove_button(index)
 		top.add_child(remove)
 		remove.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-		remove.offset_left = -23.0
+		remove.offset_left = -27.0
 		remove.offset_right = 7.0
 		remove.offset_top = -8.0
-		remove.offset_bottom = 22.0
+		remove.offset_bottom = 26.0
 
 	var badge := PlayerBadge.new()
 	badge.player_slot = index
@@ -105,31 +161,35 @@ func _add_card(index: int) -> void:
 
 
 func _create_remove_button(index: int) -> Button:
-	var button := MenuPanel.create_button("X", _remove_slot.bind(index), true)
+	var button := MenuPanel.create_button("", _remove_slot.bind(index), true)
 	button.tooltip_text = tr("REMOVE_PLAYER") % (index + 1)
-	button.custom_minimum_size = Vector2(30, 30)
-	button.add_theme_font_override("font", RetroUi.display_font())
-	button.add_theme_font_size_override("font_size", 22)
-	for state in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color"]:
-		button.add_theme_color_override(state, RetroUi.CREAM)
-	var fills := {"normal": Color("#c84536"), "hover": Color("#e05a46"), "pressed": RetroUi.BRICK}
-	for state in fills:
-		var circle := RetroUi.ink_box(fills[state], 16, 2, 2 if state != "pressed" else 0)
-		circle.border_color = Color("#15100e")
-		circle.content_margin_left = 0
-		circle.content_margin_right = 0
-		circle.content_margin_top = 0
-		circle.content_margin_bottom = 0
-		button.add_theme_stylebox_override(state, circle)
-	var focus := RetroUi.ink_box(RetroUi.CREAM, 17, 2, 0)
-	focus.draw_center = false
-	focus.border_color = RetroUi.CREAM
-	focus.expand_margin_left = 2.0
-	focus.expand_margin_right = 2.0
-	focus.expand_margin_top = 2.0
-	focus.expand_margin_bottom = 2.0
-	button.add_theme_stylebox_override("focus", focus)
+	button.accessibility_name = button.tooltip_text
+	button.custom_minimum_size = Vector2(34, 34)
+	for state in ["normal", "hover", "pressed", "focus", "disabled"]:
+		button.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+	button.draw.connect(_draw_remove_button.bind(button))
+	button.mouse_entered.connect(button.queue_redraw)
+	button.mouse_exited.connect(button.queue_redraw)
+	button.focus_entered.connect(button.queue_redraw)
+	button.focus_exited.connect(button.queue_redraw)
+	button.button_down.connect(button.queue_redraw)
+	button.button_up.connect(button.queue_redraw)
 	return button
+
+
+func _draw_remove_button(button: Button) -> void:
+	var center := button.size * 0.5
+	var radius := minf(center.x, center.y) - 2.0
+	var fill := RetroUi.BRICK if button.is_pressed() else (Color("#e05a46") if button.is_hovered() else Color("#c84536"))
+	button.draw_circle(center + Vector2(0, 2), radius, RetroUi.INK, true, -1, true)
+	button.draw_circle(center, radius, Color("#15100e"), true, -1, true)
+	button.draw_circle(center, radius - 2, fill, true, -1, true)
+	if button.has_focus():
+		button.draw_circle(center, radius + 1, RetroUi.CREAM, false, 2, true)
+	var font := RetroUi.DISPLAY_FONT
+	var width := font.get_string_size("X", HORIZONTAL_ALIGNMENT_LEFT, -1, 23).x
+	var baseline := (font.get_ascent(23) - font.get_descent(23)) * 0.5
+	button.draw_string(font, center + Vector2(-width * 0.5, baseline), "X", HORIZONTAL_ALIGNMENT_LEFT, -1, 23, RetroUi.CREAM)
 
 
 func _style_small_button(button: Button, font_size: int) -> void:
@@ -154,6 +214,7 @@ func _update_slot(index: int, compact: bool) -> void:
 
 func _select_size(index: int) -> void:
 	map_choice = _size_picker.get_item_id(index)
+	_free_size = map_choice
 	CartoonSound.play_confirm()
 	roster_changed.emit()
 

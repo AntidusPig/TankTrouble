@@ -1,61 +1,51 @@
 # Tank Trouble
 
-Tank Trouble is a retro-cartoon maze game with ricocheting shells, timed pickups, and three-life matches. Build a roster of two to eight tanks with up to three local human players, AI opponents, or stationary practice targets.
+A local multiplayer tank game set in hand-painted cartoon mazes. Bank shots around corners, race for power-ups, or work together to solve Sudoku with cannon fire. Play with **2–8 tanks**, including up to **3 local human players**. Fill the other slots with AI or practice targets.
 
-![Tank Trouble title screen](docs/screenshots/main-menu.png)
+![Steam Foundry gameplay with a moving conveyor, explosive barrels, and outlined tank shells](docs/screenshots/arena.png)
 
-## Run the game
+## Play
 
-1. Install [Godot 4.7.2 .NET](https://godotengine.org/download/archive/4.7.2-stable/) and the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
-2. Import `project.godot` into the Godot project manager and press **F5**. Build the C# project in the editor if prompted.
-3. Select **New Game** for Arena or **Sudoku** for cooperative puzzle play. Choose a board size or **Random**, then use **+** and **×** to set up the roster. The standard edition of Godot can open the GDScript gameplay, but C# opponents require the .NET edition.
+1. Install **Godot 4.7.2 .NET** and the **.NET 8 SDK** used by this project. [Godot download](https://godotengine.org/download/archive/4.7.2-stable/) · [.NET SDK download](https://dotnet.microsoft.com/download/dotnet/8.0)
+2. Clone or download the repository. Import `project.godot` in Godot, then press **F5**. Build the C# project in the editor if prompted.
+3. Choose **New Game** for tank battles or **Sudoku** for cooperative play. In **New Game**, the **Arena** picker offers the campaign, individual stages, saved custom maps, and your editor draft.
 
-| Action | Human 1 | Human 2 | Human 3 |
+| Default controls | Human 1 | Human 2 | Human 3 |
 | --- | --- | --- | --- |
 | Drive and turn | WASD | Arrow keys | IJKL |
 | Fire | F | Enter | O |
-| Pause or resume | Esc | Esc | Esc |
 
-Use **Tab**, **Shift+Tab**, or the arrow keys to move through menus and **Enter** to select. **Esc** goes back or pauses the match. Gamepads use the left stick to drive and **A** to fire by default, with one pad per human slot. Use **Settings** to capture a different key, button, or stick direction. Changes save automatically. **Restore Defaults** asks for confirmation before replacing the saved bindings.
+**Esc** pauses or goes back. Use **Tab** or the arrow keys to move through menus and **Enter** to select. On a gamepad, use the left stick to drive and **A** to fire. **Settings → Controls** lets you remap keyboard and gamepad inputs. The language flags switch between English, Simplified Chinese, Spanish, Arabic, and Greek.
 
-![The keyboard and gamepad settings page](docs/screenshots/settings.png)
+## Arenas, weapons, and opponents
 
-Choose a flag on the main menu to switch between English, Simplified Chinese, Spanish, Arabic, and Greek. The game remembers your choice.
+Fight through seven arenas with freshly generated walls. Steam Foundry has a conveyor lane and barrels that can break interior walls. Moon Crater has lethal meteor strikes, a pulsing gravity well, and the one-shot Portal Gun. In Lucky Grove, 3D Cube Pets wander the maze and flowers recharge shields.
 
-Use **Pause → Save Checkpoint** to save arena progress. Loading a checkpoint restarts the saved arena with its recorded score and opponent selection.
+Each tank starts with three lives. Pickup rings show the shots or time remaining, and the HUD identifies each bot’s difficulty. Choose Beginner, Intermediate, Advanced, or Random separately for State Machine, Behavior Tree, GOAP, Utility + Lookahead, and Neural Self-Play. [AI design and benchmarks](docs/enemy_AI.md)
 
-## Arena and AI
+![Moon Crater with an equipped Prism Laser and a separate Turbo Tonic countdown ring](docs/screenshots/moon-loadout.png)
 
-Each tank has three lives per arena. Pickups grant repairs, shields, or limited-charge weapons. The dashed red laser warning lasts one second before the lethal beam pierces walls. The shooter stays in place until the beam ends.
+## Paint a map
 
-The campaign starts on the Studio Backlot and continues through the Steam Foundry, Moon Crater, and Lucky Grove. Foundry steam vents deal one point of damage. Moon meteors destroy tanks and destructible objects in a 3×3 impact area and leave visible flames for ten seconds. Lucky Grove fountains heal one point when they pulse. The campaign also includes Keyhole Keep, Switchback, and Split Fork, with uneven footprints.
+Open **Map Editor**, paint the playable cells, and leave empty space to shape the arena. Save to one of three local slots or use **Playtest**. Keep the painted cells connected edge to edge. Every match rolls new walls inside your footprint.
 
-![A 9 by 9 arena and its HUD](docs/screenshots/arena.png)
+![The Map Editor with a custom painted footprint and Playtest controls](docs/screenshots/map-editor.png)
 
-Choose from State Machine, Behavior Tree, GOAP, Utility + Lookahead, and Neural Self-Play. Open the Encyclopedia to learn about each controller and pickup. See [enemy AI notes](docs/enemy_AI.md) for the controller components, benchmark commands, and historical training results.
+## Solve Sudoku together
 
-![The player roster picker](docs/screenshots/ai-selection.png)
+Shoot an editable cell to increment it. Values wrap back to 1 after the highest digit. Start with the default **9×9** board, choose another supported size, or pick **Random**. Sudoku bots know the solution and take turns driving into position and firing.
 
-![The encyclopedia showing the Prism Laser](docs/screenshots/encyclopedia.png)
+![Cooperative 9 by 9 Sudoku with tanks and player edit counts](docs/screenshots/sudoku.png)
 
-![The shared pause menu in the arena](docs/screenshots/pause.png)
+## Finish a round
 
-The Portal Gun fires one shot to place a pair of gates. Its destination is a random free cell. The pair closes after one traversal or ten seconds. Turbo Tonic boosts driving speed by 40% for five seconds.
+The results screen shows elapsed time, remaining lives, shots fired, and total wins. Continue the campaign when available, play a different random level with the same roster, or return to the main menu. Sudoku results show each player’s edits and offer a new random puzzle. During campaign play, **Pause → Save Checkpoint** saves your progress.
 
-The **Map Editor** on the main menu lets you paint floor and empty space, save to three local slots, and playtest with your chosen roster. Connect the painted cells edge to edge and leave at least one cell per player. Each playtest generates new walls inside your painted footprint.
+![Victory results with player stats and options for another random level or the main menu](docs/screenshots/results.png)
 
-Wandering 3D animals use CC0 models from [Kenney Cube Pets](https://kenney.nl/assets/cube-pets).
+## Credits
 
-## Sudoku
-
-Two to eight tanks share one puzzle, with up to three human players. Shoot a non-clue cell to increment its value. After the highest value, the next hit wraps the cell back to 1. A 9×9 board is the default. Set a fixed size or choose **Random** to draw one of the supported board sizes.
-
-Sudoku AI knows the solution, drives to the cells it needs to edit, and uses normal shells. All Sudoku bots share a limit of roughly one shot every 2.4 seconds. They travel to separate cells and take turns firing when lined up.
-
-![A co-op Sudoku puzzle in Tank Trouble](docs/screenshots/sudoku.png)
-
-## Asset credits
-
-- The main-menu mascot is an original ImageGen illustration created for this project.
-- [Bangers](https://github.com/googlefonts/bangers) by Vernon Adams and [Barlow Condensed](https://github.com/jpt/barlow) by Jeremy Tribby are bundled under the SIL Open Font License. Their notices are in [UI/Art/Fonts](UI/Art/Fonts).
-- [Boings](https://opengameart.org/content/boings) by EZduzziteh supplies the menu and pickup cues. [Balloon Sounds](https://opengameart.org/content/balloon-sounds), prepared by AntumDeluge from Gniffelbaf’s recording, supplies the firing pop. Both sound packs are distributed under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/).
+- The menu mascot, arena backdrops, and maze materials were created for this project with ImageGen.
+- The 3D animals are CC0 models. [Kenney Cube Pets](https://kenney.nl/assets/cube-pets)
+- Bangers and Barlow Condensed are included under the SIL Open Font License. [Bundled font notices](UI/Art/Fonts)
+- The menu, pickup, and firing sounds use CC0 assets. [Boings](https://opengameart.org/content/boings) · [Balloon Sounds](https://opengameart.org/content/balloon-sounds)

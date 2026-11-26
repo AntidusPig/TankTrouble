@@ -11,7 +11,7 @@ public static class CombatPrediction
     public readonly record struct Leg(Vector2 Start, Vector2 End, float At, float EndAt, float Radius, bool Blast);
 
     public static Shot? BestShot(PhysicsDirectSpaceState2D space, TankView self, TankView foe,
-        Vector2 foeVelocity, IReadOnlyList<TankView> tanks, GodotObject stats, float cellSize)
+        Vector2 foeVelocity, IReadOnlyList<TankView> tanks, GodotObject stats, float cellSize, int bounceLimit = 2)
     {
         float scale = Math.Abs(self.Body.GlobalScale.X);
         float speed = Math.Max(1f, Read(stats, "shell_speed") * scale);
@@ -46,7 +46,7 @@ public static class CombatPrediction
             float span = Math.Min(speed * lifetime, cellSize * 7f);
             Vector2 point = origin;
             float elapsed = 0f;
-            int maxBounces = blast > 0f ? 0 : 2;
+            int maxBounces = blast > 0f ? 0 : bounceLimit;
             for (int bounces = 0; bounces <= maxBounces && span > 2f; bounces++)
             {
                 var hit = Wall(space, point, point + direction * span, exclusions);

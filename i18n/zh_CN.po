@@ -488,3 +488,69 @@ msgstr "发射一次，在瞄准的走廊与随机空格各放置一个传送门
 
 msgid "PROP_8"
 msgstr "五秒内提高百分之四十的行驶速度。"
+
+msgid "AI_DIFFICULTY"
+msgstr "AI 难度"
+
+msgid "AI_BEGINNER"
+msgstr "初级"
+
+msgid "AI_INTERMEDIATE"
+msgstr "中级"
+
+msgid "AI_ADVANCED"
+msgstr "高级"
+
+msgid "AI_RANDOM_HINT"
+msgstr "随机模式在每轮开始时为各 AI 分配难度。"
+
+msgid "SECONDS_REMAINING"
+msgstr "剩余 %d 秒"
+
+msgid "ARENA_MAP_PICKER"
+msgstr "竞技场"
+
+msgid "ARENA_CAMPAIGN"
+msgstr "战役"
+
+msgid "ARENA_DRAFT"
+msgstr "编辑器草稿"
+
+msgid "RESULT_CONTINUE"
+msgstr "继续战役"
+
+msgid "RESULT_RANDOM_PUZZLE"
+msgstr "下一个随机谜题"
+
+msgid "RESULT_RANDOM"
+msgstr "下一个随机关卡"
+
+msgid "RESULT_PLAYER"
+msgstr "玩家"
+
+msgid "RESULT_EDITS"
+msgstr "修改次数"
+
+msgid "RESULT_SHOTS"
+msgstr "发射次数"
+
+msgid "RESULT_CONTROLS"
+msgstr "控制方式"
+
+msgid "RESULT_LIVES"
+msgstr "剩余生命"
+
+msgid "RESULT_WINS"
+msgstr "总胜场"
+
+msgid "RESULT_TIME"
+msgstr "用时 %s"
+
+msgid "RESULT_DRAW"
+msgstr "平局"
+
+msgid "RESULT_WIN"
+msgstr "你赢了"
+
+msgid "RESULT_LOSS"
+msgstr "你输了"

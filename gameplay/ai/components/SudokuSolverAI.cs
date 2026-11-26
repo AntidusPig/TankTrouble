@@ -23,6 +23,9 @@ public partial class SudokuSolverAI : Node
     [Export(PropertyHint.Range, "1.5,10.0,0.1")]
     public float SecondsBetweenPuzzleShots { get; set; } = 2.4f;
 
+    [Export(PropertyHint.Range, "0,2,1")]
+    public int Difficulty { get; set; } = 2;
+
     private CharacterBody2D _tank = null!;
     private Node2D _maze = null!;
     private Node _navigation = null!;
@@ -169,7 +172,8 @@ public partial class SudokuSolverAI : Node
 
     private int TurnOrder(int team) => (team - _clock.LastTeam + MaxTeams - 1) % MaxTeams;
 
-    private ulong Gap() => (ulong)Math.Ceiling(SecondsBetweenPuzzleShots * Engine.PhysicsTicksPerSecond);
+    private ulong Gap() => (ulong)Math.Ceiling(SecondsBetweenPuzzleShots *
+        (Difficulty switch { 0 => 2.0, 1 => 1.4, _ => 1.0 }) * Engine.PhysicsTicksPerSecond);
 
     private bool TargetNeedsEdit()
     {

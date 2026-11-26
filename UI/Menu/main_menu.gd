@@ -3,7 +3,7 @@ extends MenuPanel
 var _selection := PackedInt32Array([PlayerRoster.HUMAN, 3])
 var _sudoku_selection := PackedInt32Array([PlayerRoster.HUMAN, PlayerRoster.SUDOKU_AI])
 const MAP_EDITOR := preload("res://UI/Menu/map_editor.gd")
-var _paint_pending := PackedInt32Array()
+var _from_editor := false
 var _mode := GameSession.ARENA_MODE
 var _map_choices := [9, 9]
 var _picker: RosterPicker
@@ -81,7 +81,7 @@ func _show_home() -> void:
 	_clear_actions()
 	show_page(null)
 	title.text = tr("TITLE")
-	detail.text = (tr("PUZZLE_SOLVED") if GameSession.mode == GameSession.SUDOKU_MODE else tr("CAMPAIGN_COMPLETE")) if GameSession.completed else tr("NAV_HINT") % [
+	detail.text = (tr("PUZZLE_SOLVED") if GameSession.mode == GameSession.SUDOKU_MODE else tr("CAMPAIGN_COMPLETE")) if GameSession.completed and not GameSession.single_arena else tr("NAV_HINT") % [
 		ControlBindings.binding_name(&"ui_focus_next", 0), ControlBindings.binding_name(&"ui_accept", 0)]
 	_button(tr("NEW"), _show_roster).grab_focus()
 	_button(tr("SUDOKU"), _show_roster.bind(GameSession.SUDOKU_MODE))
@@ -119,7 +119,7 @@ func _edit_playtest(dimension: int, tiles: PackedInt32Array) -> void:
 
 
 func _show_roster(mode := GameSession.ARENA_MODE, paint_size := 0, paint := PackedInt32Array()) -> void:
-	_paint_pending = paint
+	_from_editor = not paint.is_empty()
 	detail.show()
 	_mode = mode
 	_languages.hide()
@@ -129,7 +129,8 @@ func _show_roster(mode := GameSession.ARENA_MODE, paint_size := 0, paint := Pack
 	_picker = RosterPicker.new()
 	_picker.game_mode = mode
 	_picker.map_choice = _map_choices[mode] if paint.is_empty() else paint_size
-	_picker.locked_size = not paint.is_empty()
+	_picker.locked_size = _from_editor
+	_picker.paint = paint
 	_picker.roles = (_sudoku_selection if mode == GameSession.SUDOKU_MODE else _selection).duplicate()
 	_picker.roster_changed.connect(_update_roster)
 	show_page(_picker)
@@ -145,7 +146,7 @@ func _update_roster() -> void:
 		_sudoku_selection = selection
 	else:
 		_selection = selection
-	if _paint_pending.is_empty():
+	if _picker.paint.is_empty():
 		_map_choices[_mode] = _picker.map_choice
 	var players := selection.size()
 	var humans := selection.count(PlayerRoster.HUMAN)
@@ -162,7 +163,7 @@ func _update_roster() -> void:
 	if not GameSession.ai_runtime_available():
 		notes += "\n" + tr("AI_DOTNET")
 	detail.text = notes
-	var enough_cells := _paint_pending.is_empty() or _paint_pending.size() - _paint_pending.count(0) >= players
+	var enough_cells := _picker.paint.is_empty() or _picker.paint.size() - _picker.paint.count(0) >= players
 	if not enough_cells:
 		detail.text += "\n" + tr("MAP_INVALID")
 	_start_button.disabled = not PlayerRoster.is_valid(selection) or not enough_cells
@@ -173,7 +174,7 @@ func _show_encyclopedia() -> void:
 	_back_action = _show_home
 	_clear_actions()
 	title.text = tr("BOOK")
-	detail.text = ""
+	detail.hide()
 	show_page(ArenaEncyclopedia.new())
 	_button(tr("BACK"), _show_home).grab_focus()
 
@@ -182,6 +183,30 @@ func _show_settings() -> void:
 	_languages.hide()
 	_back_action = _show_home
 	_clear_actions()
+	show_page(null)
+	title.text = tr("SETTINGS")
+	detail.hide()
+	_button(tr("CONTROLS"), _show_controls).grab_focus()
+	_button(tr("AI_DIFFICULTY"), _show_ai_settings)
+	_button(tr("BACK"), _show_home)
+
+
+func _show_ai_settings() -> void:
+	detail.hide()
+	_back_action = _show_settings
+	_clear_actions()
+	title.text = tr("AI_DIFFICULTY")
+	var page = preload("res://UI/Menu/ai_difficulty_settings.gd").new()
+	show_page(page)
+	_button(tr("BACK"), _show_settings)
+	page.focus_first()
+
+
+func _show_controls() -> void:
+	_languages.hide()
+	_back_action = _show_settings
+	_clear_actions()
+	detail.show()
 	title.text = tr("CONTROLS")
 	detail.text = ""
 	var settings := ControlsSettings.new()
@@ -189,29 +214,29 @@ func _show_settings() -> void:
 	settings.group_changed.connect(func(group: int): _settings_group = group)
 	show_page(settings)
 	_button(tr("RESTORE"), _confirm_defaults)
-	_button(tr("BACK"), _show_home)
+	_button(tr("BACK"), _show_settings)
 	settings.focus_first()
 
 
 func _confirm_defaults() -> void:
 	_languages.hide()
-	_back_action = _show_settings
+	_back_action = _show_controls
 	_clear_actions()
 	show_page(null)
 	title.text = tr("RESTORE_PROMPT")
 	detail.text = tr("RESTORE_NOTE")
 	_button(tr("RESTORE"), _restore_defaults)
-	_button(tr("CANCEL"), _show_settings).grab_focus()
+	_button(tr("CANCEL"), _show_controls).grab_focus()
 
 
 func _restore_defaults() -> void:
 	var result := ControlBindings.restore_defaults()
-	_show_settings()
+	_show_controls()
 	detail.text = tr("RESTORED") if result == OK else tr("RESET_ERR") + " " + error_string(result)
 
 
 func _start() -> void:
-	if GameSession.start_roster(_picker.roles, _mode, _picker.map_choice, _paint_pending) != OK:
+	if GameSession.start_roster(_picker.roles, _mode, _picker.map_choice, _picker.paint, _picker.start_level, _from_editor) != OK:
 		detail.text = tr("START_ERR")
 
 

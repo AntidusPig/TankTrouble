@@ -52,7 +52,7 @@ static func load_slot(slot: int) -> Dictionary:
 	if config.load(PATH) != OK:
 		return {}
 	var dimension: Variant = config.get_value(str(slot), "dimension", 0)
-	var tiles: Variant = config.get_value(str(slot), "tiles", null)
+	var tiles: Variant = config.get_value(str(slot), "tiles", PackedInt32Array())
 	if dimension is int and dimension >= MIN_SIZE and dimension <= MAX_SIZE and tiles is PackedInt32Array and tiles.size() == dimension * dimension:
 		for i in range(tiles.size()):
 			if tiles[i] < Tile.VOID or tiles[i] > LEGACY_MAX_TILE:

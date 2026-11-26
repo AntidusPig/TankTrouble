@@ -8,7 +8,7 @@ const AI_NOTES := ["BOT_0", "BOT_1", "BOT_2", "BOT_3", "BOT_4", "BOT_5", "BOT_6"
 
 var _index := VBoxContainer.new()
 var _name := Label.new()
-var _description := Label.new()
+var _description := RichTextLabel.new()
 var _scroll := ScrollContainer.new()
 var _marker := Label.new()
 var _portrait := PlayerBadge.new()
@@ -25,7 +25,7 @@ func _ready() -> void:
 	var spread := HBoxContainer.new()
 	spread.add_theme_constant_override("separation", 14)
 	add_child(spread)
-	_scroll.custom_minimum_size = Vector2(166, 206)
+	_scroll.custom_minimum_size = Vector2(228, 206)
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_scroll.follow_focus = true
 	spread.add_child(_scroll)
@@ -43,7 +43,8 @@ func _ready() -> void:
 	_name.add_theme_font_override("font", RetroUi.display_font())
 	_name.add_theme_color_override("font_color", RetroUi.BRICK)
 	_name.add_theme_font_size_override("font_size", 27)
-	_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_name.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_name.mouse_filter = Control.MOUSE_FILTER_PASS
 	var feature := HBoxContainer.new()
 	feature.add_theme_constant_override("separation", 8)
 	content.add_child(feature)
@@ -59,14 +60,25 @@ func _ready() -> void:
 	feature.add_child(_marker)
 	_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	feature.add_child(_name)
-	_description.add_theme_font_size_override("font_size", 19)
+	_description.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_description.fit_content = false
+	_description.scroll_active = true
+	_description.focus_mode = Control.FOCUS_ALL
+	_description.add_theme_font_override("normal_font", RetroUi.body_font())
+	_description.add_theme_font_size_override("normal_font_size", 20)
+	_description.add_theme_color_override("default_color", RetroUi.INK)
 	_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	content.add_child(_description)
 	_show_category(false)
 
 
+func preferred_width(view_width: float) -> float:
+	return clampf(view_width - 110.0, 390.0, 860.0)
+
+
 func fit_height(available: float) -> void:
-	_scroll.custom_minimum_size.y = clampf(available - 238.0, 144.0, 278.0)
+	_scroll.custom_minimum_size.x = clampf(get_viewport_rect().size.x * 0.20, 137.0, 228.0)
+	_scroll.custom_minimum_size.y = clampf(available - 280.0, 144.0, 334.0)
 
 
 func _show_category(opponents: bool) -> void:
@@ -93,6 +105,8 @@ func _show_category(opponents: bool) -> void:
 		var button := MenuPanel.create_button(caption, _show_entry.bind(caption, explanation, marker, tint, i), true)
 		button.add_theme_font_override("font", RetroUi.body_font())
 		button.add_theme_font_size_override("font_size", 17)
+		button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		button.tooltip_text = caption
 		_index.add_child(button)
 		if i == 0:
 			_show_entry(caption, explanation, marker, tint, i)
@@ -105,4 +119,6 @@ func _show_entry(caption: String, explanation: String, marker: String, tint: Col
 	_marker.text = marker
 	_marker.add_theme_color_override("font_color", tint)
 	_name.text = caption
+	_name.tooltip_text = caption
 	_description.text = explanation
+	_description.scroll_to_line(0)

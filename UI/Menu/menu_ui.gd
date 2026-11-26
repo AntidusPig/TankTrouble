@@ -5,6 +5,7 @@ class_name PauseMenu extends CanvasLayer
 var _panel := MenuPanel.new()
 var _resume_button: Button
 var _previous_auto_quit: bool
+var results_active := false
 
 
 func _ready() -> void:
@@ -28,19 +29,20 @@ func _exit_tree() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed(&"Escape", false, true):
+	if not results_active and event.is_action_pressed(&"Escape", false, true):
 		get_viewport().set_input_as_handled()
 		CartoonSound.play_pause()
 		_set_paused(not _panel.visible)
 
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST and is_node_ready():
+	if what == NOTIFICATION_WM_CLOSE_REQUEST and is_node_ready() and not results_active:
 		_set_paused(true)
 
 
 func open() -> void:
-	_set_paused(true)
+	if not results_active:
+		_set_paused(true)
 
 
 func _set_paused(paused: bool) -> void:
@@ -60,6 +62,6 @@ func _save_checkpoint() -> void:
 
 
 func _return_to_menu() -> void:
-	GameSession.return_to_map_editor = not GameSession.custom_tiles.is_empty()
+	GameSession.return_to_map_editor = GameSession.editor_playtest
 	_set_paused(false)
 	get_tree().change_scene_to_file(GameSession.MENU)

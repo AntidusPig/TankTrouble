@@ -1,6 +1,9 @@
 extends Node2D
 
 @export var maze_path: NodePath = ^"MazeBuilder"
+const FLOOR_ART := preload("res://maze/illustrated_floor.gd")
+const WALL_SCENE := preload("res://maze/wall/illustrated_wall.tscn")
+const MATERIALS := preload("res://maze/maze_materials.gd")
 const THEME_CATALOG := preload("res://gameplay/levels/arena_theme.gd")
 
 var _hud_insets := Vector3.ZERO
@@ -15,9 +18,17 @@ func _enter_tree() -> void:
 	if scene_mode == GameSession.ARENA_MODE:
 		var stage := THEME_CATALOG.for_level(GameSession.level)
 		builder.footprint = stage.footprint
+		builder.wall_scene = WALL_SCENE
+		builder.wall_material = MATERIALS.texture(MATERIALS.WALL, stage.material)
+		builder.wall_trim = MATERIALS.TRIM[stage.material]
 		builder.painted_cells = GameSession.custom_tiles
-		if not builder.painted_cells.is_empty():
+		if GameSession.single_arena:
 			$WorldCommon/MenuUi.checkpoint_enabled = false
+		var floor_art := FLOOR_ART.new()
+		floor_art.name = "IllustratedFloor"
+		floor_art.maze = builder
+		floor_art.material_texture = MATERIALS.texture(MATERIALS.FLOOR, stage.material)
+		builder.add_child(floor_art)
 		if stage.backdrop != null:
 			$WorldCommon/Background.texture = stage.backdrop
 
