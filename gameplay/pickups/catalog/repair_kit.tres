@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1")
-display_name = "Repair Kit"
+display_name = "REPAIR"
 marker = "+"
 color = Color(0.35, 1, 0.55, 1)
 healing = 2

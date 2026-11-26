@@ -12,6 +12,8 @@ func setup_astar_points() -> void:
 	astar.clear()
 	for x in range(maze_builder.maze_size.x):
 		for y in range(maze_builder.maze_size.y):
+			if not maze_builder.valid_index(x, y):
+				continue
 			var id = get_cell_id(x, y)
 			var cell_center = (Vector2(x, y) * maze_builder.grid_size) + Vector2(maze_builder.grid_size / 2.0, maze_builder.grid_size / 2.0) + offset.position
 			astar.add_point(id, cell_center)
@@ -27,6 +29,25 @@ func get_global_enemy_path(start_pos: Vector2, target_pos: Vector2) -> PackedVec
 	var target_id = astar.get_closest_point(maze_builder.to_local(target_pos))
 	return local_2_global(astar.get_point_path(start_id, target_id))
 	
+func distances_from(positions: PackedVector2Array) -> Dictionary[int, int]:
+	var distances: Dictionary[int, int] = {}
+	var frontier: Array[int] = []
+	for point in positions:
+		var start := astar.get_closest_point(maze_builder.to_local(point))
+		if start >= 0 and not distances.has(start):
+			distances[start] = 0
+			frontier.append(start)
+	var cursor := 0
+	while cursor < frontier.size():
+		var current := frontier[cursor]
+		cursor += 1
+		for neighbor in astar.get_point_connections(current):
+			if not distances.has(neighbor):
+				distances[neighbor] = distances[current] + 1
+				frontier.append(neighbor)
+	return distances
+
+
 func local_2_global(path:PackedVector2Array)-> PackedVector2Array:
 	var global_path := PackedVector2Array()
 	for local_point in path:

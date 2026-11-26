@@ -9,6 +9,8 @@ var block_h: int
 
 var sudoku_numbers : Array[SudokuNumber] = []
 signal victory_achieved()
+signal cell_edited(shooter: TankBase)
+var solved := false
 
 func _ready():
 	super._ready()
@@ -21,11 +23,11 @@ func _ready():
 func setup_dimensions():
 	# 9x9 -> 3x3 blocks, 6x6 -> 3x2 blocks, 4x4 -> 2x2 blocks
 	if maze_size.x == 4: block_w = 2; block_h = 2
-	elif maze_size.x == 6: block_w = 3 if randi() % 2 == 0 else 2; block_h = 5 - block_w
+	elif maze_size.x == 6: block_w = 3 if _maze_rng.randi() % 2 == 0 else 2; block_h = 5 - block_w
 	elif maze_size.x == 9: block_w = 3; block_h = 3
-	elif maze_size.x == 8: block_w = 4 if randi() % 2 == 0 else 2; block_h = 6 - block_w
-	elif maze_size.x == 10: block_w = 5 if randi() % 2 == 0 else 2; block_h = 7 - block_w
-	elif maze_size.x == 12: block_w = 4 if randi() % 2 == 0 else 3; block_h = 7 - block_w
+	elif maze_size.x == 8: block_w = 4 if _maze_rng.randi() % 2 == 0 else 2; block_h = 6 - block_w
+	elif maze_size.x == 10: block_w = 5 if _maze_rng.randi() % 2 == 0 else 2; block_h = 7 - block_w
+	elif maze_size.x == 12: block_w = 4 if _maze_rng.randi() % 2 == 0 else 3; block_h = 7 - block_w
 	elif maze_size.x == 16: block_w = 4; block_h = 4
 	else:
 		push_error("Invalid Sudoku Size: ", maze_size.x, ', ', maze_size.y)
@@ -41,7 +43,7 @@ func create_sudoku_puzzle():
 	current_grid = solution.duplicate()
 
 	var indices = range(total_cells)
-	indices.shuffle()
+	_shuffle_values(indices)
 	# Adjust difficulty here
 	var target_empty = total_cells / 4
 	var removed_count = 0
@@ -76,20 +78,41 @@ func _solve_and_count(solution_count: int, grid: PackedInt32Array) -> int:
 	return solution_count + 1
 
 func fill_grid() -> bool:
-	for i in range(solution.size()):
-		if solution[i] == 0:
-			var numbers = range(1, maze_size.x + 1)
-			numbers.shuffle()
-			for value in numbers:
-				var row = i / maze_size.x
-				var col = i % maze_size.x
-				if can_place_number(solution, row, col, value):
-					solution[i] = value
-					if not 0 in solution: return true
-					if fill_grid(): return true
-			solution[i] = 0
-			return false
+	# Shuffle a constructive solution by whole bands, stacks and symbols.
+	var rows := _shuffled_units(block_h)
+	var columns := _shuffled_units(block_w)
+	var symbols := range(1, maze_size.x + 1)
+	_shuffle_values(symbols)
+	for y in range(maze_size.y):
+		for x in range(maze_size.x):
+			var row: int = rows[y]
+			var column: int = columns[x]
+			var pattern := (row * block_w + row / block_h + column) % maze_size.x
+			solution[y * maze_size.x + x] = symbols[pattern]
 	return true
+
+
+func _shuffled_units(group_size: int) -> Array[int]:
+	var groups := range(maze_size.x / group_size)
+	_shuffle_values(groups)
+	var order: Array[int] = []
+	for group in groups:
+		var entries := range(group_size)
+		_shuffle_values(entries)
+		for entry in entries:
+			order.append(group * group_size + entry)
+	return order
+
+
+func _shuffle_values(values: Array) -> void:
+	for i in range(values.size() - 1, 0, -1):
+		var partner := _maze_rng.randi_range(0, i)
+		var value: Variant = values[i]
+		values[i] = values[partner]
+		values[partner] = value
+
+
+
 
 func can_place_number(grid: PackedInt32Array, row: int, col: int, val: int) -> bool:
 	# Check Row and Column, remember the sudoku is NxN, square
@@ -116,55 +139,34 @@ func spawn_numbers() -> void:
 
 	for i in range(maze_size.x):
 		for j in range(maze_size.y):
-			var idx = i * maze_size.y + j
+			var idx := j * maze_size.x + i
 			var ns_inst : SudokuNumber = SudokuNumber.create(maze_size.x, current_grid[idx] != 0, idx)
 			offset.add_child(ns_inst)
-			ns_inst.scale = scale
 			ns_inst.position = Vector2(i * grid_size + grid_size/2, j * grid_size + grid_size/2)
 			ns_inst.value_changed.connect(_on_cell_value_changed)
+			ns_inst.shell_edited.connect(func(shooter: TankBase): cell_edited.emit(shooter))
 			ns_inst.set_number(current_grid[idx])
 			sudoku_numbers[idx] = ns_inst
 		
 ####### CHECK #########
 func _on_cell_value_changed(index: int, new_value: int):
 	current_grid[index] = new_value
-	if _check_if_solved():
+	if not solved and current_grid == solution:
 		_handle_victory()
 		
-func _check_if_solved() -> bool:
-	return current_grid == solution
-	# use this is solution is non-unique
-	#var size = maze_size.x
-	#var target = (1 << (size + 1)) - 2 
-#
-	#for i in range(size):
-		#var r_m = 0; var c_m = 0; var b_m = 0
-		#for j in range(size):
-			## Row/Col
-			#r_m |= 1 << current_grid[i * size + j]
-			#c_m |= 1 << current_grid[j * size + i]
-			## Block: 
-			## i = which block
-			## j = which cell inside that block
-			#var row = (i / block_h) * block_h + (j / block_w)
-			#var col = (i % block_h) * block_w + (j % block_w)
-			#b_m |= 1 << current_grid[row * size + col]
-		#if r_m != target or c_m != target or b_m != target:
-			#return false
-	#return true
-	
 func _handle_victory() -> void:
-	print("Sudoku Solved! Triggering Victory.")
-	for node in sudoku_numbers:
-		if is_instance_valid(node):
-			# Disable the collision/interaction area so bullets pass through now
-			var area = node.get_node_or_null("Area2D")
-			if area: area.monitorable = false
-			
-			# Visual celebration
-			for sn in sudoku_numbers:
-				sn.set_fixed(true)
+	solved = true
+	for number in sudoku_numbers:
+		number.set_fixed(true)
 	victory_achieved.emit()
+
+
+func remaining_cells() -> int:
+	var remaining := 0
+	for index in range(current_grid.size()):
+		remaining += int(current_grid[index] != solution[index])
+	return remaining
+
 
 ######## DECORATIONS ##########
 @onready var bg: ColorRect = $Background # The one with the ShaderMaterial
@@ -186,9 +188,9 @@ func _draw() -> void:
 	# 1. Draw Thin Internal Lines
 	for i in range(size + 1):
 		# Determine line thickness: Thick for borders/blocks, thin for cells
-		var is_block_boundary = (i % block_h == 0) if i < size else true
+		var is_block_boundary = (i % block_w == 0) if i < size else true
 		# For vertical lines, we check block_w; for horizontal, block_h
-		var is_block_h_boundary = (i % block_w == 0) if i < size else true
+		var is_block_h_boundary = (i % block_h == 0) if i < size else true
 		
 		var color = Color(0, 0, 0, 0.15) # Subtle white/grey
 		var thickness = 1.0

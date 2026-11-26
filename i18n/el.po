@@ -1,0 +1,490 @@
+msgid ""
+msgstr ""
+"Language: el\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "TITLE"
+msgstr "Μάχη Τανκ"
+
+msgid "NEW"
+msgstr "Νέο παιχνίδι"
+
+msgid "SUDOKU"
+msgstr "Σουντόκου"
+
+msgid "LOAD"
+msgstr "Φόρτωση"
+
+msgid "BOOK"
+msgstr "Εγκυκλοπαίδεια"
+
+msgid "SETTINGS"
+msgstr "Ρυθμίσεις"
+
+msgid "QUIT"
+msgstr "Έξοδος"
+
+msgid "SUDOKU_SETUP"
+msgstr "Ρύθμιση Σουντόκου"
+
+msgid "CHOOSE"
+msgstr "Επιλογή παικτών"
+
+msgid "START_PUZZLE"
+msgstr "Έναρξη γρίφου"
+
+msgid "START_MATCH"
+msgstr "Έναρξη αγώνα"
+
+msgid "BACK"
+msgstr "Πίσω"
+
+msgid "PLAYER_COUNTS"
+msgstr "%d παίκτες • %d από 3 άνθρωποι"
+
+msgid "CONTROLS"
+msgstr "Χειρισμός"
+
+msgid "RESTORE"
+msgstr "Επαναφορά προεπιλογών"
+
+msgid "RESTORE_PROMPT"
+msgstr "Επαναφορά προεπιλογών;"
+
+msgid "RESTORE_NOTE"
+msgstr "Θα αντικατασταθούν όλες οι αποθηκευμένες αντιστοιχίσεις."
+
+msgid "CANCEL"
+msgstr "Ακύρωση"
+
+msgid "RESTORED"
+msgstr "Ο χειρισμός επανήλθε στις προεπιλογές."
+
+msgid "RESET_ERR"
+msgstr "Αδύνατη η επαναφορά χειρισμού."
+
+msgid "START_ERR"
+msgstr "Αδύνατη η έναρξη."
+
+msgid "LOAD_ERR"
+msgstr "Αδύνατη η φόρτωση."
+
+msgid "LOAD_DOTNET"
+msgstr "Άνοιξε το έργο στο Godot .NET για φόρτωση με AI."
+
+msgid "AI_DOTNET"
+msgstr "Οι αντίπαλοι AI απαιτούν Godot .NET."
+
+msgid "AI_DISABLED"
+msgstr "Το AI δεν είναι διαθέσιμο. Χτίσε το έργο στο Godot .NET."
+
+msgid "PUZZLE_SOLVED"
+msgstr "Το Σουντόκου λύθηκε!"
+
+msgid "CAMPAIGN_COMPLETE"
+msgstr "Η σειρά αρένας ολοκληρώθηκε"
+
+msgid "NAV_HINT"
+msgstr "%s / βέλη για κίνηση · %s για επιλογή"
+
+msgid "PAUSE"
+msgstr "Παύση"
+
+msgid "PAUSED"
+msgstr "Σε παύση"
+
+msgid "RESUME"
+msgstr "Συνέχεια"
+
+msgid "SAVE"
+msgstr "Αποθήκευση"
+
+msgid "MAIN"
+msgstr "Κεντρικό μενού"
+
+msgid "SAVED"
+msgstr "Αποθηκεύτηκε"
+
+msgid "SAVE_ERR"
+msgstr "Αποτυχία αποθήκευσης"
+
+msgid "PUZZLE_SIZE"
+msgstr "Μέγεθος γρίφου"
+
+msgid "MAP_SIZE"
+msgstr "Μέγεθος χάρτη"
+
+msgid "RANDOM"
+msgstr "Τυχαίο"
+
+msgid "ADD_PLAYER"
+msgstr "Προσθήκη παίκτη %d"
+
+msgid "REMOVE_PLAYER"
+msgstr "Αφαίρεση παίκτη %d"
+
+msgid "CYCLE_PLAYER"
+msgstr "%s · Αλλαγή χειρισμού παίκτη %d"
+
+msgid "PLAYER"
+msgstr "Παίκτης %d"
+
+msgid "MENUS"
+msgstr "Μενού"
+
+msgid "ACTION"
+msgstr "Ενέργεια"
+
+msgid "KEYBOARD"
+msgstr "Πληκτρολόγιο"
+
+msgid "GAMEPAD"
+msgstr "Χειριστήριο"
+
+msgid "CAPTURE_HINT"
+msgstr "Επίλεξε μια αντιστοίχιση και πάτησε πλήκτρο ή κούνησε το χειριστήριο."
+
+msgid "LISTENING"
+msgstr "Αναμονή…"
+
+msgid "CAPTURE_KEY"
+msgstr "Πάτησε πλήκτρο ή συνδυασμό."
+
+msgid "CAPTURE_PAD"
+msgstr "Πάτησε κουμπί ή κούνησε μοχλό."
+
+msgid "UNCHANGED"
+msgstr "Η αντιστοίχιση διατηρήθηκε."
+
+msgid "TRY_INPUT"
+msgstr "Δοκίμασε άλλη είσοδο."
+
+msgid "BINDING_SAVED"
+msgstr "Η αντιστοίχιση αποθηκεύτηκε."
+
+msgid "PROPS"
+msgstr "Αντικείμενα"
+
+msgid "OPPONENTS"
+msgstr "Αντίπαλοι"
+
+msgid "CHARGES"
+msgstr "Φορτίσεις ανά συλλογή %d"
+
+msgid "HUMAN"
+msgstr "Άνθρωπος"
+
+msgid "OFF"
+msgstr "Ανενεργό"
+
+msgid "PRACTICE"
+msgstr "Στόχος εξάσκησης"
+
+msgid "STATE"
+msgstr "Μηχανή καταστάσεων"
+
+msgid "TREE"
+msgstr "Δέντρο συμπεριφοράς"
+
+msgid "GOAP"
+msgstr "GOAP"
+
+msgid "UTILITY"
+msgstr "Χρησιμότητα με πρόβλεψη"
+
+msgid "NEURAL"
+msgstr "Νευρωνικό αυτοπαίξιμο"
+
+msgid "SUDOKU_AI"
+msgstr "AI Σουντόκου"
+
+msgid "SHORT_PRACTICE"
+msgstr "Εξάσκηση"
+
+msgid "SHORT_STATE"
+msgstr "Καταστάσεις"
+
+msgid "SHORT_TREE"
+msgstr "Δέντρο"
+
+msgid "SHORT_UTILITY"
+msgstr "Χρησιμότητα"
+
+msgid "SHORT_NEURAL"
+msgstr "Νευρωνικό"
+
+msgid "WINS"
+msgstr "%d Ν"
+
+msgid "RESPAWNING"
+msgstr "Επανεμφάνιση…"
+
+msgid "ELIMINATED"
+msgstr "Αποκλείστηκε"
+
+msgid "SHIELD"
+msgstr "Ασπίδα %d"
+
+msgid "STANDARD"
+msgstr "Κανονικό"
+
+msgid "EDITS"
+msgstr "%d αλλαγές"
+
+msgid "WINNER"
+msgstr "Κερδίζει ο παίκτης %d"
+
+msgid "DRAW"
+msgstr "Ισοπαλία γύρου"
+
+msgid "NEXT_ARENA"
+msgstr "Επόμενη αρένα"
+
+msgid "RETRY_ARENA"
+msgstr "Επανάληψη αρένας"
+
+msgid "ARENA_STATUS"
+msgstr "%s · %d / %d"
+
+msgid "ARENA_BACKLOT"
+msgstr "Στούντιο Γυρισμάτων"
+
+msgid "ARENA_FOUNDRY"
+msgstr "Χυτήριο Ατμού"
+
+msgid "ARENA_MOON"
+msgstr "Σεληνιακός Κρατήρας"
+
+msgid "ARENA_GROVE"
+msgstr "Τυχερό Άλσος"
+
+msgid "PUZZLE_STATUS"
+msgstr "Σουντόκου %d × %d · %d κελιά μένουν"
+
+msgid "REPAIR"
+msgstr "Κιτ επισκευής"
+
+msgid "SHIELD_CELL"
+msgstr "Κυψέλη ασπίδας"
+
+msgid "NEEDLE"
+msgstr "Κάψουλα βελόνας"
+
+msgid "FORK"
+msgstr "Τριπλή κάψουλα"
+
+msgid "BREAKER"
+msgstr "Διατρητική κάψουλα"
+
+msgid "LASER"
+msgstr "Λέιζερ πρίσματος"
+
+msgid "BLAST"
+msgstr "Εκρηκτικό βλήμα"
+
+msgid "FORWARD"
+msgstr "Εμπρός"
+
+msgid "REVERSE"
+msgstr "Όπισθεν"
+
+msgid "TURN_L"
+msgstr "Στροφή αριστερά"
+
+msgid "TURN_R"
+msgstr "Στροφή δεξιά"
+
+msgid "FIRE"
+msgstr "Πυρ"
+
+msgid "MENU_UP"
+msgstr "Πάνω"
+
+msgid "MENU_DOWN"
+msgstr "Κάτω"
+
+msgid "MENU_LEFT"
+msgstr "Αριστερά"
+
+msgid "MENU_RIGHT"
+msgstr "Δεξιά"
+
+msgid "MENU_SELECT"
+msgstr "Επιλογή"
+
+msgid "MENU_PAUSE"
+msgstr "Πίσω / Παύση"
+
+msgid "MENU_NEXT"
+msgstr "Επόμενο στοιχείο"
+
+msgid "MENU_PREVIOUS"
+msgstr "Προηγούμενο στοιχείο"
+
+msgid "ASSIGNED"
+msgstr "Έχει ήδη αντιστοιχιστεί στο %s."
+
+msgid "BIND_ERR"
+msgstr "Αδύνατη η αποθήκευση χειρισμού."
+
+msgid "ANY_PAD"
+msgstr "Οποιοδήποτε χειριστήριο"
+
+msgid "PAD"
+msgstr "Χειριστήριο %d"
+
+msgid "AXIS"
+msgstr "Άξονας %d"
+
+msgid "BUTTON"
+msgstr "Κουμπί %d"
+
+msgid "PROP_0"
+msgstr "Επισκευάζει δύο βαθμούς αντοχής. Τα άθικτα τανκ το αφήνουν για τους άλλους."
+
+msgid "PROP_1"
+msgstr "Απορροφά δύο μονάδες ζημιάς. Το λέιζερ διαπερνά την ασπίδα."
+
+msgid "PROP_2"
+msgstr "Γρήγορο βλήμα για χτυπήματα πριν στρίψει ή κρυφτεί ο αντίπαλος."
+
+msgid "PROP_3"
+msgstr "Ρίχνει τρία βλήματα σε διασπορά με μία φόρτιση."
+
+msgid "PROP_4"
+msgstr "Βαρύ και αργό βλήμα που προκαλεί δύο μονάδες ζημιάς σε άμεσο χτύπημα."
+
+msgid "PROP_5"
+msgstr "Φορτίζει για ένα δευτερόλεπτο και καταστρέφει κάθε τανκ στη δέσμη. Διαπερνά τοίχους και ακινητοποιεί τον σκοπευτή μέχρι το τέλος."
+
+msgid "PROP_6"
+msgstr "Εκρήγνυται σε επαφή ή όταν τελειώσει το φυτίλι. Ζημιώνει τα κοντινά τανκ. Οι τοίχοι παρέχουν κάλυψη."
+
+msgid "BOT_0"
+msgstr "Σταθερός στόχος με τρεις ζωές για εξάσκηση και δοκιμή αντικειμένων."
+
+msgid "BOT_1"
+msgstr "Σταθεροί κανόνες εναλλάσσουν καταδίωξη, βολή, αποφυγή και επισκευή."
+
+msgid "BOT_2"
+msgstr "Χρησιμοποιεί δέντρο προτεραιοτήτων και ελέγχει κινδύνους και ζημιές πριν επιτεθεί."
+
+msgid "BOT_3"
+msgstr "Σχεδιάζει ακολουθίες όπως υποχώρηση πριν την επισκευή ή εύρεση γραμμής βολής μετά τον επανεξοπλισμό."
+
+msgid "BOT_4"
+msgstr "Βαθμολογεί νόμιμες ενέργειες και εξετάζει την επόμενη κίνηση."
+
+msgid "BOT_5"
+msgstr "Μαθαίνει να ταξινομεί νόμιμες ενέργειες παίζοντας εναντίον παλαιότερων εκδόσεων του εαυτού του."
+
+msgid "BOT_6"
+msgstr "Ξέρει τη λύση και φτάνει στα κελιά για να τα αλλάζει με ένα βλήμα κάθε φορά."
+
+msgid "PAD_BACK"
+msgstr "Πίσω"
+
+msgid "PAD_GUIDE"
+msgstr "Οδηγός"
+
+msgid "PAD_START"
+msgstr "Έναρξη"
+
+msgid "PAD_STICK_L"
+msgstr "Αριστερός μοχλός"
+
+msgid "PAD_STICK_R"
+msgstr "Δεξιός μοχλός"
+
+msgid "PAD_D_UP"
+msgstr "Σταυρός πάνω"
+
+msgid "PAD_D_DOWN"
+msgstr "Σταυρός κάτω"
+
+msgid "PAD_D_LEFT"
+msgstr "Σταυρός αριστερά"
+
+msgid "PAD_D_RIGHT"
+msgstr "Σταυρός δεξιά"
+
+msgid "PAD_LX"
+msgstr "Αριστερός μοχλός X"
+
+msgid "PAD_LY"
+msgstr "Αριστερός μοχλός Y"
+
+msgid "PAD_RX"
+msgstr "Δεξιός μοχλός X"
+
+msgid "PAD_RY"
+msgstr "Δεξιός μοχλός Y"
+
+msgid "PLAYER_SHORT"
+msgstr "Π%d"
+
+msgid "MAP_EDITOR"
+msgstr "Επεξεργαστής χαρτών"
+
+msgid "MAP_EDITOR_CUSTOM"
+msgstr "Προσαρμοσμένη αρένα"
+
+msgid "MAP_VOID"
+msgstr "Κενό"
+
+msgid "MAP_FLOOR"
+msgstr "Δάπεδο"
+
+msgid "MAP_ICE"
+msgstr "Πάγος"
+
+msgid "MAP_GRASS"
+msgstr "Γρασίδι"
+
+msgid "MAP_FILL"
+msgstr "Γέμισμα χάρτη"
+
+msgid "MAP_SLOT"
+msgstr "Χάρτης %d"
+
+msgid "MAP_SLOT_EMPTY"
+msgstr "Δεν υπάρχει αποθηκευμένος χάρτης σε αυτή τη θέση."
+
+msgid "MAP_INVALID"
+msgstr "Ένωσε όλα τα βαμμένα πλακίδια από τις πλευρές τους και άφησε ένα ανά παίκτη."
+
+msgid "MAP_READY"
+msgstr "Ζωγράφισε με το ποντίκι ή μετακίνησε τον δείκτη και πάτησε Επιλογή. Οι τοίχοι δημιουργούνται τυχαία στο παιχνίδι."
+
+msgid "MAP_PLAYTEST"
+msgstr "Δοκιμή χάρτη"
+
+msgid "MAP_SAVE"
+msgstr "Αποθήκευση χάρτη"
+
+msgid "MAP_LOAD"
+msgstr "Φόρτωση χάρτη"
+
+msgid "MAP_SAVED"
+msgstr "Ο χάρτης αποθηκεύτηκε."
+
+msgid "ARENA_KEYHOLE"
+msgstr "Φρούριο Κλειδαρότρυπα"
+
+msgid "ARENA_SWITCHBACK"
+msgstr "Ζιγκ ζαγκ"
+
+msgid "ARENA_FORK"
+msgstr "Διακλάδωση"
+
+msgid "PORTAL_CAPSULE"
+msgstr "Όπλο πυλών"
+
+msgid "TURBO_TONIC"
+msgstr "Τονωτικό τούρμπο"
+
+msgid "PROP_7"
+msgstr "Μία βολή τοποθετεί μία πύλη στον στοχευμένο διάδρομο και άλλη μία σε τυχαίο ελεύθερο κελί. Κλείνουν μετά από μία διέλευση ή δέκα δευτερόλεπτα."
+
+msgid "PROP_8"
+msgstr "Αυξάνει την ταχύτητα οδήγησης κατά σαράντα τοις εκατό για πέντε δευτερόλεπτα."

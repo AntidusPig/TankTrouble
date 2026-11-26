@@ -1,5 +1,7 @@
 class_name ArenaPickup extends Area2D
 
+const PARTICLES := preload("res://gameplay/vfx/cartoon_particles.gd")
+
 var definition: PickupDefinition
 var cell: Vector2i
 var collected := false
@@ -25,6 +27,8 @@ func _physics_process(_delta: float) -> void:
 		if body is TankBase and definition.apply_to(body):
 			collected = true
 			if not body.silent:
+				var parent := get_parent() as Node2D
+				PARTICLES.emit(parent, parent.to_local(global_position), definition.color, 18, 102.0)
 				CartoonSound.play_at(CartoonSound.pickup, global_position, -13.0)
 			queue_free()
 			return

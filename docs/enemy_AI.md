@@ -14,7 +14,7 @@ Rank bots that pass the fairness checks by win rate on held-out maze seeds. Trac
 
 ## Trying the controllers
 
-Run the project in Godot 4.7.2 .NET with the .NET 8 SDK. To play against a controller, select **New Game → 1 Player · Play against AI**. Target practice keeps the tanks stationary for weapon tests.
+Run the project in Godot 4.7.2 .NET with the .NET 8 SDK. To play against a controller, select **New Game**, then cycle a player slot to the desired controller and start the match. Target practice keeps the tanks stationary for weapon tests.
 
 To wire a scene in the editor, add exactly one of the component scenes from `gameplay/ai/components` under a `TankBase` entity. Assign a positive team number to group allies. Team zero is free-for-all. The components use the same drive, rotation, cooldown, damage, shield, and pickup code as the player. They observe visible arena entities and make decisions on a timer. The projectile predictor estimates tank movement, checks wall reflections, and gives different options to laser and explosive weapons.
 

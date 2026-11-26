@@ -17,7 +17,7 @@ func _ready() -> void:
 
 func set_input_slot(slot: int) -> void:
 	input_slot = slot
-	var suffix := "2" if slot == 2 else ""
+	var suffix := str(slot) if slot > 1 else ""
 	_up = StringName("Up" + suffix)
 	_down = StringName("Down" + suffix)
 	_left = StringName("Left" + suffix)
@@ -26,15 +26,15 @@ func set_input_slot(slot: int) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed(_attack):
+	if event.is_action_pressed(_attack, false, true):
 		request_shot()
 
 
 func _physics_process(delta: float) -> void:
 	if pending_destroy:
 		return
-	var turn := Input.get_axis(_left, _right)
-	var drive := Input.get_axis(_down, _up)
+	var turn := Input.get_action_strength(_right, true) - Input.get_action_strength(_left, true)
+	var drive := Input.get_action_strength(_up, true) - Input.get_action_strength(_down, true)
 	apply_drive(turn, drive, delta)
 	var direction := get_forward()
 	if drive != 0.0 and not is_instance_valid(laser_beam):

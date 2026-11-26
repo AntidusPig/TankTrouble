@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="PickupDefinition" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://gameplay/pickups/pickup_definition.gd" id="1"]
+[ext_resource type="Script" path="res://data/scripts/ShellStats.gd" id="2"]
+
+[sub_resource type="Resource" id="PortalStats"]
+script = ExtResource("2")
+firing_cooldown = 0.55
+
+[resource]
+script = ExtResource("1")
+display_name = "PORTAL_CAPSULE"
+marker = "P"
+color = Color(0.30, 0.82, 0.94, 1)
+weapon_stats = SubResource("PortalStats")
+shot_charges = 1
+portal_round = true

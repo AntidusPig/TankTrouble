@@ -24,6 +24,8 @@ const tank_damaged : Array[Resource] = [preload("uid://c7c5coikwed3h"), preload(
 @export_range(0, 16) var team: int = 0
 var shield_points: int = 0
 var silent: bool = false
+var portal_launcher: Callable
+var boost_left := 0.0
 var weapon_effect_parent: Node2D
 var _ai_enabled := false
 var _ai_turn := 0.0
@@ -61,12 +63,15 @@ func apply_drive(turn: float, drive: float, delta: float) -> void:
 	if is_instance_valid(laser_beam):
 		return
 	rotation += turn * rotate_speed * delta
-	velocity = get_forward() * drive * move_speed * scale.x
-	moving = turn != 0.0 or drive != 0.0
+	velocity = get_forward() * drive * move_speed * scale.x * (1.40 if boost_left > 0.0 else 1.0)
+	moving = turn != 0.0 or velocity.length_squared() > 5.0
 
 
 func _physics_process(delta: float) -> void:
 	if pending_destroy:return
+	if boost_left > 0.0:
+		boost_left = maxf(0.0, boost_left - delta)
+		queue_redraw()
 	if is_instance_valid(laser_beam):
 		_shot_requested = false
 		laser_beam.advance(delta, self)
@@ -113,14 +118,18 @@ func shoot() -> void:
 	var angles := PackedFloat32Array([0.0]) if weapon == null else weapon.shot_angles
 	if angles.is_empty():
 		return
+	var is_portal := weapon != null and weapon.portal_round
+	if is_portal and (not portal_launcher.is_valid() or not portal_launcher.call(self, muzzle.global_position, get_forward())):
+		return
 	time_since_last_shot = active_stats.firing_cooldown
 	shells = shells.filter(func(shell): return is_instance_valid(shell))
-	for angle in angles:
-		var direction := get_forward().rotated(deg_to_rad(angle))
-		if active_stats.laser_range > 0.0:
-			_fire_laser(direction, active_stats)
-		else:
-			_fire_shell(direction, active_stats if weapon != null else null)
+	if not is_portal:
+		for angle in angles:
+			var direction := get_forward().rotated(deg_to_rad(angle))
+			if active_stats.laser_range > 0.0:
+				_fire_laser(direction, active_stats)
+			else:
+				_fire_shell(direction, active_stats if weapon != null else null)
 	shoot_signal.emit(muzzle.global_position, get_forward())
 	while shells.size() > active_stats.max_num_shells:
 		var oldest: Shell = shells.pop_front()
@@ -167,6 +176,14 @@ func heal(amount: int) -> bool:
 	return true
 
 
+func grant_speed_boost(seconds: float) -> bool:
+	if pending_destroy or boost_left >= seconds * 0.75:
+		return false
+	boost_left = seconds
+	queue_redraw()
+	return true
+
+
 func add_shield(amount: int) -> bool:
 	if pending_destroy or amount <= shield_points:
 		return false
@@ -176,6 +193,8 @@ func add_shield(amount: int) -> bool:
 
 
 func _draw() -> void:
+	if boost_left > 0.0:
+		draw_arc(Vector2.ZERO, 66.0, PI * 0.70, PI * 1.30, 20, Color("#ffb453"), 5.0, true)
 	if shield_points > 0:
 		draw_arc(Vector2.ZERO, 83.0, 0.0, TAU, 48, Color(0.53, 0.65, 1.0, 0.9), 3.5, true)
 

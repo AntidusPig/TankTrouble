@@ -1,0 +1,307 @@
+using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Godot;
+using Godot.Collections;
+
+namespace TankTrouble.AI;
+
+[GlobalClass]
+public partial class SudokuSolverAI : Node
+{
+    private sealed class ShotClock
+    {
+        public ulong NextShot;
+        public int LastTeam;
+    }
+
+    private static readonly ConditionalWeakTable<Node2D, ShotClock> Clocks = new();
+    private const int MaxTeams = 8;
+    private const string SolverGroup = "sudoku_solver";
+    private const string DriverMetadata = "_active_tank_brain";
+
+    [Export(PropertyHint.Range, "1.5,10.0,0.1")]
+    public float SecondsBetweenPuzzleShots { get; set; } = 2.4f;
+
+    private CharacterBody2D _tank = null!;
+    private Node2D _maze = null!;
+    private Node _navigation = null!;
+    private ShotClock _clock = null!;
+    private Node2D? _target;
+    private Vector2 _direction;
+    private Vector2 _stage;
+    private Vector2[] _route = System.Array.Empty<Vector2>();
+    private int _nextWaypoint;
+    private Vector2 _progress;
+    private float _stuckTime;
+    private float _wait;
+    private bool _readyToShoot;
+    private int _avoidIndex = -1;
+    private int _patrolIndex;
+    private Vector2[] _patrolRoute = System.Array.Empty<Vector2>();
+    private int _patrolWaypoint;
+    private readonly System.Collections.Generic.Dictionary<int, int> _turnAttempts = new();
+    public int TargetIndex { get; private set; } = -1;
+
+    public override void _Ready()
+    {
+        if (GetParent() is not CharacterBody2D tank || !tank.HasMethod("set_ai_controls") ||
+            GetTree().GetFirstNodeInGroup("MazeBuilder") is not Node2D maze ||
+            !maze.HasMethod("remaining_cells") || tank.HasMeta(DriverMetadata))
+        {
+            SetPhysicsProcess(false);
+            return;
+        }
+        _tank = tank;
+        _maze = maze;
+        _navigation = _maze.GetNode("MazeAStar");
+        _clock = Clocks.GetValue(maze, _ => new ShotClock { NextShot = Engine.GetPhysicsFrames() + Gap() });
+        _progress = tank.GlobalPosition;
+        _tank.SetMeta(DriverMetadata, true);
+        _tank.Call("enable_ai_controls", true);
+        AddToGroup(SolverGroup);
+    }
+
+    public override void _ExitTree()
+    {
+        if (IsInstanceValid(_tank))
+        {
+            _tank.RemoveMeta(DriverMetadata);
+            _tank.Call("enable_ai_controls", false);
+        }
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        _readyToShoot = false;
+        if (_tank.Get("pending_destroy").AsBool() || _maze.Get("solved").AsBool())
+        {
+            Stop();
+            return;
+        }
+
+        if (!TargetNeedsEdit())
+        {
+            _target = null;
+            TargetIndex = -1;
+            _wait -= (float)delta;
+            if (_wait <= 0f)
+            {
+                SelectTarget();
+                _wait = 0.35f;
+            }
+            if (_target is null)
+            {
+                Patrol((float)delta);
+                return;
+            }
+            _patrolRoute = System.Array.Empty<Vector2>();
+        }
+
+        float scale = Mathf.Abs(_tank.GlobalScale.X);
+        Vector2 location = _tank.GlobalPosition;
+        if (location.DistanceTo(_stage) > 8f * scale)
+        {
+            if (location.DistanceTo(_progress) > 15f * scale)
+            {
+                _progress = location;
+                _stuckTime = 0f;
+            }
+            else
+                _stuckTime += (float)delta;
+            if (_stuckTime >= 3.2f)
+            {
+                AbandonTarget();
+                return;
+            }
+            Steer(Waypoint(location, scale), (float)delta);
+            return;
+        }
+
+        float diff = Mathf.AngleDifference(_tank.GlobalRotation, _direction.Angle());
+        float turnSpeed = (float)_tank.Get("rotate_speed").AsDouble();
+        if (Mathf.Abs(diff) > 0.018f)
+        {
+            _tank.Call("set_ai_controls", Mathf.Clamp(diff / (turnSpeed * (float)delta), -1f, 1f), 0f, false);
+            return;
+        }
+
+        ulong now = Engine.GetPhysicsFrames();
+        if (_tank.Get("time_since_last_shot").AsDouble() > 0.0)
+        {
+            Stop();
+            return;
+        }
+        if (!MuzzleHitsTarget())
+        {
+            _stuckTime += (float)delta;
+            if (_stuckTime >= 1.35f)
+                AbandonTarget();
+            else
+                Stop();
+            return;
+        }
+
+        _readyToShoot = true;
+        _stuckTime = 0;
+        int team = _tank.Get("team").AsInt32();
+        if (now < _clock.NextShot || HasEarlierTurn(team))
+        {
+            Stop();
+            return;
+        }
+
+        _clock.NextShot = now + Gap();
+        _clock.LastTeam = team;
+        _readyToShoot = false;
+        _tank.Call("set_ai_controls", 0f, 0f, true);
+    }
+
+    private bool HasEarlierTurn(int team)
+    {
+        int order = TurnOrder(team);
+        foreach (var node in GetTree().GetNodesInGroup(SolverGroup))
+            if (node is SudokuSolverAI solver && solver._maze == _maze && solver._readyToShoot &&
+                TurnOrder(solver._tank.Get("team").AsInt32()) < order && solver.TargetNeedsEdit())
+                return true;
+        return false;
+    }
+
+    private int TurnOrder(int team) => (team - _clock.LastTeam + MaxTeams - 1) % MaxTeams;
+
+    private ulong Gap() => (ulong)Math.Ceiling(SecondsBetweenPuzzleShots * Engine.PhysicsTicksPerSecond);
+
+    private bool TargetNeedsEdit()
+    {
+        if (!IsInstanceValid(_target) || TargetIndex < 0 || _target!.Get("fixed").AsBool())
+            return false;
+        var answer = _maze.Get("solution").AsInt32Array();
+        return TargetIndex < answer.Length && _target.Get("current_value").AsInt32() != answer[TargetIndex];
+    }
+
+    private void SelectTarget()
+    {
+        var claimed = new HashSet<int>();
+        foreach (var node in GetTree().GetNodesInGroup(SolverGroup))
+            if (node is SudokuSolverAI solver && solver != this && solver._maze == _maze && solver.TargetIndex >= 0)
+                claimed.Add(solver.TargetIndex);
+
+        var cells = _maze.Get("sudoku_numbers").AsGodotArray();
+        var answers = _maze.Get("solution").AsInt32Array();
+        Vector2 location = _tank.GlobalPosition;
+        float best = float.PositiveInfinity;
+        for (int i = 0; i < answers.Length; i++)
+        {
+            if (claimed.Contains(i) || i == _avoidIndex || cells[i].AsGodotObject() is not Node2D cell ||
+                cell.Get("fixed").AsBool() || cell.Get("current_value").AsInt32() == answers[i])
+                continue;
+            var route = Path(location, cell.GlobalPosition);
+            if (route.Length == 0)
+                continue;
+            float cost = route.Length + location.DistanceTo(route[0]) / 160f +
+                location.DistanceTo(cell.GlobalPosition) / 2400f;
+            if (cost >= best)
+                continue;
+
+            best = cost;
+            TargetIndex = i;
+            _target = cell;
+            _route = route;
+            _nextWaypoint = 0;
+            Vector2 arrival = route.Length > 1 ? cell.GlobalPosition - route[^2] : cell.GlobalPosition - location;
+            if (arrival.LengthSquared() < 1f)
+                arrival = Vector2.Right;
+            _direction = Mathf.Abs(arrival.X) >= Mathf.Abs(arrival.Y)
+                ? new Vector2(Mathf.Sign(arrival.X), 0)
+                : new Vector2(0, Mathf.Sign(arrival.Y));
+            _direction = _direction.Rotated(_turnAttempts.GetValueOrDefault(i) * Mathf.Pi / 2f);
+            _stage = cell.GlobalPosition - _direction * 43f * Mathf.Abs(_tank.GlobalScale.X);
+        }
+        _avoidIndex = -1;
+        _stuckTime = 0f;
+        _progress = location;
+    }
+
+    private Vector2 Waypoint(Vector2 position, float scale)
+    {
+        // Finish a corridor at its center before turning through the next opening.
+        while (_nextWaypoint < _route.Length && position.DistanceTo(_route[_nextWaypoint]) < 8f * scale)
+            _nextWaypoint++;
+        return _nextWaypoint < _route.Length ? _route[_nextWaypoint] : _stage;
+    }
+
+    private Vector2[] Path(Vector2 start, Vector2 goal) =>
+        _navigation.Call("get_global_enemy_path", start, goal).AsVector2Array();
+
+    private void Steer(Vector2 waypoint, float delta)
+    {
+        Vector2 movement = waypoint - _tank.GlobalPosition;
+        if (movement.LengthSquared() < 1f)
+        {
+            Stop();
+            return;
+        }
+        float angle = Mathf.AngleDifference(_tank.GlobalRotation, movement.Angle());
+        float drive = 1f;
+        if (Mathf.Abs(angle) > Mathf.Pi / 2f)
+        {
+            angle = Mathf.AngleDifference(_tank.GlobalRotation, movement.Angle() + Mathf.Pi);
+            drive = -1f;
+        }
+        if (Mathf.Abs(angle) > 0.08f)
+            drive = 0f;
+        else
+        {
+            float speed = (float)_tank.Get("move_speed").AsDouble() * Mathf.Abs(_tank.GlobalScale.X);
+            drive *= Mathf.Min(1f, movement.Length() / Mathf.Max(1f, speed * delta));
+        }
+        float turnSpeed = (float)_tank.Get("rotate_speed").AsDouble();
+        _tank.Call("set_ai_controls", Mathf.Clamp(angle / (turnSpeed * delta), -1f, 1f), drive, false);
+    }
+
+    private bool MuzzleHitsTarget()
+    {
+        Vector2 start = _tank.GetNode<Node2D>("body/head_mount/head/muzzle").GlobalPosition;
+        Vector2 forward = Vector2.FromAngle(_tank.GlobalRotation);
+        var query = PhysicsRayQueryParameters2D.Create(start, start + forward * 10f, 1);
+        query.CollideWithAreas = true;
+        query.HitFromInside = true;
+        query.Exclude = new Array<Rid> { _tank.GetRid() };
+        var hit = _tank.GetWorld2D().DirectSpaceState.IntersectRay(query);
+        return hit.Count > 0 && hit["collider"].AsGodotObject() is Area2D area && area.GetParent() == _target;
+    }
+
+    private void AbandonTarget()
+    {
+        _avoidIndex = TargetIndex;
+        _turnAttempts[TargetIndex] = (_turnAttempts.GetValueOrDefault(TargetIndex) + 1) % 4;
+        TargetIndex = -1;
+        _target = null;
+        _wait = 0f;
+        Stop();
+    }
+
+    private void Patrol(float delta)
+    {
+        Vector2 location = _tank.GlobalPosition;
+        float tolerance = 8f * Mathf.Abs(_tank.GlobalScale.X);
+        while (_patrolWaypoint < _patrolRoute.Length &&
+               location.DistanceTo(_patrolRoute[_patrolWaypoint]) < tolerance)
+            _patrolWaypoint++;
+
+        if (_patrolWaypoint >= _patrolRoute.Length)
+        {
+            var cells = _maze.Get("sudoku_numbers").AsGodotArray();
+            int team = _tank.Get("team").AsInt32();
+            _patrolIndex = (_patrolIndex + 5 + team) % cells.Count;
+            var goal = (Node2D)cells[_patrolIndex].AsGodotObject();
+            _patrolRoute = Path(location, goal.GlobalPosition);
+            _patrolWaypoint = 0;
+        }
+
+        if (_patrolWaypoint < _patrolRoute.Length)
+            Steer(_patrolRoute[_patrolWaypoint], delta);
+    }
+
+    private void Stop() => _tank.Call("set_ai_controls", 0f, 0f, false);
+}

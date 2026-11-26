@@ -10,6 +10,10 @@ var wall_thickness : float
 const neighbour_dir = [Vector2i(1,0), Vector2i(-1,0), Vector2i(0,1), Vector2i(0,-1)]
 var walls_dict = {}
 @export var generation_seed: int = -1
+enum Footprint { RECTANGLE, MOON, FOUNDRY, GROVE, KEYHOLE, SWITCHBACK, FORK }
+const BOARD := preload("res://maze/painted_map.gd")
+var painted_cells := PackedInt32Array()
+@export var footprint := Footprint.RECTANGLE
 var _maze_rng := RandomNumberGenerator.new()
 
 func _ready() -> void:
@@ -32,6 +36,10 @@ func _ready() -> void:
 	
 func get_cell_position(i:int, j:int) -> Vector2:
 	return to_global(Vector2(grid_size * (i + 0.5), grid_size * (j + 0.5)) - grid_size * maze_size / 2.0)
+
+func cell_at(world_point: Vector2) -> Vector2i:
+	return Vector2i((to_local(world_point) / grid_size + Vector2(maze_size) * 0.5).floor())
+
 
 func add_wall(posx:int, posy:int, horizontal:bool) -> void:
 	'''
@@ -66,10 +74,12 @@ func remove_wall(posx:float, posy:float, horizontal:bool) -> void:
 func add_all_walls() -> void:
 	for i in range(maze_size.x+1):
 		for j in range(maze_size.y):
-			add_wall(i,j,false)
+			if valid_index(i - 1, j) or valid_index(i, j):
+				add_wall(i, j, false)
 	for i in range(maze_size.x):
-		for j in range(maze_size.y+1):
-			add_wall(i,j,true)
+		for j in range(maze_size.y + 1):
+			if valid_index(i, j - 1) or valid_index(i, j):
+				add_wall(i, j, true)
 	
 func add_border_walls() -> void:
 	for i in [0,maze_size.x]:
@@ -83,7 +93,23 @@ func valid_index(i:int,j:int) -> bool:
 	'''
 	check if (i,j) is inside the maze
 	'''
-	return (i>=0) and (i<maze_size.x) and (j>=0) and (j<maze_size.y)
+	if i < 0 or i >= maze_size.x or j < 0 or j >= maze_size.y:
+		return false
+	if not painted_cells.is_empty():
+		return painted_cells[j * maze_size.x + i] != BOARD.Tile.VOID
+	var point := (Vector2(i + 0.5, j + 0.5) * 2.0 / Vector2(maze_size) - Vector2.ONE)
+	var symmetric := point.abs()
+	match footprint:
+		Footprint.MOON: return symmetric.length_squared() <= 1.0
+		Footprint.FOUNDRY: return symmetric.x + symmetric.y <= 1.25
+		Footprint.GROVE: return symmetric.x < 0.58 or symmetric.y < 0.58
+		Footprint.KEYHOLE: return point.y <= 0.0 or symmetric.x <= 0.34 or point.y > 0.65
+		Footprint.SWITCHBACK:
+			var band := 5 * j / maze_size.y
+			if band == 1: return point.x < -0.20
+			if band == 3: return point.x > 0.20
+		Footprint.FORK: return point.y > 0.22 or symmetric.x >= 0.36
+	return true
 
 func pop_random(array):
 	assert(not array.is_empty(), "Array cannot be empty")
@@ -227,10 +253,12 @@ func create_maze_Kruskal() -> void:
 	var all_walls: Array = []
 	for i in range(1,maze_size.x):
 		for j in range(maze_size.y):
-			all_walls.append([i, j, false])  # [x, y, is_horizontal]
+			if valid_index(i - 1, j) and valid_index(i, j):
+				all_walls.append([i, j, false])
 	for i in range(maze_size.x):
 		for j in range(1,maze_size.y):
-			all_walls.append([i, j, true])
+			if valid_index(i, j - 1) and valid_index(i, j):
+				all_walls.append([i, j, true])
 	# Shuffle internal walls
 	for i in range(all_walls.size() - 1, 0, -1):
 		var swap := _maze_rng.randi_range(0, i)

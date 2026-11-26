@@ -10,7 +10,7 @@ laser_range = 4000.0
 
 [resource]
 script = ExtResource("1")
-display_name = "Prism Laser"
+display_name = "LASER"
 marker = "L"
 color = Color(1, 0.28, 0.28, 1)
 weapon_stats = SubResource("WeaponStats")

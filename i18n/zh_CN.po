@@ -1,0 +1,490 @@
+msgid ""
+msgstr ""
+"Language: zh_CN\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "TITLE"
+msgstr "坦克大乱斗"
+
+msgid "NEW"
+msgstr "新游戏"
+
+msgid "SUDOKU"
+msgstr "数独"
+
+msgid "LOAD"
+msgstr "读取存档"
+
+msgid "BOOK"
+msgstr "百科全书"
+
+msgid "SETTINGS"
+msgstr "设置"
+
+msgid "QUIT"
+msgstr "退出"
+
+msgid "SUDOKU_SETUP"
+msgstr "数独设置"
+
+msgid "CHOOSE"
+msgstr "选择玩家"
+
+msgid "START_PUZZLE"
+msgstr "开始解题"
+
+msgid "START_MATCH"
+msgstr "开始比赛"
+
+msgid "BACK"
+msgstr "返回"
+
+msgid "PLAYER_COUNTS"
+msgstr "%d 名玩家 · %d/3 名真人"
+
+msgid "CONTROLS"
+msgstr "操作设置"
+
+msgid "RESTORE"
+msgstr "恢复默认"
+
+msgid "RESTORE_PROMPT"
+msgstr "恢复默认设置？"
+
+msgid "RESTORE_NOTE"
+msgstr "这将替换所有已保存的键盘和手柄按键。"
+
+msgid "CANCEL"
+msgstr "取消"
+
+msgid "RESTORED"
+msgstr "已恢复默认按键。"
+
+msgid "RESET_ERR"
+msgstr "无法重置按键。"
+
+msgid "START_ERR"
+msgstr "无法启动游戏。"
+
+msgid "LOAD_ERR"
+msgstr "无法读取存档。"
+
+msgid "LOAD_DOTNET"
+msgstr "请用 Godot .NET 读取此 AI 存档。"
+
+msgid "AI_DOTNET"
+msgstr "AI 对手需要 Godot .NET。"
+
+msgid "AI_DISABLED"
+msgstr "AI 不可用。请在 Godot .NET 中打开并构建项目。"
+
+msgid "PUZZLE_SOLVED"
+msgstr "数独已解开！"
+
+msgid "CAMPAIGN_COMPLETE"
+msgstr "竞技场系列赛完成"
+
+msgid "NAV_HINT"
+msgstr "%s / 方向键移动 · %s 选择"
+
+msgid "PAUSE"
+msgstr "暂停"
+
+msgid "PAUSED"
+msgstr "已暂停"
+
+msgid "RESUME"
+msgstr "继续"
+
+msgid "SAVE"
+msgstr "保存进度"
+
+msgid "MAIN"
+msgstr "主菜单"
+
+msgid "SAVED"
+msgstr "已保存"
+
+msgid "SAVE_ERR"
+msgstr "保存失败"
+
+msgid "PUZZLE_SIZE"
+msgstr "数独尺寸"
+
+msgid "MAP_SIZE"
+msgstr "地图尺寸"
+
+msgid "RANDOM"
+msgstr "随机"
+
+msgid "ADD_PLAYER"
+msgstr "添加玩家 %d"
+
+msgid "REMOVE_PLAYER"
+msgstr "移除玩家 %d"
+
+msgid "CYCLE_PLAYER"
+msgstr "%s · 切换玩家 %d 的控制方式"
+
+msgid "PLAYER"
+msgstr "玩家 %d"
+
+msgid "MENUS"
+msgstr "菜单"
+
+msgid "ACTION"
+msgstr "动作"
+
+msgid "KEYBOARD"
+msgstr "键盘"
+
+msgid "GAMEPAD"
+msgstr "手柄"
+
+msgid "CAPTURE_HINT"
+msgstr "选择按键项，然后按下键盘或操作手柄。"
+
+msgid "LISTENING"
+msgstr "等待输入…"
+
+msgid "CAPTURE_KEY"
+msgstr "按下按键或组合键。"
+
+msgid "CAPTURE_PAD"
+msgstr "按下手柄按键或推动摇杆。"
+
+msgid "UNCHANGED"
+msgstr "按键未更改。"
+
+msgid "TRY_INPUT"
+msgstr "请换一个输入。"
+
+msgid "BINDING_SAVED"
+msgstr "按键已保存。"
+
+msgid "PROPS"
+msgstr "道具"
+
+msgid "OPPONENTS"
+msgstr "对手"
+
+msgid "CHARGES"
+msgstr "每次拾取获得 %d 发"
+
+msgid "HUMAN"
+msgstr "真人"
+
+msgid "OFF"
+msgstr "关闭"
+
+msgid "PRACTICE"
+msgstr "靶场练习"
+
+msgid "STATE"
+msgstr "状态机"
+
+msgid "TREE"
+msgstr "行为树"
+
+msgid "GOAP"
+msgstr "GOAP"
+
+msgid "UTILITY"
+msgstr "效用评分与前瞻"
+
+msgid "NEURAL"
+msgstr "神经网络自博弈"
+
+msgid "SUDOKU_AI"
+msgstr "数独 AI"
+
+msgid "SHORT_PRACTICE"
+msgstr "靶场"
+
+msgid "SHORT_STATE"
+msgstr "状态机"
+
+msgid "SHORT_TREE"
+msgstr "行为树"
+
+msgid "SHORT_UTILITY"
+msgstr "效用"
+
+msgid "SHORT_NEURAL"
+msgstr "神经"
+
+msgid "WINS"
+msgstr "%d 胜"
+
+msgid "RESPAWNING"
+msgstr "重生中…"
+
+msgid "ELIMINATED"
+msgstr "已淘汰"
+
+msgid "SHIELD"
+msgstr "护盾 %d"
+
+msgid "STANDARD"
+msgstr "普通弹"
+
+msgid "EDITS"
+msgstr "%d 次修改"
+
+msgid "WINNER"
+msgstr "玩家 %d 获胜"
+
+msgid "DRAW"
+msgstr "本轮平局"
+
+msgid "NEXT_ARENA"
+msgstr "下一竞技场"
+
+msgid "RETRY_ARENA"
+msgstr "重试此竞技场"
+
+msgid "ARENA_STATUS"
+msgstr "%s · %d / %d"
+
+msgid "ARENA_BACKLOT"
+msgstr "电影片场"
+
+msgid "ARENA_FOUNDRY"
+msgstr "蒸汽铸造厂"
+
+msgid "ARENA_MOON"
+msgstr "月球环形山"
+
+msgid "ARENA_GROVE"
+msgstr "幸运林地"
+
+msgid "PUZZLE_STATUS"
+msgstr "%d × %d 数独 · 剩余 %d 格"
+
+msgid "REPAIR"
+msgstr "维修包"
+
+msgid "SHIELD_CELL"
+msgstr "护盾电池"
+
+msgid "NEEDLE"
+msgstr "针弹胶囊"
+
+msgid "FORK"
+msgstr "三叉胶囊"
+
+msgid "BREAKER"
+msgstr "破甲胶囊"
+
+msgid "LASER"
+msgstr "棱镜激光"
+
+msgid "BLAST"
+msgstr "爆裂弹"
+
+msgid "FORWARD"
+msgstr "前进"
+
+msgid "REVERSE"
+msgstr "后退"
+
+msgid "TURN_L"
+msgstr "左转"
+
+msgid "TURN_R"
+msgstr "右转"
+
+msgid "FIRE"
+msgstr "开火"
+
+msgid "MENU_UP"
+msgstr "向上"
+
+msgid "MENU_DOWN"
+msgstr "向下"
+
+msgid "MENU_LEFT"
+msgstr "向左"
+
+msgid "MENU_RIGHT"
+msgstr "向右"
+
+msgid "MENU_SELECT"
+msgstr "选择"
+
+msgid "MENU_PAUSE"
+msgstr "返回 / 暂停"
+
+msgid "MENU_NEXT"
+msgstr "下一项"
+
+msgid "MENU_PREVIOUS"
+msgstr "上一项"
+
+msgid "ASSIGNED"
+msgstr "已分配给 %s。"
+
+msgid "BIND_ERR"
+msgstr "无法保存按键。"
+
+msgid "ANY_PAD"
+msgstr "任意手柄"
+
+msgid "PAD"
+msgstr "手柄 %d"
+
+msgid "AXIS"
+msgstr "轴 %d"
+
+msgid "BUTTON"
+msgstr "按钮 %d"
+
+msgid "PROP_0"
+msgstr "恢复两点生命值。满生命值的坦克不会拾取。"
+
+msgid "PROP_1"
+msgstr "吸收两点伤害。激光无视护盾。"
+
+msgid "PROP_2"
+msgstr "高速炮弹，能在对手转向或进入掩体前击中对手。"
+
+msgid "PROP_3"
+msgstr "消耗一发弹药，呈扇形发射三枚炮弹。"
+
+msgid "PROP_4"
+msgstr "缓慢的重型炮弹，直接命中时造成两点伤害。"
+
+msgid "PROP_5"
+msgstr "蓄力一秒后摧毁光束上的所有坦克。激光可穿墙，发射者要等光束消失后才能移动。"
+
+msgid "PROP_6"
+msgstr "撞击或引信耗尽时爆炸。附近坦克会受到伤害，墙壁能提供掩护。"
+
+msgid "BOT_0"
+msgstr "拥有三条命的固定靶，适合练习射击和测试道具。"
+
+msgid "BOT_1"
+msgstr "用固定规则在追击、射击、躲避和修理间切换。"
+
+msgid "BOT_2"
+msgstr "用行为优先级树决策，攻击前先检查危险和受损情况。"
+
+msgid "BOT_3"
+msgstr "制定行动计划，比如先撤退再修理，或补给后寻找射界。"
+
+msgid "BOT_4"
+msgstr "为合法行动评分，并考虑后续步骤。"
+
+msgid "BOT_5"
+msgstr "与自己的历史版本进行对战，学习为合法行动排序。"
+
+msgid "BOT_6"
+msgstr "知道谜题答案，会开到相应格子，每次用一枚炮弹改变数字。"
+
+msgid "PAD_BACK"
+msgstr "返回"
+
+msgid "PAD_GUIDE"
+msgstr "指南键"
+
+msgid "PAD_START"
+msgstr "开始键"
+
+msgid "PAD_STICK_L"
+msgstr "左摇杆"
+
+msgid "PAD_STICK_R"
+msgstr "右摇杆"
+
+msgid "PAD_D_UP"
+msgstr "方向键上"
+
+msgid "PAD_D_DOWN"
+msgstr "方向键下"
+
+msgid "PAD_D_LEFT"
+msgstr "方向键左"
+
+msgid "PAD_D_RIGHT"
+msgstr "方向键右"
+
+msgid "PAD_LX"
+msgstr "左摇杆 X"
+
+msgid "PAD_LY"
+msgstr "左摇杆 Y"
+
+msgid "PAD_RX"
+msgstr "右摇杆 X"
+
+msgid "PAD_RY"
+msgstr "右摇杆 Y"
+
+msgid "PLAYER_SHORT"
+msgstr "%d 号"
+
+msgid "MAP_EDITOR"
+msgstr "地图编辑器"
+
+msgid "MAP_EDITOR_CUSTOM"
+msgstr "自定义竞技场"
+
+msgid "MAP_VOID"
+msgstr "空白"
+
+msgid "MAP_FLOOR"
+msgstr "地板"
+
+msgid "MAP_ICE"
+msgstr "冰面"
+
+msgid "MAP_GRASS"
+msgstr "草地"
+
+msgid "MAP_FILL"
+msgstr "填满画布"
+
+msgid "MAP_SLOT"
+msgstr "地图 %d"
+
+msgid "MAP_SLOT_EMPTY"
+msgstr "此栏没有已保存的地图。"
+
+msgid "MAP_INVALID"
+msgstr "让所有已绘格子通过边相连，并为每位玩家留出一格。"
+
+msgid "MAP_READY"
+msgstr "用鼠标绘制，或移动光标后按选择。开局时会随机生成墙壁。"
+
+msgid "MAP_PLAYTEST"
+msgstr "试玩"
+
+msgid "MAP_SAVE"
+msgstr "保存地图"
+
+msgid "MAP_LOAD"
+msgstr "读取地图"
+
+msgid "MAP_SAVED"
+msgstr "地图已保存。"
+
+msgid "ARENA_KEYHOLE"
+msgstr "钥匙孔堡垒"
+
+msgid "ARENA_SWITCHBACK"
+msgstr "蛇形回廊"
+
+msgid "ARENA_FORK"
+msgstr "岔路口"
+
+msgid "PORTAL_CAPSULE"
+msgstr "传送门枪"
+
+msgid "TURBO_TONIC"
+msgstr "加速药剂"
+
+msgid "PROP_7"
+msgstr "发射一次，在瞄准的走廊与随机空格各放置一个传送门。穿越一次或十秒后消失。"
+
+msgid "PROP_8"
+msgstr "五秒内提高百分之四十的行驶速度。"

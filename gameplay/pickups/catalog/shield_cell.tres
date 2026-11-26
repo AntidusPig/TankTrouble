@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1")
-display_name = "Shield Cell"
+display_name = "SHIELD_CELL"
 marker = "S"
 color = Color(0.57, 0.66, 1, 1)
 shield = 2

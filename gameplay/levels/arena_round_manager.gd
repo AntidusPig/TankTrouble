@@ -1,5 +1,9 @@
 class_name ArenaRoundManager extends LevelManager
 
+const THEME_CATALOG := preload("res://gameplay/levels/arena_theme.gd")
+const PORTAL := preload("res://gameplay/weapons/portal_pair.gd")
+const PETS := preload("res://gameplay/npcs/animal_spawner.gd")
+const EVENT_SCRIPT := preload("res://gameplay/levels/arena_event.gd")
 const TARGET_SCENE := preload("res://tank/tank_base.tscn")
 const AI_COMPONENT_PATHS := [
 	"res://gameplay/ai/components/StateMachineAI.tscn",
@@ -11,6 +15,9 @@ const AI_COMPONENT_PATHS := [
 
 class Contestant:
 	var team: int
+	var slot: int
+	var role: int
+	var card: FighterCard
 	var input_slot: int
 	var lives := 3
 	var tank: TankBase
@@ -22,48 +29,55 @@ class Contestant:
 
 var round_active := false
 var arena_number := 1
-var round_result := "Preparing arena"
+var round_result := ""
 var targets: Array[TankBase] = []
 var contestants: Array[Contestant] = []
 var next_round := Timer.new()
-var hud := Label.new()
+var hud := ArenaHud.new()
 var _ai_status := ""
 @onready var pause_menu: PauseMenu = $"../WorldCommon/MenuUi"
-@onready var pickups: PickupSpawner = $PickupSpawner
+@onready var pickups: PickupSpawner = get_node_or_null("PickupSpawner") as PickupSpawner
 
 
 func _ready() -> void:
 	next_round.one_shot = true
 	add_child(next_round)
 	next_round.timeout.connect(_advance)
+	arena_number = GameSession.level
 	_build_hud()
-	pickups.arena = self
-	pickups.spawn_interval = maxf(1.5, pickups.spawn_interval - 0.5 * (GameSession.level - 1))
-	maze_builder = $"../MazeBuilder"
+	var world := get_parent()
+	maze_builder = world.get_node(world.maze_path) as MazeBuilder
+	if pickups != null:
+		pickups.arena = self
+		pickups.spawn_interval = maxf(1.5, pickups.spawn_interval - 0.5 * (GameSession.level - 1))
+	_configure_mode()
 	_begin_round.call_deferred()
+
+
+func _configure_mode() -> void:
+	if maze_builder.footprint in [MazeBuilder.Footprint.GROVE, MazeBuilder.Footprint.KEYHOLE, MazeBuilder.Footprint.FORK]:
+		var pets := PETS.new()
+		pets.name = "AnimalSpawner"
+		pets.maze = maze_builder
+		add_child(pets)
+	var kind: int = THEME_CATALOG.for_level(GameSession.level).event
+	if kind != EVENT_SCRIPT.Kind.NONE:
+		var event := EVENT_SCRIPT.new()
+		event.setup(maze_builder, tanks, kind, camera)
+		add_child(event)
 
 
 func _build_hud() -> void:
 	var overlay := CanvasLayer.new()
 	add_child(overlay)
-	var score_card := PanelContainer.new()
-	score_card.position = Vector2(20, 16)
-	score_card.add_theme_stylebox_override("panel", RetroUi.ink_box(RetroUi.PAPER, 12, 2, 3))
-	score_card.theme = RetroUi.theme_resource()
-	score_card.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	overlay.add_child(score_card)
-	hud.add_theme_font_size_override("font_size", 19)
-	score_card.add_child(hud)
-	var button := MenuPanel.create_button("Pause", pause_menu.open, true)
-	button.focus_mode = Control.FOCUS_NONE
-	overlay.add_child(button)
-	button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	button.offset_left = -120
-	button.offset_right = -24
-	button.offset_top = 18
+	get_parent().hud = hud
+	hud._pause = pause_menu.open
+	hud.layout_changed.connect(get_parent().set_hud_insets)
+	overlay.add_child(hud)
 
 
 func _return_to_menu() -> void:
+	GameSession.return_to_map_editor = not GameSession.custom_tiles.is_empty()
 	get_tree().change_scene_to_file(GameSession.MENU)
 
 
@@ -73,7 +87,7 @@ func available_cells(excluded: Array[Vector2i]) -> Array[Vector2i]:
 	for y in range(maze_builder.maze_size.y):
 		for x in range(maze_builder.maze_size.x):
 			var cell := Vector2i(x, y)
-			if cell in excluded:
+			if cell in excluded or not maze_builder.valid_index(x, y):
 				continue
 			var center := maze_builder.get_cell_position(x, y)
 			if tanks.any(func(tank): return is_instance_valid(tank) and tank.global_position.distance_to(center) < clearance):
@@ -83,23 +97,33 @@ func available_cells(excluded: Array[Vector2i]) -> Array[Vector2i]:
 
 
 func _begin_round() -> void:
+	if not is_inside_tree():
+		return
 	arena_number = GameSession.level
 	round_active = true
-	_add_contestant(1, 1)
-	if GameSession.player_count == 2:
-		_add_contestant(2, 2)
-	else:
-		for i in range(maxi(1, number_of_enemies + arena_number - 1)):
-			_add_contestant(2, 0)
-	pickups.start()
-
-
-func _add_contestant(team: int, input_slot: int) -> void:
-	var contestant := Contestant.new()
-	contestant.team = team
-	contestant.input_slot = input_slot
-	contestants.append(contestant)
-	_spawn_contestant(contestant)
+	var human_slot := 0
+	for slot in range(GameSession.roster.size()):
+		var role: int = GameSession.roster[slot]
+		if role == PlayerRoster.OFF:
+			continue
+		var contestant := Contestant.new()
+		contestant.slot = slot
+		contestant.team = slot + 1
+		contestant.role = role
+		if role == PlayerRoster.HUMAN:
+			human_slot += 1
+			contestant.input_slot = human_slot
+		contestant.card = hud.add_fighter(slot, role)
+		contestants.append(contestant)
+	# Place AI first so human starts can maximize distance from actual rivals.
+	for contestant in contestants:
+		if contestant.role != PlayerRoster.HUMAN:
+			_spawn_contestant(contestant)
+	for contestant in contestants:
+		if contestant.role == PlayerRoster.HUMAN:
+			_spawn_contestant(contestant)
+	if pickups != null:
+		pickups.start()
 
 
 func _spawn_contestant(contestant: Contestant) -> void:
@@ -119,6 +143,8 @@ func _spawn_contestant(contestant: Contestant) -> void:
 	var tank := add_tank(PLAYER_TANK_SCENE if human else TARGET_SCENE, cell.x, cell.y)
 	contestant.tank = tank
 	tank.team = contestant.team
+	_configure_tank(tank)
+	tank.get_node("body").modulate = PlayerRoster.COLORS[contestant.slot]
 	var path := maze_builder.maze_astar.get_global_enemy_path(
 		tank.global_position, maze_builder.get_cell_position(maze_builder.maze_size.x / 2, maze_builder.maze_size.y / 2))
 	if path.size() > 1:
@@ -128,43 +154,83 @@ func _spawn_contestant(contestant: Contestant) -> void:
 		player.set_input_slot(contestant.input_slot)
 		player_tanks.append(player)
 		_on_player_spawned(player)
-		if contestant.input_slot == 2:
-			player.get_node("body").modulate = Color("#7cc5ff")
+
 	else:
 		targets.append(tank)
-		tank.get_node("body").modulate = Color("#f57376")
-		if GameSession.opponent_ai == 0:
+		if contestant.role == PlayerRoster.PRACTICE:
 			tank.set_physics_process(false)
 		else:
-			_attach_ai(tank)
+			_attach_ai(tank, contestant.role)
 	tank.destroyed_signal.connect(_on_destroyed.bind(contestant, tank))
 
 
+func _configure_tank(tank: TankBase) -> void:
+	tank.portal_launcher = launch_portal
+
+
+func launch_portal(shooter: TankBase, origin: Vector2, direction: Vector2) -> bool:
+	if not round_active:
+		return false
+	var limit := origin + direction * maze_builder.grid_size * 2.5
+	var shot := PhysicsRayQueryParameters2D.create(shooter.global_position, limit, 1, [shooter.get_rid()])
+	var hit := shooter.get_world_2d().direct_space_state.intersect_ray(shot)
+	var impact: Vector2 = limit if hit.is_empty() else hit.position
+	var entry := maze_builder.cell_at(impact - direction * 9.0)
+	if not maze_builder.valid_index(entry.x, entry.y):
+		entry = maze_builder.cell_at(shooter.global_position)
+	if not maze_builder.valid_index(entry.x, entry.y):
+		return false
+	var exits := available_cells([entry])
+	if exits.is_empty():
+		return false
+	var destination: Vector2i = exits.pick_random()
+	var gates := PORTAL.new()
+	gates.arena = self
+	gates.entrance = to_local(maze_builder.get_cell_position(entry.x, entry.y))
+	gates.exit = to_local(maze_builder.get_cell_position(destination.x, destination.y))
+	gates.muzzle = to_local(origin)
+	gates.tracer_end = to_local(impact)
+	gates.radius = maze_builder.grid_size * 0.25
+	add_child(gates)
+	return true
+
+
 func _choose_spawn(contestant: Contestant, cells: Array[Vector2i]) -> Vector2i:
-	if contestant.input_slot > 0:
-		var home := Vector2i.ONE if contestant.team == 1 else maze_builder.maze_size - Vector2i(2, 2)
-		cells.sort_custom(func(a: Vector2i, b: Vector2i): return a.distance_squared_to(home) < b.distance_squared_to(home))
-		return cells[0]
+	var rivals := PackedVector2Array()
+	for tank in tanks:
+		if is_instance_valid(tank) and not tank.pending_destroy and tank.team != contestant.team:
+			rivals.append(tank.global_position)
+	var graph := maze_builder.maze_astar
+	var distances := graph.distances_from(rivals)
+	var best_distance := -1
+	var farthest: Array[Vector2i] = []
+	var safe: Array[Vector2i] = []
+	for cell in cells:
+		var distance: int = distances.get(graph.get_cell_id(cell.x, cell.y), -1)
+		if distance > best_distance:
+			best_distance = distance
+			farthest.clear()
+		if distance == best_distance:
+			farthest.append(cell)
+		if distance >= 3 and cell != contestant.previous_spawn:
+			safe.append(cell)
 
-	if cells.size() > 1:
-		cells.erase(contestant.previous_spawn)
-	var separation := maze_builder.grid_size * absf(maze_builder.global_scale.x) * 2.5
-	var rivals := tanks.filter(func(tank: TankBase): return is_instance_valid(tank) and tank.team != contestant.team)
-	var safe := cells.filter(func(cell: Vector2i):
-		var center := maze_builder.get_cell_position(cell.x, cell.y)
-		return not rivals.any(func(tank: TankBase): return tank.global_position.distance_to(center) < separation)
-	)
-	return safe.pick_random() if not safe.is_empty() else cells.pick_random()
+	if contestant.role == PlayerRoster.HUMAN:
+		return farthest.pick_random()
+	if not safe.is_empty():
+		return safe.pick_random()
+	var alternatives := cells.filter(func(cell: Vector2i): return cell != contestant.previous_spawn)
+	return alternatives.pick_random() if not alternatives.is_empty() else cells[0]
 
 
-func _attach_ai(tank: TankBase) -> void:
+func _attach_ai(tank: TankBase, role: int) -> void:
 	if GameSession.ai_runtime_available():
-		var controller := load(AI_COMPONENT_PATHS[GameSession.opponent_ai - 1]) as PackedScene
+		var controller := load(AI_COMPONENT_PATHS[role - 1]) as PackedScene
 		if controller != null:
 			tank.add_child(controller.instantiate())
 			if tank.has_meta("_active_tank_brain"):
 				return
-	_ai_status = "AI unavailable. Open and build the project in Godot .NET."
+	_ai_status = tr("AI_DISABLED")
 	push_warning(_ai_status)
 
 
@@ -191,30 +257,52 @@ func _wait_to_respawn(contestant: Contestant, delay: float) -> void:
 func _resolve_round() -> void:
 	if not round_active:
 		return
-	var first_alive := contestants[0].lives > 0
-	var rival_alive := contestants.any(func(slot: Contestant): return slot.team == 2 and slot.lives > 0)
-	if first_alive and rival_alive:
+	var survivors := contestants.filter(func(slot: Contestant): return slot.lives > 0)
+	if survivors.size() > 1:
 		return
 
-	var versus := GameSession.player_count == 2
-	var advance := versus or first_alive
+	var advance := true
 	GameSession.rounds_played += 1
-	if first_alive:
-		GameSession.player_one_wins += 1
-		round_result = "Player 1 wins" if versus or GameSession.opponent_ai > 0 else "Targets cleared"
-	elif rival_alive:
-		if versus:
-			GameSession.player_two_wins += 1
-			round_result = "Player 2 wins"
-		else:
+	if survivors.size() == 1:
+		var winner: Contestant = survivors[0]
+		GameSession.award_win(winner.slot)
+		round_result = tr("WINNER") % (winner.slot + 1)
+		if GameSession.player_count == 1 and winner.role != PlayerRoster.HUMAN:
 			GameSession.losses += 1
-			round_result = "Out of lives"
+			advance = false
 	else:
 		GameSession.draws += 1
-		round_result = "Round drawn"
+		round_result = tr("DRAW")
 
+	_freeze_round()
+
+	if not GameSession.custom_tiles.is_empty():
+		GameSession.completed = true
+	elif advance and arena_number == GameSession.LEVEL_COUNT:
+		GameSession.completed = true
+		round_result += "   ·   " + tr("CAMPAIGN_COMPLETE")
+	elif advance:
+		GameSession.level = arena_number + 1
+		round_result += "   ·   " + tr("NEXT_ARENA")
+	else:
+		round_result += "   ·   " + tr("RETRY_ARENA")
+	if not GameSession.completed:
+		GameSession.prepare_map()
+	var event := get_node_or_null("ArenaEvent")
+	var delay: float = event.flame_seconds() if event != null else 0.0
+	next_round.start(maxf(intermission, delay))
+
+
+func _freeze_round() -> void:
 	round_active = false
-	pickups.process_mode = Node.PROCESS_MODE_DISABLED
+	var pets := get_node_or_null("AnimalSpawner")
+	if pets != null:
+		pets.process_mode = Node.PROCESS_MODE_DISABLED
+	var event := get_node_or_null("ArenaEvent")
+	if event != null:
+		event.end_round()
+	if pickups != null:
+		pickups.process_mode = Node.PROCESS_MODE_DISABLED
 	for effect in get_tree().get_nodes_in_group("arena_weapon_effect"):
 		effect.process_mode = Node.PROCESS_MODE_DISABLED
 	for tank in tanks:
@@ -222,16 +310,6 @@ func _resolve_round() -> void:
 			if is_instance_valid(tank.laser_beam):
 				tank.laser_beam.queue_free()
 			tank.process_mode = Node.PROCESS_MODE_DISABLED
-
-	if advance and arena_number == GameSession.LEVEL_COUNT:
-		GameSession.completed = true
-		round_result += "   ·   Series complete"
-	elif advance:
-		GameSession.level = arena_number + 1
-		round_result += "   ·   Next arena"
-	else:
-		round_result += "   ·   Retrying this arena"
-	next_round.start(intermission)
 
 
 func _advance() -> void:
@@ -242,31 +320,13 @@ func _advance() -> void:
 
 
 func _process(_delta: float) -> void:
-	var versus := GameSession.player_count == 2
-	var second_score := GameSession.player_two_wins if versus else GameSession.losses
-	var score_label := "P2" if versus else "Losses"
-	var score := "Arena %d/%d   P1 %d   %s %d   Draws %d" % [
-		arena_number, GameSession.LEVEL_COUNT, GameSession.player_one_wins,
-		score_label, second_score, GameSession.draws
-	]
-	if not round_active:
-		hud.text = "%s\n%s" % [score, round_result]
-		return
-	hud.text = score
+	var heading := tr("ARENA_STATUS") % [tr(THEME_CATALOG.for_level(arena_number).name), arena_number, GameSession.LEVEL_COUNT]
+	if not GameSession.custom_tiles.is_empty():
+		heading = tr("MAP_EDITOR_CUSTOM")
+	if not round_active and not round_result.is_empty():
+		heading += "   ·   " + round_result
 	if not _ai_status.is_empty():
-		hud.text += "\n" + _ai_status
-	for index in range(contestants.size()):
-		var contestant := contestants[index]
-		var label := "P%d" % contestant.input_slot if contestant.input_slot > 0 else "Enemy %d" % index
-		hud.text += "\n" + _tank_status(contestant, label)
-
-
-func _tank_status(contestant: Contestant, label: String) -> String:
-	var status := "%s   Lives %d" % [label, contestant.lives]
-	var tank := contestant.tank
-	if not is_instance_valid(tank):
-		return status + ("   Respawning" if contestant.lives > 0 else "   Eliminated")
-	var weapon := "Standard"
-	if tank.loadout.weapon != null:
-		weapon = "%s (%d)" % [tank.loadout.weapon.display_name, tank.loadout.shots_left]
-	return "%s   Hull %d/%d   Shield %d   %s" % [status, tank.health, tank.max_health, tank.shield_points, weapon]
+		heading += "   ·   " + _ai_status
+	hud.show_round(heading)
+	for contestant in contestants:
+		contestant.card.update_fighter(contestant.tank, contestant.lives, GameSession.wins[contestant.slot])

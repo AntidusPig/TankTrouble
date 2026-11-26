@@ -14,7 +14,7 @@ blast_radius = 160.0
 
 [resource]
 script = ExtResource("1")
-display_name = "Blast Shell"
+display_name = "BLAST"
 marker = "X"
 color = Color(1, 0.51, 0.24, 1)
 weapon_stats = SubResource("WeaponStats")

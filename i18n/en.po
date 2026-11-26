@@ -1,0 +1,490 @@
+msgid ""
+msgstr ""
+"Language: en\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "TITLE"
+msgstr "Tank Trouble"
+
+msgid "NEW"
+msgstr "New Game"
+
+msgid "SUDOKU"
+msgstr "Sudoku"
+
+msgid "LOAD"
+msgstr "Load Checkpoint"
+
+msgid "BOOK"
+msgstr "Encyclopedia"
+
+msgid "SETTINGS"
+msgstr "Settings"
+
+msgid "QUIT"
+msgstr "Quit"
+
+msgid "SUDOKU_SETUP"
+msgstr "Sudoku Setup"
+
+msgid "CHOOSE"
+msgstr "Choose Players"
+
+msgid "START_PUZZLE"
+msgstr "Start Puzzle"
+
+msgid "START_MATCH"
+msgstr "Start Match"
+
+msgid "BACK"
+msgstr "Back"
+
+msgid "PLAYER_COUNTS"
+msgstr "%d players • %d of 3 human"
+
+msgid "CONTROLS"
+msgstr "Controls"
+
+msgid "RESTORE"
+msgstr "Restore Defaults"
+
+msgid "RESTORE_PROMPT"
+msgstr "Restore Defaults?"
+
+msgid "RESTORE_NOTE"
+msgstr "This replaces every saved keyboard and gamepad binding."
+
+msgid "CANCEL"
+msgstr "Cancel"
+
+msgid "RESTORED"
+msgstr "Default controls restored."
+
+msgid "RESET_ERR"
+msgstr "Could not reset controls."
+
+msgid "START_ERR"
+msgstr "Could not open the game."
+
+msgid "LOAD_ERR"
+msgstr "Could not load the checkpoint."
+
+msgid "LOAD_DOTNET"
+msgstr "Open the project in Godot .NET to load this AI checkpoint."
+
+msgid "AI_DOTNET"
+msgstr "AI opponents require Godot .NET."
+
+msgid "AI_DISABLED"
+msgstr "AI unavailable. Open and build the project in Godot .NET."
+
+msgid "PUZZLE_SOLVED"
+msgstr "Sudoku solved!"
+
+msgid "CAMPAIGN_COMPLETE"
+msgstr "Arena series complete"
+
+msgid "NAV_HINT"
+msgstr "%s / direction keys to move · %s to select"
+
+msgid "PAUSE"
+msgstr "Pause"
+
+msgid "PAUSED"
+msgstr "Paused"
+
+msgid "RESUME"
+msgstr "Resume"
+
+msgid "SAVE"
+msgstr "Save Checkpoint"
+
+msgid "MAIN"
+msgstr "Main Menu"
+
+msgid "SAVED"
+msgstr "Checkpoint saved"
+
+msgid "SAVE_ERR"
+msgstr "Save failed"
+
+msgid "PUZZLE_SIZE"
+msgstr "Puzzle size"
+
+msgid "MAP_SIZE"
+msgstr "Map size"
+
+msgid "RANDOM"
+msgstr "Random"
+
+msgid "ADD_PLAYER"
+msgstr "Add player %d"
+
+msgid "REMOVE_PLAYER"
+msgstr "Remove player %d"
+
+msgid "CYCLE_PLAYER"
+msgstr "%s · Cycle controller for Player %d"
+
+msgid "PLAYER"
+msgstr "Player %d"
+
+msgid "MENUS"
+msgstr "Menus"
+
+msgid "ACTION"
+msgstr "Action"
+
+msgid "KEYBOARD"
+msgstr "Keyboard"
+
+msgid "GAMEPAD"
+msgstr "Gamepad"
+
+msgid "CAPTURE_HINT"
+msgstr "Select a binding, then press a key or move a gamepad control."
+
+msgid "LISTENING"
+msgstr "Listening…"
+
+msgid "CAPTURE_KEY"
+msgstr "Press a key or key combination."
+
+msgid "CAPTURE_PAD"
+msgstr "Press a gamepad button or move a stick."
+
+msgid "UNCHANGED"
+msgstr "Binding unchanged."
+
+msgid "TRY_INPUT"
+msgstr "Try another input."
+
+msgid "BINDING_SAVED"
+msgstr "Binding saved."
+
+msgid "PROPS"
+msgstr "Props"
+
+msgid "OPPONENTS"
+msgstr "Opponents"
+
+msgid "CHARGES"
+msgstr "Charges per pickup  %d"
+
+msgid "HUMAN"
+msgstr "Human"
+
+msgid "OFF"
+msgstr "Off"
+
+msgid "PRACTICE"
+msgstr "Target Practice"
+
+msgid "STATE"
+msgstr "State Machine"
+
+msgid "TREE"
+msgstr "Behavior Tree"
+
+msgid "GOAP"
+msgstr "GOAP"
+
+msgid "UTILITY"
+msgstr "Utility + Lookahead"
+
+msgid "NEURAL"
+msgstr "Neural Self-Play"
+
+msgid "SUDOKU_AI"
+msgstr "Sudoku AI"
+
+msgid "SHORT_PRACTICE"
+msgstr "Practice"
+
+msgid "SHORT_STATE"
+msgstr "State"
+
+msgid "SHORT_TREE"
+msgstr "Tree"
+
+msgid "SHORT_UTILITY"
+msgstr "Utility"
+
+msgid "SHORT_NEURAL"
+msgstr "Neural"
+
+msgid "WINS"
+msgstr "%d W"
+
+msgid "RESPAWNING"
+msgstr "Respawning…"
+
+msgid "ELIMINATED"
+msgstr "Eliminated"
+
+msgid "SHIELD"
+msgstr "Shield %d"
+
+msgid "STANDARD"
+msgstr "Standard"
+
+msgid "EDITS"
+msgstr "%d edits"
+
+msgid "WINNER"
+msgstr "Player %d wins"
+
+msgid "DRAW"
+msgstr "Round drawn"
+
+msgid "NEXT_ARENA"
+msgstr "Next arena"
+
+msgid "RETRY_ARENA"
+msgstr "Retrying this arena"
+
+msgid "ARENA_STATUS"
+msgstr "%s · %d / %d"
+
+msgid "ARENA_BACKLOT"
+msgstr "Studio Backlot"
+
+msgid "ARENA_FOUNDRY"
+msgstr "Steam Foundry"
+
+msgid "ARENA_MOON"
+msgstr "Moon Crater"
+
+msgid "ARENA_GROVE"
+msgstr "Lucky Grove"
+
+msgid "PUZZLE_STATUS"
+msgstr "Sudoku %d × %d · %d cells left"
+
+msgid "REPAIR"
+msgstr "Repair Kit"
+
+msgid "SHIELD_CELL"
+msgstr "Shield Cell"
+
+msgid "NEEDLE"
+msgstr "Needle Capsule"
+
+msgid "FORK"
+msgstr "Fork Capsule"
+
+msgid "BREAKER"
+msgstr "Breaker Capsule"
+
+msgid "LASER"
+msgstr "Prism Laser"
+
+msgid "BLAST"
+msgstr "Blast Shell"
+
+msgid "FORWARD"
+msgstr "Forward"
+
+msgid "REVERSE"
+msgstr "Reverse"
+
+msgid "TURN_L"
+msgstr "Turn left"
+
+msgid "TURN_R"
+msgstr "Turn right"
+
+msgid "FIRE"
+msgstr "Fire"
+
+msgid "MENU_UP"
+msgstr "Navigate up"
+
+msgid "MENU_DOWN"
+msgstr "Navigate down"
+
+msgid "MENU_LEFT"
+msgstr "Navigate left"
+
+msgid "MENU_RIGHT"
+msgstr "Navigate right"
+
+msgid "MENU_SELECT"
+msgstr "Select"
+
+msgid "MENU_PAUSE"
+msgstr "Back / Pause"
+
+msgid "MENU_NEXT"
+msgstr "Next control"
+
+msgid "MENU_PREVIOUS"
+msgstr "Previous control"
+
+msgid "ASSIGNED"
+msgstr "Already assigned to %s."
+
+msgid "BIND_ERR"
+msgstr "Could not save controls."
+
+msgid "ANY_PAD"
+msgstr "Any pad"
+
+msgid "PAD"
+msgstr "Pad %d"
+
+msgid "AXIS"
+msgstr "Axis %d"
+
+msgid "BUTTON"
+msgstr "Button %d"
+
+msgid "PROP_0"
+msgstr "Restores two hull points. Tanks with full hull leave it for someone else."
+
+msgid "PROP_1"
+msgstr "Absorbs two damage points. The laser pierces the shield."
+
+msgid "PROP_2"
+msgstr "A fast shell for catching tanks before they turn or reach cover."
+
+msgid "PROP_3"
+msgstr "Fires three shells in a spread using one charge."
+
+msgid "PROP_4"
+msgstr "A slow, heavy shell that deals two damage on a direct hit."
+
+msgid "PROP_5"
+msgstr "Charges for one second, then destroys every tank in the beam. It pierces walls. The shooter stays still until the shot ends."
+
+msgid "PROP_6"
+msgstr "Explodes on impact or when the fuse ends. The blast damages nearby tanks. Walls provide cover."
+
+msgid "BOT_0"
+msgstr "A stationary target with three lives for practicing shots and testing props."
+
+msgid "BOT_1"
+msgstr "Fixed rules switch between chasing, firing, dodging, and repairing."
+
+msgid "BOT_2"
+msgstr "Uses an action priority tree. It checks danger and damage before attacking."
+
+msgid "BOT_3"
+msgstr "Plans sequences such as retreating before repairing or finding a firing lane after rearming."
+
+msgid "BOT_4"
+msgstr "Scores legal actions and considers what it could do next."
+
+msgid "BOT_5"
+msgstr "Learns to rank legal actions by playing previous versions of itself."
+
+msgid "BOT_6"
+msgstr "Knows the solution and drives to cells to advance them one shell at a time."
+
+msgid "PAD_BACK"
+msgstr "Back"
+
+msgid "PAD_GUIDE"
+msgstr "Guide"
+
+msgid "PAD_START"
+msgstr "Start"
+
+msgid "PAD_STICK_L"
+msgstr "Left stick"
+
+msgid "PAD_STICK_R"
+msgstr "Right stick"
+
+msgid "PAD_D_UP"
+msgstr "D-pad up"
+
+msgid "PAD_D_DOWN"
+msgstr "D-pad down"
+
+msgid "PAD_D_LEFT"
+msgstr "D-pad left"
+
+msgid "PAD_D_RIGHT"
+msgstr "D-pad right"
+
+msgid "PAD_LX"
+msgstr "Left stick X"
+
+msgid "PAD_LY"
+msgstr "Left stick Y"
+
+msgid "PAD_RX"
+msgstr "Right stick X"
+
+msgid "PAD_RY"
+msgstr "Right stick Y"
+
+msgid "PLAYER_SHORT"
+msgstr "P%d"
+
+msgid "MAP_EDITOR"
+msgstr "Map Editor"
+
+msgid "MAP_EDITOR_CUSTOM"
+msgstr "Custom Arena"
+
+msgid "MAP_VOID"
+msgstr "Void"
+
+msgid "MAP_FLOOR"
+msgstr "Floor"
+
+msgid "MAP_ICE"
+msgstr "Ice"
+
+msgid "MAP_GRASS"
+msgstr "Grass"
+
+msgid "MAP_FILL"
+msgstr "Fill canvas"
+
+msgid "MAP_SLOT"
+msgstr "Map %d"
+
+msgid "MAP_SLOT_EMPTY"
+msgstr "This slot has no saved map."
+
+msgid "MAP_INVALID"
+msgstr "Connect all painted tiles edge to edge and leave one tile per player."
+
+msgid "MAP_READY"
+msgstr "Paint with the mouse or move the cursor and press Select. Walls are randomized when you play."
+
+msgid "MAP_PLAYTEST"
+msgstr "Playtest"
+
+msgid "MAP_SAVE"
+msgstr "Save map"
+
+msgid "MAP_LOAD"
+msgstr "Load map"
+
+msgid "MAP_SAVED"
+msgstr "Map saved."
+
+msgid "ARENA_KEYHOLE"
+msgstr "Keyhole Keep"
+
+msgid "ARENA_SWITCHBACK"
+msgstr "Switchback"
+
+msgid "ARENA_FORK"
+msgstr "Split Fork"
+
+msgid "PORTAL_CAPSULE"
+msgstr "Portal Gun"
+
+msgid "TURBO_TONIC"
+msgstr "Turbo Tonic"
+
+msgid "PROP_7"
+msgstr "Fire once to place a gate in the aimed corridor and a second gate in a random free cell. The pair expires after one traversal or ten seconds."
+
+msgid "PROP_8"
+msgstr "Boosts driving speed by 40 percent for five seconds."

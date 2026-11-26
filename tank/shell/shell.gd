@@ -1,6 +1,8 @@
 @tool
 class_name Shell extends Node2D
 
+const PARTICLES := preload("res://gameplay/vfx/cartoon_particles.gd")
+
 @onready var sprite_2d: Sprite2D = $Sprite2D
 
 @export var size : float = 14
@@ -48,7 +50,7 @@ func _physics_process(delta: float) -> void:
 	var ray_start = global_position
 	var ray_end = global_position + movement_step
 
-	var query = PhysicsRayQueryParameters2D.create(ray_start, ray_end)
+	var query = PhysicsRayQueryParameters2D.create(ray_start, ray_end, _collision_mask())
 	# hitting from inside sudoku cell is possible
 	query.hit_from_inside = true
 	query.collide_with_areas = true  # sudoku cell
@@ -65,6 +67,10 @@ func _physics_process(delta: float) -> void:
 			global_position += movement_step
 	else:
 		global_position += movement_step
+
+func _collision_mask() -> int:
+	return 0xffffffff
+
 
 # [VIRTUAL]
 func _handle_collision(result:Dictionary, _is_inside:bool) -> bool:
@@ -121,6 +127,7 @@ func _detonate(center: Vector2, direct_hit: Object = null) -> void:
 		tank.receive_damage(stats.shell_damage)
 
 	var parent := get_parent() as Node2D
+	PARTICLES.emit(parent, parent.to_local(center), Color("#ffb144"), 28, blast_size * 2.3)
 	var flash := WeaponFlash.new()
 	flash.position = parent.to_local(center)
 	flash.blast_radius = blast_size

@@ -5,11 +5,13 @@ const FILM_GRAIN := preload("res://UI/background.png")
 
 var backdrop_color := RetroUi.TEAL
 var show_title_art := false
-var actions := VBoxContainer.new()
+var actions := GridContainer.new()
 var detail := Label.new()
 var title := Label.new()
 var _illustration: TextureRect
 var _content := VBoxContainer.new()
+var _page: Control
+var _paper: StyleBoxFlat
 
 
 func _ready() -> void:
@@ -30,18 +32,18 @@ func _ready() -> void:
 
 	var card := PanelContainer.new()
 	card.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	var paper := RetroUi.ink_box(RetroUi.PAPER, 27, 4, 7)
-	paper.content_margin_left = 34.0
-	paper.content_margin_right = 34.0
-	paper.content_margin_top = 24.0
-	paper.content_margin_bottom = 27.0
-	card.add_theme_stylebox_override("panel", paper)
+	_paper = RetroUi.ink_box(RetroUi.PAPER, 27, 4, 7)
+	_paper.content_margin_left = 34.0
+	_paper.content_margin_right = 34.0
+	_paper.content_margin_top = 24.0
+	_paper.content_margin_bottom = 27.0
+	card.add_theme_stylebox_override("panel", _paper)
 	row.add_child(card)
 	_content.add_theme_constant_override("separation", 11)
 	card.add_child(_content)
 
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_override("font", RetroUi.DISPLAY_FONT)
+	title.add_theme_font_override("font", RetroUi.display_font())
 	title.add_theme_font_size_override("font_size", 67)
 	title.add_theme_color_override("font_color", RetroUi.BRICK)
 	title.add_theme_color_override("font_shadow_color", RetroUi.INK)
@@ -60,27 +62,41 @@ func _ready() -> void:
 	detail.add_theme_font_size_override("font_size", 21)
 	_content.add_child(detail)
 
-	actions.add_theme_constant_override("separation", 10)
+	actions.add_theme_constant_override("h_separation", 8)
+	actions.add_theme_constant_override("v_separation", 10)
 	_content.add_child(actions)
 	_fit_menu()
 
 
 func _fit_menu() -> void:
-	var compact := size.y < 570.0
+	var compact := _compact_menu()
+	_paper.content_margin_top = 13.0 if compact else 24.0
+	_paper.content_margin_bottom = 15.0 if compact else 27.0
+	_content.add_theme_constant_override("separation", 8 if compact else 11)
 	_content.custom_minimum_size.x = clampf(size.x - 116.0, 225.0, 340.0)
-	title.add_theme_font_size_override("font_size", 49 if compact or size.x < 455.0 else 67)
-	actions.add_theme_constant_override("separation", 6 if compact else 10)
+	if _page != null and _page.has_method("preferred_width"):
+		_content.custom_minimum_size.x = _page.call("preferred_width", get_viewport_rect().size.x)
+	var tall_script := TranslationServer.get_locale() in ["ar", "zh_CN"]
+	var base_size := 54 if tall_script else 67
+	title.add_theme_font_size_override("font_size", mini(46, base_size) if compact or size.x < 455.0 else base_size)
+	actions.add_theme_constant_override("v_separation", 6 if compact else 10)
 	for button in actions.get_children():
 		_fit_action(button)
 	if _illustration != null:
-		_illustration.visible = size.x >= 880.0 and size.y >= 470.0
+		_illustration.visible = _page == null and size.x >= 880.0 and size.y >= 470.0
 		var extent := clampf(minf(size.x * 0.35, size.y * 0.70), 280.0, 445.0)
 		_illustration.custom_minimum_size = Vector2(extent, extent)
+	if _page != null and _page.has_method("fit_height"):
+		_page.call("fit_height", get_viewport_rect().size.y)
 	queue_redraw()
 
 
+func _compact_menu() -> bool:
+	return get_viewport_rect().size.y < (745.0 if show_title_art and _page == null else 570.0)
+
+
 func _fit_action(button: Button) -> void:
-	var compact := size.y < 570.0
+	var compact := _compact_menu()
 	button.custom_minimum_size.y = 33.0 if compact else 43.0
 	button.add_theme_font_size_override("font_size", 21 if compact else 25)
 
@@ -90,7 +106,8 @@ func _draw() -> void:
 	if not show_title_art:
 		return
 
-	var center := Vector2(size.x * 0.28 if size.x >= 880.0 else size.x * 0.5, size.y * 0.53)
+	var art_side := 0.72 if is_layout_rtl() else 0.28
+	var center := Vector2(size.x * art_side if size.x >= 880.0 else size.x * 0.5, size.y * 0.53)
 	var radius := size.length()
 	for ray in range(14):
 		var start := float(ray) * TAU / 14.0
@@ -105,6 +122,17 @@ func _draw() -> void:
 		draw_rect(Rect2(Vector2(19, 19), size - Vector2(38, 38)), Color(0.98, 0.87, 0.64, 0.50), false, 1.0)
 
 
+func show_page(page: Control) -> void:
+	if _page != null:
+		_content.remove_child(_page)
+		_page.queue_free()
+	_page = page
+	if _page != null:
+		_content.add_child(_page)
+		_content.move_child(_page, actions.get_index())
+	_fit_menu()
+
+
 func _clear_actions() -> void:
 	for child in actions.get_children():
 		actions.remove_child(child)
@@ -113,6 +141,7 @@ func _clear_actions() -> void:
 
 func _button(caption: String, action: Callable) -> Button:
 	var button := create_button(caption, action)
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	actions.add_child(button)
 	_fit_action(button)
 	return button
@@ -123,7 +152,7 @@ static func create_button(caption: String, action: Callable, compact := false) -
 	button.theme = RetroUi.theme_resource()
 	button.text = caption
 	button.custom_minimum_size.y = 34.0 if compact else 43.0
-	button.add_theme_font_override("font", RetroUi.DISPLAY_FONT)
+	button.add_theme_font_override("font", RetroUi.display_font())
 	button.add_theme_font_size_override("font_size", 20 if compact else 25)
 	button.pressed.connect(CartoonSound.play_confirm)
 	button.pressed.connect(action)

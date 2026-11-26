@@ -13,7 +13,7 @@ max_num_shells = 4
 
 [resource]
 script = ExtResource("1")
-display_name = "Breaker Capsule"
+display_name = "BREAKER"
 marker = "B"
 color = Color(0.97, 0.45, 0.75, 1)
 weapon_stats = SubResource("WeaponStats")

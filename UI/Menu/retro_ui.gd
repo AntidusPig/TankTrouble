@@ -2,6 +2,8 @@ class_name RetroUi extends RefCounted
 
 const DISPLAY_FONT := preload("res://UI/Art/Fonts/Bangers-Regular.ttf")
 const BODY_FONT := preload("res://UI/Art/Fonts/BarlowCondensed-SemiBold.ttf")
+const CJK_FALLBACK := preload("res://i18n/fonts/NotoSansSC-UI.ttf")
+const ARABIC_FALLBACK := preload("res://i18n/fonts/NotoSansArabic-UI.ttf")
 
 const INK := Color("#302019")
 const PAPER := Color("#ffedc7")
@@ -12,13 +14,36 @@ const CREAM := Color("#fff4d9")
 const DIM := Color(0.12, 0.075, 0.06, 0.78)
 
 static var _shared_theme: Theme
+static var _display: FontVariation
+static var _body: FontVariation
+
+
+static func display_font() -> Font:
+	if _display == null:
+		_display = _with_fallback(DISPLAY_FONT)
+	return _display
+
+
+static func body_font() -> Font:
+	if _body == null:
+		_body = _with_fallback(BODY_FONT)
+	return _body
+
+
+static func _with_fallback(base: Font) -> FontVariation:
+	var system := SystemFont.new()
+	system.font_names = PackedStringArray(["Segoe UI", "Arial", "Microsoft YaHei", "Noto Sans"])
+	var compatible := FontVariation.new()
+	compatible.base_font = base
+	compatible.fallbacks = [ARABIC_FALLBACK, CJK_FALLBACK, system]
+	return compatible
 
 
 static func theme_resource() -> Theme:
 	if _shared_theme != null:
 		return _shared_theme
 	var theme := Theme.new()
-	theme.default_font = BODY_FONT
+	theme.default_font = body_font()
 	theme.default_font_size = 24
 	theme.set_color("font_color", "Label", INK)
 	for state in ["font_color", "font_focus_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color"]:

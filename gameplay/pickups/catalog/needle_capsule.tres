@@ -13,7 +13,7 @@ max_num_shells = 6
 
 [resource]
 script = ExtResource("1")
-display_name = "Needle Capsule"
+display_name = "NEEDLE"
 marker = "N"
 color = Color(0.42, 0.85, 1, 1)
 weapon_stats = SubResource("WeaponStats")

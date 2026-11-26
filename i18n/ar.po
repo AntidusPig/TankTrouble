@@ -1,0 +1,490 @@
+msgid ""
+msgstr ""
+"Language: ar\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "TITLE"
+msgstr "معركة الدبابات"
+
+msgid "NEW"
+msgstr "لعبة جديدة"
+
+msgid "SUDOKU"
+msgstr "سودوكو"
+
+msgid "LOAD"
+msgstr "تحميل الحفظ"
+
+msgid "BOOK"
+msgstr "الموسوعة"
+
+msgid "SETTINGS"
+msgstr "الإعدادات"
+
+msgid "QUIT"
+msgstr "خروج"
+
+msgid "SUDOKU_SETUP"
+msgstr "إعداد السودوكو"
+
+msgid "CHOOSE"
+msgstr "اختر اللاعبين"
+
+msgid "START_PUZZLE"
+msgstr "ابدأ اللغز"
+
+msgid "START_MATCH"
+msgstr "ابدأ المباراة"
+
+msgid "BACK"
+msgstr "رجوع"
+
+msgid "PLAYER_COUNTS"
+msgstr "%d لاعبين · %d من 3 بشر"
+
+msgid "CONTROLS"
+msgstr "التحكم"
+
+msgid "RESTORE"
+msgstr "استعادة الافتراضي"
+
+msgid "RESTORE_PROMPT"
+msgstr "استعادة الإعدادات الافتراضية؟"
+
+msgid "RESTORE_NOTE"
+msgstr "سيستبدل هذا جميع تعيينات لوحة المفاتيح ووحدة التحكم."
+
+msgid "CANCEL"
+msgstr "إلغاء"
+
+msgid "RESTORED"
+msgstr "تمت استعادة التحكم الافتراضي."
+
+msgid "RESET_ERR"
+msgstr "تعذرت إعادة تعيين التحكم."
+
+msgid "START_ERR"
+msgstr "تعذر بدء اللعبة."
+
+msgid "LOAD_ERR"
+msgstr "تعذر تحميل الحفظ."
+
+msgid "LOAD_DOTNET"
+msgstr "افتح المشروع في Godot .NET لتحميل هذا الحفظ."
+
+msgid "AI_DOTNET"
+msgstr "تتطلب خصوم الذكاء الاصطناعي Godot .NET."
+
+msgid "AI_DISABLED"
+msgstr "الذكاء الاصطناعي غير متاح. افتح المشروع وابنه في Godot .NET."
+
+msgid "PUZZLE_SOLVED"
+msgstr "تم حل السودوكو!"
+
+msgid "CAMPAIGN_COMPLETE"
+msgstr "اكتملت سلسلة الحلبات"
+
+msgid "NAV_HINT"
+msgstr "%s / أسهم للتنقل · %s للاختيار"
+
+msgid "PAUSE"
+msgstr "إيقاف مؤقت"
+
+msgid "PAUSED"
+msgstr "متوقف مؤقتًا"
+
+msgid "RESUME"
+msgstr "متابعة"
+
+msgid "SAVE"
+msgstr "حفظ التقدم"
+
+msgid "MAIN"
+msgstr "القائمة الرئيسية"
+
+msgid "SAVED"
+msgstr "تم الحفظ"
+
+msgid "SAVE_ERR"
+msgstr "تعذر الحفظ"
+
+msgid "PUZZLE_SIZE"
+msgstr "حجم اللغز"
+
+msgid "MAP_SIZE"
+msgstr "حجم الخريطة"
+
+msgid "RANDOM"
+msgstr "عشوائي"
+
+msgid "ADD_PLAYER"
+msgstr "أضف اللاعب %d"
+
+msgid "REMOVE_PLAYER"
+msgstr "أزل اللاعب %d"
+
+msgid "CYCLE_PLAYER"
+msgstr "%s · بدّل طريقة تحكم اللاعب %d"
+
+msgid "PLAYER"
+msgstr "اللاعب %d"
+
+msgid "MENUS"
+msgstr "القوائم"
+
+msgid "ACTION"
+msgstr "الإجراء"
+
+msgid "KEYBOARD"
+msgstr "لوحة المفاتيح"
+
+msgid "GAMEPAD"
+msgstr "وحدة التحكم"
+
+msgid "CAPTURE_HINT"
+msgstr "اختر تعيينًا ثم اضغط مفتاحًا أو حرّك وحدة التحكم."
+
+msgid "LISTENING"
+msgstr "بانتظار الإدخال…"
+
+msgid "CAPTURE_KEY"
+msgstr "اضغط مفتاحًا أو مجموعة مفاتيح."
+
+msgid "CAPTURE_PAD"
+msgstr "اضغط زرًا أو حرّك عصا التحكم."
+
+msgid "UNCHANGED"
+msgstr "التعيين دون تغيير."
+
+msgid "TRY_INPUT"
+msgstr "جرّب إدخالًا آخر."
+
+msgid "BINDING_SAVED"
+msgstr "تم حفظ التعيين."
+
+msgid "PROPS"
+msgstr "العناصر"
+
+msgid "OPPONENTS"
+msgstr "الخصوم"
+
+msgid "CHARGES"
+msgstr "الشحنات لكل عنصر %d"
+
+msgid "HUMAN"
+msgstr "بشري"
+
+msgid "OFF"
+msgstr "معطّل"
+
+msgid "PRACTICE"
+msgstr "هدف تدريب"
+
+msgid "STATE"
+msgstr "آلة حالات"
+
+msgid "TREE"
+msgstr "شجرة سلوك"
+
+msgid "GOAP"
+msgstr "GOAP"
+
+msgid "UTILITY"
+msgstr "منفعة مع استشراف"
+
+msgid "NEURAL"
+msgstr "لعب ذاتي عصبي"
+
+msgid "SUDOKU_AI"
+msgstr "ذكاء السودوكو"
+
+msgid "SHORT_PRACTICE"
+msgstr "تدريب"
+
+msgid "SHORT_STATE"
+msgstr "حالات"
+
+msgid "SHORT_TREE"
+msgstr "شجرة"
+
+msgid "SHORT_UTILITY"
+msgstr "منفعة"
+
+msgid "SHORT_NEURAL"
+msgstr "عصبي"
+
+msgid "WINS"
+msgstr "%d فوز"
+
+msgid "RESPAWNING"
+msgstr "إعادة الظهور…"
+
+msgid "ELIMINATED"
+msgstr "خرج من اللعب"
+
+msgid "SHIELD"
+msgstr "درع %d"
+
+msgid "STANDARD"
+msgstr "قياسي"
+
+msgid "EDITS"
+msgstr "%d تعديلات"
+
+msgid "WINNER"
+msgstr "فاز اللاعب %d"
+
+msgid "DRAW"
+msgstr "انتهت الجولة بالتعادل"
+
+msgid "NEXT_ARENA"
+msgstr "الحلبة التالية"
+
+msgid "RETRY_ARENA"
+msgstr "إعادة هذه الحلبة"
+
+msgid "ARENA_STATUS"
+msgstr "%s · %d / %d"
+
+msgid "ARENA_BACKLOT"
+msgstr "استوديو الأفلام"
+
+msgid "ARENA_FOUNDRY"
+msgstr "مسبك البخار"
+
+msgid "ARENA_MOON"
+msgstr "فوهة القمر"
+
+msgid "ARENA_GROVE"
+msgstr "بستان الحظ"
+
+msgid "PUZZLE_STATUS"
+msgstr "سودوكو %d × %d · بقي %d خلايا"
+
+msgid "REPAIR"
+msgstr "عدة إصلاح"
+
+msgid "SHIELD_CELL"
+msgstr "خلية درع"
+
+msgid "NEEDLE"
+msgstr "كبسولة الإبرة"
+
+msgid "FORK"
+msgstr "كبسولة ثلاثية"
+
+msgid "BREAKER"
+msgstr "كبسولة خارقة"
+
+msgid "LASER"
+msgstr "ليزر المنشور"
+
+msgid "BLAST"
+msgstr "قذيفة متفجرة"
+
+msgid "FORWARD"
+msgstr "تقدم"
+
+msgid "REVERSE"
+msgstr "تراجع"
+
+msgid "TURN_L"
+msgstr "انعطف يسارًا"
+
+msgid "TURN_R"
+msgstr "انعطف يمينًا"
+
+msgid "FIRE"
+msgstr "أطلق"
+
+msgid "MENU_UP"
+msgstr "انتقل لأعلى"
+
+msgid "MENU_DOWN"
+msgstr "انتقل لأسفل"
+
+msgid "MENU_LEFT"
+msgstr "انتقل يسارًا"
+
+msgid "MENU_RIGHT"
+msgstr "انتقل يمينًا"
+
+msgid "MENU_SELECT"
+msgstr "اختيار"
+
+msgid "MENU_PAUSE"
+msgstr "رجوع / إيقاف مؤقت"
+
+msgid "MENU_NEXT"
+msgstr "العنصر التالي"
+
+msgid "MENU_PREVIOUS"
+msgstr "العنصر السابق"
+
+msgid "ASSIGNED"
+msgstr "مُعيّن بالفعل لـ %s."
+
+msgid "BIND_ERR"
+msgstr "تعذر حفظ التحكم."
+
+msgid "ANY_PAD"
+msgstr "أي وحدة تحكم"
+
+msgid "PAD"
+msgstr "وحدة التحكم %d"
+
+msgid "AXIS"
+msgstr "المحور %d"
+
+msgid "BUTTON"
+msgstr "الزر %d"
+
+msgid "PROP_0"
+msgstr "تستعيد نقطتين من المتانة. لا تلتقطها الدبابات السليمة."
+
+msgid "PROP_1"
+msgstr "تمتص نقطتي ضرر. يخترق الليزر الدرع."
+
+msgid "PROP_2"
+msgstr "قذيفة سريعة تصيب الدبابات قبل أن تستدير أو تحتمي."
+
+msgid "PROP_3"
+msgstr "تطلق ثلاث قذائف متفرقة بشحنة واحدة."
+
+msgid "PROP_4"
+msgstr "قذيفة ثقيلة وبطيئة تسبب نقطتي ضرر عند الإصابة المباشرة."
+
+msgid "PROP_5"
+msgstr "يشحن ثانية ثم يدمر كل دبابة في الشعاع. يخترق الجدران ويثبت الدبابة المطلقة حتى النهاية."
+
+msgid "PROP_6"
+msgstr "تنفجر عند الاصطدام أو انتهاء الفتيل. تضر بالدبابات القريبة. تحمي الجدران من الانفجار."
+
+msgid "BOT_0"
+msgstr "هدف ثابت بثلاث حيوات للتدرب على الرمي وتجربة العناصر."
+
+msgid "BOT_1"
+msgstr "يبدل بين المطاردة والإطلاق والمراوغة والإصلاح بقواعد ثابتة."
+
+msgid "BOT_2"
+msgstr "يستخدم شجرة أولويات ويفحص الخطر والضرر قبل الهجوم."
+
+msgid "BOT_3"
+msgstr "يخطط لتسلسلات مثل الانسحاب قبل الإصلاح أو البحث عن خط إطلاق بعد التسلح."
+
+msgid "BOT_4"
+msgstr "يقيّم الإجراءات المسموحة ويفكر في الخطوة التالية."
+
+msgid "BOT_5"
+msgstr "يتعلم ترتيب الإجراءات المسموحة باللعب ضد نسخه السابقة."
+
+msgid "BOT_6"
+msgstr "يعرف الحل ويتجه إلى الخلايا لتعديلها بقذيفة في كل مرة."
+
+msgid "PAD_BACK"
+msgstr "رجوع"
+
+msgid "PAD_GUIDE"
+msgstr "الدليل"
+
+msgid "PAD_START"
+msgstr "البدء"
+
+msgid "PAD_STICK_L"
+msgstr "العصا اليسرى"
+
+msgid "PAD_STICK_R"
+msgstr "العصا اليمنى"
+
+msgid "PAD_D_UP"
+msgstr "لوحة الاتجاهات لأعلى"
+
+msgid "PAD_D_DOWN"
+msgstr "لوحة الاتجاهات لأسفل"
+
+msgid "PAD_D_LEFT"
+msgstr "لوحة الاتجاهات لليسار"
+
+msgid "PAD_D_RIGHT"
+msgstr "لوحة الاتجاهات لليمين"
+
+msgid "PAD_LX"
+msgstr "العصا اليسرى X"
+
+msgid "PAD_LY"
+msgstr "العصا اليسرى Y"
+
+msgid "PAD_RX"
+msgstr "العصا اليمنى X"
+
+msgid "PAD_RY"
+msgstr "العصا اليمنى Y"
+
+msgid "PLAYER_SHORT"
+msgstr "ل%d"
+
+msgid "MAP_EDITOR"
+msgstr "محرر الخرائط"
+
+msgid "MAP_EDITOR_CUSTOM"
+msgstr "حلبة مخصصة"
+
+msgid "MAP_VOID"
+msgstr "فراغ"
+
+msgid "MAP_FLOOR"
+msgstr "أرضية"
+
+msgid "MAP_ICE"
+msgstr "جليد"
+
+msgid "MAP_GRASS"
+msgstr "عشب"
+
+msgid "MAP_FILL"
+msgstr "املأ اللوحة"
+
+msgid "MAP_SLOT"
+msgstr "الخريطة %d"
+
+msgid "MAP_SLOT_EMPTY"
+msgstr "لا توجد خريطة محفوظة في هذه الخانة."
+
+msgid "MAP_INVALID"
+msgstr "صِل جميع الخلايا المرسومة عبر حوافها واترك خلية لكل لاعب."
+
+msgid "MAP_READY"
+msgstr "ارسم بالفأرة أو حرّك المؤشر واضغط اختيار. تُولّد الجدران عشوائيًا عند اللعب."
+
+msgid "MAP_PLAYTEST"
+msgstr "جرّب الخريطة"
+
+msgid "MAP_SAVE"
+msgstr "احفظ الخريطة"
+
+msgid "MAP_LOAD"
+msgstr "حمّل الخريطة"
+
+msgid "MAP_SAVED"
+msgstr "حُفظت الخريطة."
+
+msgid "ARENA_KEYHOLE"
+msgstr "حصن المفتاح"
+
+msgid "ARENA_SWITCHBACK"
+msgstr "الممر المتعرج"
+
+msgid "ARENA_FORK"
+msgstr "المسار المتشعب"
+
+msgid "PORTAL_CAPSULE"
+msgstr "مسدس البوابات"
+
+msgid "TURBO_TONIC"
+msgstr "جرعة التسريع"
+
+msgid "PROP_7"
+msgstr "طلقة واحدة تضع بوابة في الممر المستهدف وأخرى في خلية فارغة عشوائية. تختفيان بعد عبور واحد أو عشر ثوانٍ."
+
+msgid "PROP_8"
+msgstr "تزيد سرعة القيادة أربعين بالمئة لمدة خمس ثوانٍ."

@@ -13,7 +13,7 @@ max_num_shells = 10
 
 [resource]
 script = ExtResource("1")
-display_name = "Fork Capsule"
+display_name = "FORK"
 marker = "F"
 color = Color(1, 0.72, 0.28, 1)
 weapon_stats = SubResource("WeaponStats")

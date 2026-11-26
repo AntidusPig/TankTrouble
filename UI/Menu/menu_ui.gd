@@ -13,11 +13,11 @@ func _ready() -> void:
 	get_tree().auto_accept_quit = false
 	_panel.backdrop_color = RetroUi.DIM
 	add_child(_panel)
-	_panel.title.text = "Paused"
-	_resume_button = _panel._button("Resume", _set_paused.bind(false))
+	_panel.title.text = tr("PAUSED")
+	_resume_button = _panel._button(tr("RESUME"), _set_paused.bind(false))
 	if checkpoint_enabled:
-		_panel._button("Save Checkpoint", _save_checkpoint)
-	_panel._button("Main Menu", _return_to_menu)
+		_panel._button(tr("SAVE"), _save_checkpoint)
+	_panel._button(tr("MAIN"), _return_to_menu)
 	_panel.hide()
 
 
@@ -28,7 +28,7 @@ func _exit_tree() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("Escape"):
+	if event.is_action_pressed(&"Escape", false, true):
 		get_viewport().set_input_as_handled()
 		CartoonSound.play_pause()
 		_set_paused(not _panel.visible)
@@ -53,12 +53,13 @@ func _set_paused(paused: bool) -> void:
 
 func _save_checkpoint() -> void:
 	if GameSession.completed:
-		_panel.detail.text = "Series complete"
+		_panel.detail.text = tr("CAMPAIGN_COMPLETE")
 		return
 	var result := GameSession.save_checkpoint()
-	_panel.detail.text = "Checkpoint saved" if result == OK else "Save failed: " + error_string(result)
+	_panel.detail.text = tr("SAVED") if result == OK else tr("SAVE_ERR") + " " + error_string(result)
 
 
 func _return_to_menu() -> void:
+	GameSession.return_to_map_editor = not GameSession.custom_tiles.is_empty()
 	_set_paused(false)
 	get_tree().change_scene_to_file(GameSession.MENU)

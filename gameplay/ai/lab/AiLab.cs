@@ -172,6 +172,8 @@ public partial class AiLab : Node2D
         _maze = _mazeScene.Instantiate<Node2D>();
         _maze.Set("maze_size", new Vector2I(_match.Size, _match.Size));
         _maze.Set("generation_seed", _match.MapSeed);
+        if (_training)
+            _maze.Set("footprint", (int)(_learner.Episodes / 3 % 4));
         _field.AddChild(_maze);
         var camera = new Camera2D { Zoom = Vector2.One * (3.8f / _match.Size) };
         _field.AddChild(camera);
@@ -237,6 +239,8 @@ public partial class AiLab : Node2D
         for (int attempt = 0; attempt < 16; attempt++)
         {
             var cell = new Vector2I(_mapRandom.Next(_match.Size), _mapRandom.Next(_match.Size));
+            if (!_maze.Call("valid_index", cell.X, cell.Y).AsBool())
+                continue;
             var point = PositionOf(cell);
             if (point.DistanceSquaredTo(_first.GlobalPosition) < 15000f || point.DistanceSquaredTo(_second.GlobalPosition) < 15000f ||
                 _pickups.Any(entry => IsInstanceValid(entry.Pickup) && entry.Pickup.GlobalPosition.IsEqualApprox(point)))

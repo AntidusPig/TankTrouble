@@ -1,0 +1,490 @@
+msgid ""
+msgstr ""
+"Language: es\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "TITLE"
+msgstr "Duelo de tanques"
+
+msgid "NEW"
+msgstr "Nueva partida"
+
+msgid "SUDOKU"
+msgstr "Sudoku"
+
+msgid "LOAD"
+msgstr "Cargar partida"
+
+msgid "BOOK"
+msgstr "Enciclopedia"
+
+msgid "SETTINGS"
+msgstr "Ajustes"
+
+msgid "QUIT"
+msgstr "Salir"
+
+msgid "SUDOKU_SETUP"
+msgstr "Preparar sudoku"
+
+msgid "CHOOSE"
+msgstr "Elegir jugadores"
+
+msgid "START_PUZZLE"
+msgstr "Iniciar sudoku"
+
+msgid "START_MATCH"
+msgstr "Iniciar partida"
+
+msgid "BACK"
+msgstr "Volver"
+
+msgid "PLAYER_COUNTS"
+msgstr "%d jugadores • %d de 3 humanos"
+
+msgid "CONTROLS"
+msgstr "Controles"
+
+msgid "RESTORE"
+msgstr "Restaurar valores"
+
+msgid "RESTORE_PROMPT"
+msgstr "¿Restaurar valores?"
+
+msgid "RESTORE_NOTE"
+msgstr "Se reemplazarán todos los controles guardados."
+
+msgid "CANCEL"
+msgstr "Cancelar"
+
+msgid "RESTORED"
+msgstr "Controles restaurados."
+
+msgid "RESET_ERR"
+msgstr "No se pudieron restablecer los controles."
+
+msgid "START_ERR"
+msgstr "No se pudo iniciar la partida."
+
+msgid "LOAD_ERR"
+msgstr "No se pudo cargar la partida."
+
+msgid "LOAD_DOTNET"
+msgstr "Abre el proyecto en Godot .NET para cargar esta partida con IA."
+
+msgid "AI_DOTNET"
+msgstr "Los rivales de IA requieren Godot .NET."
+
+msgid "AI_DISABLED"
+msgstr "IA no disponible. Abre y compila el proyecto en Godot .NET."
+
+msgid "PUZZLE_SOLVED"
+msgstr "¡Sudoku resuelto!"
+
+msgid "CAMPAIGN_COMPLETE"
+msgstr "Serie de arenas completada"
+
+msgid "NAV_HINT"
+msgstr "%s / flechas para moverte · %s para elegir"
+
+msgid "PAUSE"
+msgstr "Pausa"
+
+msgid "PAUSED"
+msgstr "En pausa"
+
+msgid "RESUME"
+msgstr "Continuar"
+
+msgid "SAVE"
+msgstr "Guardar partida"
+
+msgid "MAIN"
+msgstr "Menú principal"
+
+msgid "SAVED"
+msgstr "Partida guardada"
+
+msgid "SAVE_ERR"
+msgstr "Error al guardar"
+
+msgid "PUZZLE_SIZE"
+msgstr "Tamaño del sudoku"
+
+msgid "MAP_SIZE"
+msgstr "Tamaño del mapa"
+
+msgid "RANDOM"
+msgstr "Aleatorio"
+
+msgid "ADD_PLAYER"
+msgstr "Añadir jugador %d"
+
+msgid "REMOVE_PLAYER"
+msgstr "Quitar jugador %d"
+
+msgid "CYCLE_PLAYER"
+msgstr "%s · Cambiar control del jugador %d"
+
+msgid "PLAYER"
+msgstr "Jugador %d"
+
+msgid "MENUS"
+msgstr "Menús"
+
+msgid "ACTION"
+msgstr "Acción"
+
+msgid "KEYBOARD"
+msgstr "Teclado"
+
+msgid "GAMEPAD"
+msgstr "Mando"
+
+msgid "CAPTURE_HINT"
+msgstr "Elige una asignación y pulsa una tecla o usa el mando."
+
+msgid "LISTENING"
+msgstr "Esperando…"
+
+msgid "CAPTURE_KEY"
+msgstr "Pulsa una tecla o combinación."
+
+msgid "CAPTURE_PAD"
+msgstr "Pulsa un botón del mando o mueve una palanca."
+
+msgid "UNCHANGED"
+msgstr "Asignación sin cambios."
+
+msgid "TRY_INPUT"
+msgstr "Prueba otra entrada."
+
+msgid "BINDING_SAVED"
+msgstr "Asignación guardada."
+
+msgid "PROPS"
+msgstr "Objetos"
+
+msgid "OPPONENTS"
+msgstr "Rivales"
+
+msgid "CHARGES"
+msgstr "Cargas por recogida: %d"
+
+msgid "HUMAN"
+msgstr "Humano"
+
+msgid "OFF"
+msgstr "Inactivo"
+
+msgid "PRACTICE"
+msgstr "Práctica de tiro"
+
+msgid "STATE"
+msgstr "Máquina de estados"
+
+msgid "TREE"
+msgstr "Árbol de conducta"
+
+msgid "GOAP"
+msgstr "GOAP"
+
+msgid "UTILITY"
+msgstr "Utilidad con previsión"
+
+msgid "NEURAL"
+msgstr "Autojuego neuronal"
+
+msgid "SUDOKU_AI"
+msgstr "IA de sudoku"
+
+msgid "SHORT_PRACTICE"
+msgstr "Práctica"
+
+msgid "SHORT_STATE"
+msgstr "Estados"
+
+msgid "SHORT_TREE"
+msgstr "Árbol"
+
+msgid "SHORT_UTILITY"
+msgstr "Utilidad"
+
+msgid "SHORT_NEURAL"
+msgstr "Neuronal"
+
+msgid "WINS"
+msgstr "%d V"
+
+msgid "RESPAWNING"
+msgstr "Reapareciendo…"
+
+msgid "ELIMINATED"
+msgstr "Eliminado"
+
+msgid "SHIELD"
+msgstr "Escudo %d"
+
+msgid "STANDARD"
+msgstr "Estándar"
+
+msgid "EDITS"
+msgstr "%d cambios"
+
+msgid "WINNER"
+msgstr "Gana el jugador %d"
+
+msgid "DRAW"
+msgstr "Ronda empatada"
+
+msgid "NEXT_ARENA"
+msgstr "Siguiente arena"
+
+msgid "RETRY_ARENA"
+msgstr "Repitiendo arena"
+
+msgid "ARENA_STATUS"
+msgstr "%s · %d / %d"
+
+msgid "ARENA_BACKLOT"
+msgstr "Estudio de cine"
+
+msgid "ARENA_FOUNDRY"
+msgstr "Fundición de vapor"
+
+msgid "ARENA_MOON"
+msgstr "Cráter lunar"
+
+msgid "ARENA_GROVE"
+msgstr "Arboleda de la suerte"
+
+msgid "PUZZLE_STATUS"
+msgstr "Sudoku %d × %d · faltan %d casillas"
+
+msgid "REPAIR"
+msgstr "Kit de reparación"
+
+msgid "SHIELD_CELL"
+msgstr "Célula de escudo"
+
+msgid "NEEDLE"
+msgstr "Cápsula aguja"
+
+msgid "FORK"
+msgstr "Cápsula triple"
+
+msgid "BREAKER"
+msgstr "Cápsula rompedora"
+
+msgid "LASER"
+msgstr "Láser prisma"
+
+msgid "BLAST"
+msgstr "Proyectil explosivo"
+
+msgid "FORWARD"
+msgstr "Avanzar"
+
+msgid "REVERSE"
+msgstr "Retroceder"
+
+msgid "TURN_L"
+msgstr "Girar a la izquierda"
+
+msgid "TURN_R"
+msgstr "Girar a la derecha"
+
+msgid "FIRE"
+msgstr "Disparar"
+
+msgid "MENU_UP"
+msgstr "Subir"
+
+msgid "MENU_DOWN"
+msgstr "Bajar"
+
+msgid "MENU_LEFT"
+msgstr "Ir a la izquierda"
+
+msgid "MENU_RIGHT"
+msgstr "Ir a la derecha"
+
+msgid "MENU_SELECT"
+msgstr "Seleccionar"
+
+msgid "MENU_PAUSE"
+msgstr "Volver / pausa"
+
+msgid "MENU_NEXT"
+msgstr "Siguiente control"
+
+msgid "MENU_PREVIOUS"
+msgstr "Control anterior"
+
+msgid "ASSIGNED"
+msgstr "Ya se asignó a %s."
+
+msgid "BIND_ERR"
+msgstr "No se pudieron guardar los controles."
+
+msgid "ANY_PAD"
+msgstr "Cualquier mando"
+
+msgid "PAD"
+msgstr "Mando %d"
+
+msgid "AXIS"
+msgstr "Eje %d"
+
+msgid "BUTTON"
+msgstr "Botón %d"
+
+msgid "PROP_0"
+msgstr "Restaura dos puntos de casco. Los tanques intactos lo dejan para otros."
+
+msgid "PROP_1"
+msgstr "Absorbe dos puntos de daño. El láser atraviesa el escudo."
+
+msgid "PROP_2"
+msgstr "Un proyectil rápido para alcanzar tanques antes de que giren o se cubran."
+
+msgid "PROP_3"
+msgstr "Dispara tres proyectiles en abanico con una carga."
+
+msgid "PROP_4"
+msgstr "Un proyectil pesado y lento que inflige dos puntos de daño directo."
+
+msgid "PROP_5"
+msgstr "Se carga un segundo y destruye los tanques del haz. Atraviesa muros e inmoviliza al tirador hasta que termina."
+
+msgid "PROP_6"
+msgstr "Explota al impactar o al agotarse la mecha. Daña a los tanques cercanos. Los muros protegen."
+
+msgid "BOT_0"
+msgstr "Un blanco inmóvil con tres vidas para practicar y probar objetos."
+
+msgid "BOT_1"
+msgstr "Alterna entre perseguir, disparar, esquivar y reparar mediante reglas fijas."
+
+msgid "BOT_2"
+msgstr "Usa un árbol de prioridades. Revisa peligros y daños antes de atacar."
+
+msgid "BOT_3"
+msgstr "Planifica secuencias como retirarse para reparar o buscar un ángulo tras rearmarse."
+
+msgid "BOT_4"
+msgstr "Puntúa acciones legales y considera el siguiente movimiento."
+
+msgid "BOT_5"
+msgstr "Aprende a valorar acciones legales jugando contra sus propias versiones anteriores."
+
+msgid "BOT_6"
+msgstr "Conoce la solución y se acerca a las casillas para avanzar sus valores disparo a disparo."
+
+msgid "PAD_BACK"
+msgstr "Atrás"
+
+msgid "PAD_GUIDE"
+msgstr "Guía"
+
+msgid "PAD_START"
+msgstr "Inicio"
+
+msgid "PAD_STICK_L"
+msgstr "Palanca izquierda"
+
+msgid "PAD_STICK_R"
+msgstr "Palanca derecha"
+
+msgid "PAD_D_UP"
+msgstr "Cruceta arriba"
+
+msgid "PAD_D_DOWN"
+msgstr "Cruceta abajo"
+
+msgid "PAD_D_LEFT"
+msgstr "Cruceta izquierda"
+
+msgid "PAD_D_RIGHT"
+msgstr "Cruceta derecha"
+
+msgid "PAD_LX"
+msgstr "Palanca izquierda X"
+
+msgid "PAD_LY"
+msgstr "Palanca izquierda Y"
+
+msgid "PAD_RX"
+msgstr "Palanca derecha X"
+
+msgid "PAD_RY"
+msgstr "Palanca derecha Y"
+
+msgid "PLAYER_SHORT"
+msgstr "J%d"
+
+msgid "MAP_EDITOR"
+msgstr "Editor de mapas"
+
+msgid "MAP_EDITOR_CUSTOM"
+msgstr "Arena personalizada"
+
+msgid "MAP_VOID"
+msgstr "Vacío"
+
+msgid "MAP_FLOOR"
+msgstr "Suelo"
+
+msgid "MAP_ICE"
+msgstr "Hielo"
+
+msgid "MAP_GRASS"
+msgstr "Hierba"
+
+msgid "MAP_FILL"
+msgstr "Rellenar mapa"
+
+msgid "MAP_SLOT"
+msgstr "Mapa %d"
+
+msgid "MAP_SLOT_EMPTY"
+msgstr "No hay un mapa guardado en esta ranura."
+
+msgid "MAP_INVALID"
+msgstr "Conecta todas las casillas por sus lados y deja una por jugador."
+
+msgid "MAP_READY"
+msgstr "Pinta con el ratón o mueve el cursor y pulsa Seleccionar. Los muros se sortean al jugar."
+
+msgid "MAP_PLAYTEST"
+msgstr "Probar mapa"
+
+msgid "MAP_SAVE"
+msgstr "Guardar mapa"
+
+msgid "MAP_LOAD"
+msgstr "Cargar mapa"
+
+msgid "MAP_SAVED"
+msgstr "Mapa guardado."
+
+msgid "ARENA_KEYHOLE"
+msgstr "Fortaleza Cerradura"
+
+msgid "ARENA_SWITCHBACK"
+msgstr "Zigzag"
+
+msgid "ARENA_FORK"
+msgstr "Bifurcación"
+
+msgid "PORTAL_CAPSULE"
+msgstr "Pistola de portales"
+
+msgid "TURBO_TONIC"
+msgstr "Tónico turbo"
+
+msgid "PROP_7"
+msgstr "Disparo único. Coloca un portal en el pasillo apuntado y otro en una casilla libre al azar. Se cierran tras un viaje o diez segundos."
+
+msgid "PROP_8"
+msgstr "Aumenta la velocidad un cuarenta por ciento durante cinco segundos."

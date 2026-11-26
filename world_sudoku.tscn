@@ -13,7 +13,7 @@ maze_path = NodePath("MazeBuilderSudoku")
 
 [node name="MazeBuilderSudoku" parent="." unique_id=289675958 instance=ExtResource("4_q8ugh")]
 position = Vector2(0, -50)
-maze_size = Vector2i(4, 4)
+maze_size = Vector2i(9, 9)
 
 [node name="LevelManagerSudoku" parent="." unique_id=1897259335 instance=ExtResource("4_4m6he")]
 number_of_enemies = 0
